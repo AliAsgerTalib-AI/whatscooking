@@ -168,7 +168,7 @@ export function IngredientTags({ tags, onChange }) {
         )}
       </div>
 
-      {tags.length === 0 && !input && (
+      {!input && (
         <div className="mt-[0.85rem]">
           <p className="text-[0.68rem] text-white/25 tracking-[0.12em] uppercase mb-2">Quick add</p>
           <div className="flex flex-wrap gap-[0.35rem]">
