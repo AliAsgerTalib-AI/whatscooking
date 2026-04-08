@@ -13,72 +13,51 @@ import { METHODS, SERVING_PRESETS, PRO_BATCH_PRESETS } from "./src/data/methods.
 import { ALLERGENS }                             from "./src/data/allergens.js";
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
-import { formatNum }        from "./src/utils/formatNum.js";
-import { scaleIngredient }  from "./src/utils/scaleIngredient.js";
+import { formatNum }       from "./src/utils/formatNum.js";
+import { scaleIngredient } from "./src/utils/scaleIngredient.js";
 
 // ── API / hooks / export ──────────────────────────────────────────────────────
-import { generateRecipe }   from "./src/api/recipeApi.js";
-import { useFavorites }     from "./src/hooks/useFavorites.js";
-import { exportProPDF }     from "./src/export/exportProPDF.js";
-import { exportHomePDF }    from "./src/export/exportHomePDF.js";
+import { generateRecipe }  from "./src/api/recipeApi.js";
+import { useFavorites }    from "./src/hooks/useFavorites.js";
+import { exportProPDF }    from "./src/export/exportProPDF.js";
+import { exportHomePDF }   from "./src/export/exportHomePDF.js";
 
 // ── Components ────────────────────────────────────────────────────────────────
-import { IngredientTags }   from "./src/components/IngredientTags.jsx";
-import { BottomSheet }      from "./src/components/BottomSheet.jsx";
-import { NutritionBar }     from "./src/components/NutritionBar.jsx";
-import { AllergenMatrix }   from "./src/components/AllergenMatrix.jsx";
-import { MiseEnPlace }      from "./src/components/MiseEnPlace.jsx";
-import { FavoritesPanel }   from "./src/components/FavoritesPanel.jsx";
-import { ProFieldsPanel }   from "./src/components/ProFieldsPanel.jsx";
+import { IngredientTags }  from "./src/components/IngredientTags.jsx";
+import { BottomSheet }     from "./src/components/BottomSheet.jsx";
+import { NutritionBar }    from "./src/components/NutritionBar.jsx";
+import { AllergenMatrix }  from "./src/components/AllergenMatrix.jsx";
+import { MiseEnPlace }     from "./src/components/MiseEnPlace.jsx";
+import { FavoritesPanel }  from "./src/components/FavoritesPanel.jsx";
+import { ProFieldsPanel }  from "./src/components/ProFieldsPanel.jsx";
 
-// ── Tailwind class helpers ────────────────────────────────────────────────────
+// ── Design-system class strings ───────────────────────────────────────────────
 
-/** Glass card */
-const card    = "bg-white/5 border border-white/10 rounded-2xl px-7 py-[1.6rem] mb-5 backdrop-blur-[8px]";
-/** Pro-tinted glass card */
-const proCard = "bg-fl-indigo/5 border border-fl-indigo/20 rounded-2xl px-7 py-[1.6rem] mb-5 backdrop-blur-[8px]";
-/** Section header label — home gold */
-const lbl     = "flex items-center gap-2 text-[0.72rem] tracking-[0.18em] uppercase text-fl-gold font-bold mb-[0.85rem]";
-/** Section header label — pro indigo */
-const proLbl  = "flex items-center gap-2 text-[0.72rem] tracking-[0.18em] uppercase text-fl-indigo font-bold mb-[0.85rem]";
-/** Section title (inside result area) */
-const secT    = "text-[0.66rem] tracking-[0.2em] uppercase text-fl-orange font-bold mb-4 pb-2 border-b border-white/[0.08]";
+/** 1px bordered grid cell */
+const card = "border border-primary bg-surface p-6 mb-4";
+
+/** Section label — uppercase annotation */
+const lbl  = "text-label-sm uppercase tracking-label font-bold mb-3";
+
+/** Section title inside result panel */
+const secT = "text-label-sm uppercase tracking-label font-bold mb-3 pb-1 border-b border-primary";
 
 /** Inline badge pill */
-const bdg = (variant = "gold") => {
-  const v = {
-    gold:   "bg-fl-gold/[0.13]   border-fl-gold/40   text-fl-gold",
-    indigo: "bg-fl-indigo/[0.13] border-fl-indigo/40 text-fl-indigo",
-    green:  "bg-fl-green/[0.13]  border-fl-green/40  text-fl-green",
-  };
-  return `inline-block border text-[0.68rem] tracking-[0.15em] uppercase px-[0.7rem] py-[0.22rem] rounded-full font-bold ${v[variant] ?? v.gold}`;
-};
+const bdg  = () => "inline-block border border-primary text-label-sm uppercase tracking-label px-2 py-[0.15rem] font-bold";
 
-/** Filter chip button */
-const chipClass = (active, variant = "gold") => {
-  const base = "px-[0.9rem] py-1.5 rounded-full border-[1.5px] text-[0.82rem] cursor-pointer transition-all duration-[180ms] font-[inherit]";
-  const active_v = {
-    gold:   "border-fl-gold   bg-fl-gold/[0.17]   text-fl-gold   font-bold",
-    orange: "border-fl-orange bg-fl-orange/[0.17] text-fl-orange font-bold",
-    green:  "border-fl-green  bg-fl-green/[0.17]  text-fl-green  font-bold",
-    indigo: "border-fl-indigo bg-fl-indigo/[0.17] text-fl-indigo font-bold",
-  };
-  const inactive = "border-white/[0.15] bg-white/[0.03] text-white/60 font-normal";
-  return `${base} ${active ? (active_v[variant] ?? active_v.gold) : inactive}`;
-};
+/** Filter chip — active = black fill, inactive = outline */
+const chipClass = (active) =>
+  `px-3 py-1 border border-primary text-label-md uppercase tracking-label cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
+    active
+      ? "bg-primary text-on-primary"
+      : "bg-surface text-primary hover:bg-surface-container"
+  }`;
 
-/** Mobile filter pill button */
-const pillClass = (active, variant = "gold") => {
-  const base = "flex items-center gap-1.5 px-[0.9rem] py-[0.45rem] rounded-full shrink-0 border-[1.5px] text-[0.78rem] cursor-pointer font-[inherit] whitespace-nowrap transition-all";
-  const active_v = {
-    gold:   "border-fl-gold   bg-fl-gold/[0.09]   text-fl-gold   font-bold",
-    orange: "border-fl-orange bg-fl-orange/[0.09] text-fl-orange font-bold",
-    green:  "border-fl-green  bg-fl-green/[0.09]  text-fl-green  font-bold",
-    indigo: "border-fl-indigo bg-fl-indigo/[0.09] text-fl-indigo font-bold",
-  };
-  const inactive = "border-white/[0.15] bg-white/[0.04] text-white/50 font-normal";
-  return `${base} ${active ? (active_v[variant] ?? active_v.gold) : inactive}`;
-};
+/** Mobile filter pill */
+const pillClass = (active) =>
+  `flex items-center gap-1 px-3 py-1 border border-primary text-label-md uppercase tracking-label cursor-pointer font-[inherit] whitespace-nowrap transition-colors duration-100 ease-linear ${
+    active ? "bg-primary text-on-primary" : "bg-surface text-primary"
+  }`;
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RecipeGenerator() {
@@ -155,69 +134,64 @@ export default function RecipeGenerator() {
 
   // ── Shell-local sub-components ────────────────────────────────────────────────
 
-  const FilterChips = ({ items, selected, onToggle, variant = "gold", single }) => (
-    <div className="flex flex-wrap gap-1.5">
+  const FilterChips = ({ items, selected, onToggle, single }) => (
+    <div className="flex flex-wrap gap-1">
       {items.map(item => (
         <button
           key={item.val}
-          className={chipClass(single ? selected === item.val : selected.includes(item.val), variant)}
+          className={chipClass(single ? selected === item.val : selected.includes(item.val))}
           onClick={() => single ? onToggle(selected === item.val ? "" : item.val) : onToggle(item.val)}
-        >
-          {item.label}
-        </button>
+        >{item.label}</button>
       ))}
     </div>
   );
 
-  // BP-12: memoize sheetMap so JSX content isn't recreated on every render
   const sheetMap = useMemo(() => ({
-    cuisine:   { title:"🌍 Cuisine Style",       color:"#f9c74f", content:<>
-      <FilterChips items={CUISINES} selected={selectedCuisine} onToggle={v => { setSelectedCuisine(v); setCustomCuisine(""); }} variant="gold" single />
+    cuisine:  { title:"Cuisine Style", content:<>
+      <FilterChips items={CUISINES} selected={selectedCuisine} onToggle={v => { setSelectedCuisine(v); setCustomCuisine(""); }} single />
       <input
         type="text"
         placeholder="Or type your own..."
         value={customCuisine}
         onChange={e => { setCustomCuisine(e.target.value); setSelectedCuisine(""); }}
-        className="w-full mt-4 bg-black/30 border border-white/[0.15] rounded-[10px] px-4 py-3 text-fl-text text-[0.9rem] font-[inherit] outline-none"
+        className="w-full mt-3 border border-primary bg-surface px-2 py-2 text-body-md font-[inherit] outline-none focus:bg-surface-container transition-colors duration-100 ease-linear"
       />
     </> },
-    flavor:   { title:"🎨 Flavor Profile",       color:"#f3722c", content:<FilterChips items={FLAVORS} selected={selectedFlavors} onToggle={v => toggle(v, selectedFlavors, setSelectedFlavors)} variant="orange" /> },
-    diet:     { title:"🥦 Dietary Requirements", color:"#4ade80", content:<FilterChips items={DIETS}   selected={selectedDiets}   onToggle={v => toggle(v, selectedDiets, setSelectedDiets)}     variant="green" /> },
-    method:   { title:"👨‍🍳 Cooking Method",       color:"#818cf8", content:<FilterChips items={METHODS} selected={selectedMethod}  onToggle={setSelectedMethod} variant="indigo" single /> },
-    servings: { title:"👥 Serving Size",          color:"#f9c74f", content:<>
-      <p className="text-[0.82rem] text-white/40 mb-4">How many people are you cooking for?</p>
-      <div className="flex gap-2.5 flex-wrap">
+    flavor:   { title:"Flavor Profile",       content:<FilterChips items={FLAVORS} selected={selectedFlavors} onToggle={v => toggle(v, selectedFlavors, setSelectedFlavors)} /> },
+    diet:     { title:"Dietary Requirements", content:<FilterChips items={DIETS}   selected={selectedDiets}   onToggle={v => toggle(v, selectedDiets, setSelectedDiets)} /> },
+    method:   { title:"Cooking Method",       content:<FilterChips items={METHODS} selected={selectedMethod}  onToggle={setSelectedMethod} single /> },
+    servings: { title:"Serving Size",         content:<>
+      <p className="text-body-md text-outline mb-3">How many {proMode ? "covers" : "people"}?</p>
+      <div className="flex gap-1 flex-wrap">
         {(proMode ? PRO_BATCH_PRESETS : SERVING_PRESETS).map(n => (
           <button
             key={n}
             onClick={() => setServings(n)}
-            className={`w-14 h-14 rounded-full border-2 text-base font-extrabold cursor-pointer flex items-center justify-center font-[inherit] ${
-              servings === n
-                ? "border-fl-gold bg-fl-gold/20 text-fl-gold"
-                : "border-white/[0.15] bg-black/30 text-white/55"
+            className={`w-14 h-14 border border-primary text-headline-sm font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
+              servings === n ? "bg-primary text-on-primary" : "bg-surface text-primary hover:bg-surface-container"
             }`}
           >{n}</button>
         ))}
       </div>
     </> },
-    profields:{ title:"⚙️ Recipe Card Details",  color:"#818cf8", content:<ProFieldsPanel proFields={proFields} onChange={setProFields} /> },
+    profields:{ title:"Recipe Card Details", content:<ProFieldsPanel proFields={proFields} onChange={setProFields} /> },
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [selectedCuisine, customCuisine, selectedFlavors, selectedDiets, selectedMethod, servings, proMode, proFields, toggle]);
 
   const MobileFilterBar = () => {
     const pills = [
-      { id:"cuisine",   icon:"🌍", label:customCuisine||selectedCuisine||"Cuisine",                                              active:!!(customCuisine||selectedCuisine), variant:"gold" },
-      { id:"flavor",    icon:"🎨", label:selectedFlavors.length?`${selectedFlavors.length} flavor${selectedFlavors.length>1?"s":""}`:  "Flavor", active:selectedFlavors.length>0, variant:"orange" },
-      { id:"diet",      icon:"🥦", label:selectedDiets.length?`${selectedDiets.length} diet${selectedDiets.length>1?"s":""}`:    "Diet",   active:selectedDiets.length>0,   variant:"green" },
-      { id:"method",    icon:"👨‍🍳", label:selectedMethod||"Method",                                                              active:!!selectedMethod,                    variant:"indigo" },
-      { id:"servings",  icon:"👥", label:`${servings} ${proMode?"covers":"people"}`,                                              active:true,                                variant:"gold" },
-      ...(proMode ? [{ id:"profields", icon:"⚙️", label:"Card Details", active:!!(proFields.chefName||proFields.station), variant:"indigo" }] : []),
+      { id:"cuisine",   label:customCuisine||selectedCuisine||"Cuisine",                                             active:!!(customCuisine||selectedCuisine) },
+      { id:"flavor",    label:selectedFlavors.length ? `${selectedFlavors.length} Flavor${selectedFlavors.length>1?"s":""}` : "Flavor", active:selectedFlavors.length>0 },
+      { id:"diet",      label:selectedDiets.length   ? `${selectedDiets.length} Diet${selectedDiets.length>1?"s":""}` : "Diet",         active:selectedDiets.length>0 },
+      { id:"method",    label:selectedMethod||"Method",                                                              active:!!selectedMethod },
+      { id:"servings",  label:`${servings} ${proMode?"Covers":"People"}`,                                           active:true },
+      ...(proMode ? [{ id:"profields", label:"Card Details", active:!!(proFields.chefName||proFields.station) }] : []),
     ];
     return (
-      <div className="flex gap-2 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling:"touch" }}>
+      <div className="flex gap-1 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling:"touch" }}>
         {pills.map(p => (
-          <button key={p.id} onClick={() => setActiveSheet(p.id)} className={pillClass(p.active, p.variant)}>
-            <span>{p.icon}</span><span>{p.label}</span><span className="opacity-50 text-[0.65rem]">▾</span>
+          <button key={p.id} onClick={() => setActiveSheet(p.id)} className={pillClass(p.active)}>
+            {p.label} <span className="text-label-sm">▾</span>
           </button>
         ))}
       </div>
@@ -226,8 +200,8 @@ export default function RecipeGenerator() {
 
   const DesktopFilters = () => (<>
     <div className={card}>
-      <div className={lbl}>🌍 Cuisine Style</div>
-      <div className="flex flex-wrap gap-1.5">
+      <div className={lbl}>Cuisine Style</div>
+      <div className="flex flex-wrap gap-1 mb-3">
         {CUISINES.map(c => (
           <button key={c.val} className={chipClass(selectedCuisine===c.val&&!customCuisine)} onClick={() => { setSelectedCuisine(c.val); setCustomCuisine(""); }}>{c.label}</button>
         ))}
@@ -237,47 +211,47 @@ export default function RecipeGenerator() {
         placeholder="Or type your own (e.g. Cajun, Hawaiian...)"
         value={customCuisine}
         onChange={e => { setCustomCuisine(e.target.value); setSelectedCuisine(""); }}
-        className="w-full bg-black/30 border border-white/[0.15] rounded-[10px] px-4 py-3 text-fl-text text-[0.9rem] font-[inherit] outline-none mt-3"
+        className="w-full border border-primary bg-surface px-2 py-2 text-body-md font-[inherit] outline-none transition-colors duration-100 ease-linear focus:bg-surface-container"
       />
     </div>
     <div className={card}>
-      <div className={lbl}>🎨 Flavor Profile <span className="text-white/[0.28] font-normal normal-case tracking-normal text-[0.75rem]">(pick any)</span></div>
-      <div className="flex flex-wrap gap-1.5">
-        {FLAVORS.map(f => <button key={f.val} className={chipClass(selectedFlavors.includes(f.val),"orange")} onClick={() => toggle(f.val, selectedFlavors, setSelectedFlavors)}>{f.label}</button>)}
+      <div className={lbl}>Flavor Profile <span className="text-outline font-normal normal-case tracking-normal">— pick any</span></div>
+      <div className="flex flex-wrap gap-1">
+        {FLAVORS.map(f => <button key={f.val} className={chipClass(selectedFlavors.includes(f.val))} onClick={() => toggle(f.val, selectedFlavors, setSelectedFlavors)}>{f.label}</button>)}
       </div>
     </div>
     <div className={card}>
-      <div className={lbl}>🥦 Dietary Requirements <span className="text-white/[0.28] font-normal normal-case tracking-normal text-[0.75rem]">(pick any)</span></div>
-      <div className="flex flex-wrap gap-1.5">
-        {DIETS.map(d => <button key={d.val} className={chipClass(selectedDiets.includes(d.val),"green")} onClick={() => toggle(d.val, selectedDiets, setSelectedDiets)}>{d.label}</button>)}
+      <div className={lbl}>Dietary Requirements <span className="text-outline font-normal normal-case tracking-normal">— pick any</span></div>
+      <div className="flex flex-wrap gap-1">
+        {DIETS.map(d => <button key={d.val} className={chipClass(selectedDiets.includes(d.val))} onClick={() => toggle(d.val, selectedDiets, setSelectedDiets)}>{d.label}</button>)}
       </div>
     </div>
     <div className={card}>
-      <div className={lbl}>👨‍🍳 Cooking Method <span className="text-white/[0.28] font-normal normal-case tracking-normal text-[0.75rem]">(pick one)</span></div>
-      <div className="flex flex-wrap gap-1.5">
-        {METHODS.map(m => <button key={m.val} className={chipClass(selectedMethod===m.val,"indigo")} onClick={() => setSelectedMethod(selectedMethod===m.val?"":m.val)}>{m.label}</button>)}
+      <div className={lbl}>Cooking Method <span className="text-outline font-normal normal-case tracking-normal">— pick one</span></div>
+      <div className="flex flex-wrap gap-1">
+        {METHODS.map(m => <button key={m.val} className={chipClass(selectedMethod===m.val)} onClick={() => setSelectedMethod(selectedMethod===m.val?"":m.val)}>{m.label}</button>)}
       </div>
     </div>
     {proMode && (
-      <div className={proCard}>
-        <div className={proLbl}>⚙️ Recipe Card Details <span className="text-fl-indigo/50 font-normal normal-case tracking-normal text-[0.75rem]">(optional)</span></div>
+      <div className={card}>
+        <div className={lbl}>Recipe Card Details <span className="text-outline font-normal normal-case tracking-normal">— optional</span></div>
         <ProFieldsPanel proFields={proFields} onChange={setProFields} />
       </div>
     )}
   </>);
 
   const ProResultTabs = () => {
-    const tabs = [{ id:"recipe", label:"📋 Recipe" }, { id:"allergens", label:"⚠️ Allergens" }, { id:"mise", label:"🔪 Mise en Place" }];
+    const tabs = [{ id:"recipe", label:"Recipe" }, { id:"allergens", label:"Allergens" }, { id:"mise", label:"Mise en Place" }];
     return (
-      <div className="flex gap-1.5 px-7 pt-4 border-b border-white/[0.08] bg-black/[0.15]">
+      <div className="flex border-b border-primary">
         {tabs.map(t => (
           <button
             key={t.id}
             onClick={() => setActiveProTab(t.id)}
-            className={`px-4 py-2 rounded-t-lg border border-b-0 text-[0.78rem] cursor-pointer font-[inherit] transition-all duration-150 ${
+            className={`px-4 py-2 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] border-r border-primary transition-colors duration-100 ease-linear last:border-r-0 ${
               activeProTab === t.id
-                ? "border-white/[0.15] bg-white/[0.08] text-fl-text font-bold"
-                : "border-transparent bg-transparent text-white/40 font-normal"
+                ? "bg-primary text-on-primary"
+                : "bg-surface text-primary hover:bg-surface-container"
             }`}
           >{t.label}</button>
         ))}
@@ -287,92 +261,80 @@ export default function RecipeGenerator() {
 
   // ── Render ────────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-app font-sans text-fl-text">
+    <div className="min-h-screen bg-surface text-primary font-sans">
 
-      {/* NAV */}
-      <nav className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] backdrop-blur-[10px] bg-black/30 sticky top-0 z-[100]">
-        <div className="flex items-center gap-3">
-          <div className="text-[1.4rem] font-extrabold bg-logo bg-clip-text text-transparent">🍳 FlavorLab</div>
-          {proMode && (
-            <span className="bg-fl-indigo/20 border border-fl-indigo/50 text-fl-indigo text-[0.62rem] font-extrabold tracking-[0.15em] uppercase px-[0.6rem] py-[0.2rem] rounded">PRO</span>
-          )}
-        </div>
-        <div className="flex items-center gap-2">
-          {/* BP-08: role=switch + aria-checked on Pro Mode toggle */}
-          <div
+      {/* NAV — 2px bottom border as primary structural rule */}
+      <nav className="flex items-center justify-between px-6 md:px-[5.5rem] py-4 border-b-2 border-primary bg-surface sticky top-0 z-[100]">
+        <div className="text-headline-sm font-bold tracking-tight">FLAVORLAB</div>
+        <div className="flex items-center gap-1">
+          {/* Pro toggle — plain bordered button, no visual flourish */}
+          <button
             role="switch"
             aria-checked={proMode}
             aria-label="Toggle Pro mode"
-            tabIndex={0}
-            onKeyDown={e => (e.key === " " || e.key === "Enter") && setProMode(p => !p)}
             onClick={() => setProMode(p => !p)}
-            className={`flex items-center gap-2 px-3 py-[0.3rem] rounded-full cursor-pointer transition-all duration-200 border ${
-              proMode
-                ? "bg-fl-indigo/[0.15] border-fl-indigo/40 animate-pro-glow"
-                : "bg-white/[0.05] border-white/[0.12]"
+            onKeyDown={e => (e.key === " " || e.key === "Enter") && setProMode(p => !p)}
+            className={`border border-primary px-3 py-1 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
+              proMode ? "bg-primary text-on-primary" : "bg-surface text-primary"
             }`}
-          >
-            <div className={`w-7 h-4 rounded-full relative transition-colors duration-200 shrink-0 ${proMode ? "bg-fl-indigo" : "bg-white/[0.15]"}`}>
-              <div className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-[left] duration-200 shadow-sm ${proMode ? "left-[14px]" : "left-0.5"}`} />
-            </div>
-            <span className={`text-[0.72rem] font-bold whitespace-nowrap ${proMode ? "text-fl-indigo" : "text-white/40"}`}>Pro Mode</span>
-          </div>
+          >{proMode ? "Pro: On" : "Pro: Off"}</button>
           {["generator","favorites"].map(t => (
             <button
               key={t}
               onClick={() => setTab(t)}
               aria-pressed={tab === t}
-              className={`px-[0.9rem] py-1.5 rounded-full border text-[0.75rem] font-bold cursor-pointer font-[inherit] ${
-                tab === t
-                  ? "bg-fl-gold/[0.15] border-fl-gold/40 text-fl-gold"
-                  : "bg-transparent border-white/[0.12] text-white/40"
+              className={`border border-primary px-3 py-1 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
+                tab === t ? "bg-primary text-on-primary" : "bg-surface text-primary hover:bg-surface-container"
               }`}
             >
-              {t === "generator" ? "✨ Generator" : `♥ Saved${favorites.length ? ` (${favorites.length})` : ""}`}
+              {t === "generator" ? "Generator" : `Saved${favorites.length ? ` (${favorites.length})` : ""}`}
             </button>
           ))}
         </div>
       </nav>
 
+      {/* Pro Mode annotation — full-width ruled banner */}
       {proMode && (
-        <div className="bg-pro-banner border-b border-fl-indigo/20 px-6 py-[0.6rem] flex items-center gap-3 animate-fade-up-xs">
-          <span className="text-base">👨‍🍳</span>
-          <div>
-            <span className="text-[0.78rem] font-bold text-fl-indigo">Professional Kitchen Mode</span>
-            <span className="text-[0.75rem] text-white/35 ml-2">Metric weights · Mise en place · HACCP notes · Allergen matrix · Pro recipe card PDF</span>
-          </div>
+        <div className="px-6 md:px-[5.5rem] py-2 border-b border-primary bg-surface-container animate-fade-in">
+          <span className="text-label-sm uppercase tracking-label">
+            Professional Mode — Metric weights · Mise en place · HACCP · Allergen matrix · Pro recipe card PDF
+          </span>
         </div>
       )}
 
-      <div className="max-w-[940px] mx-auto px-5 pt-8 pb-20">
+      <div className="max-w-[940px] mx-auto px-6 md:px-[5.5rem] py-10">
 
         {/* FAVORITES */}
         {tab === "favorites" && (
-          <div className="animate-fade-up-md">
-            <h2 className="text-[1.5rem] font-extrabold mb-6">♥ Saved Recipes</h2>
+          <div className="animate-fade-in">
+            <h2 className="text-headline-sm font-bold mb-6 uppercase tracking-label">Saved Recipes</h2>
             <FavoritesPanel favorites={favorites} onLoad={loadFavorite} onDelete={deleteFavorite} />
           </div>
         )}
 
         {/* GENERATOR */}
         {tab === "generator" && (<>
-          <div className="text-center mb-8">
-            <h1 className="text-[clamp(1.9rem,5vw,3.2rem)] font-extrabold leading-[1.15] mb-2">
+
+          {/* Hero — flush-left per Swiss grid rules */}
+          <div className="mb-10 border-b border-primary pb-8">
+            <h1 className="text-[clamp(1.9rem,5vw,3.2rem)] font-extrabold leading-[1.1] mb-2">
               {proMode
-                ? <>Professional <span className="bg-hero-pro bg-clip-text text-transparent">kitchen-grade</span><br />recipe generation.</>
-                : <>Any ingredients, <span className="bg-hero-home bg-clip-text text-transparent">any cuisine,</span><br />any craving.</>}
+                ? <>Professional kitchen-grade<br />recipe generation.</>
+                : <>Any ingredients,<br />any cuisine, any craving.</>}
             </h1>
-            <p className="text-white/40 text-[0.95rem]">
-              {proMode ? "Metric weights, mise en place, HACCP notes, and full allergen matrix." : "Tell us what you have. We'll craft the perfect recipe."}
+            <p className="text-body-md text-outline">
+              {proMode
+                ? "Metric weights, mise en place, HACCP notes, and full allergen matrix."
+                : "Tell us what you have. We'll craft the perfect recipe."}
             </p>
           </div>
 
-          {/* Ingredients card */}
+          {/* Ingredients */}
           <div className={card}>
-            <div className={lbl}>
-              🧺 {proMode ? "Kitchen Inventory" : "Your Ingredients"}
+            <div className={`${lbl} flex items-center justify-between`}>
+              <span>{proMode ? "Kitchen Inventory" : "Your Ingredients"}</span>
               {ingredientTags.length > 0 && (
-                <span className="ml-auto bg-fl-gold/[0.15] border border-fl-gold/30 text-fl-gold rounded-full px-[0.6rem] py-[0.15rem] text-[0.7rem] font-bold">
+                <span className="border border-primary px-2 py-[0.1rem] text-label-sm font-bold">
                   {ingredientTags.length} added
                 </span>
               )}
@@ -380,102 +342,95 @@ export default function RecipeGenerator() {
             <IngredientTags tags={ingredientTags} onChange={setIngredientTags} />
           </div>
 
-          {/* Serving size card */}
+          {/* Serving size */}
           <div className={card}>
-            <div className={lbl}>👥 {proMode ? "Covers / Yield" : "Serving Size"}</div>
-            <div className="flex items-center gap-2.5 flex-wrap">
+            <div className={lbl}>{proMode ? "Covers / Yield" : "Serving Size"}</div>
+            <div className="flex items-center gap-1 flex-wrap">
               {(proMode ? PRO_BATCH_PRESETS : SERVING_PRESETS).map(n => (
                 <button
                   key={n}
                   onClick={() => setServings(n)}
-                  className={`w-11 h-11 rounded-full border-[1.5px] text-[0.88rem] font-bold cursor-pointer flex items-center justify-center font-[inherit] ${
+                  className={`w-11 h-11 border border-primary text-headline-sm font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
                     servings === n
-                      ? proMode
-                        ? "border-fl-indigo bg-fl-indigo/20 text-fl-indigo"
-                        : "border-fl-gold   bg-fl-gold/20   text-fl-gold"
-                      : "border-white/[0.15] bg-black/30 text-white/50"
+                      ? "bg-primary text-on-primary"
+                      : "bg-surface text-primary hover:bg-surface-container"
                   }`}
                 >{n}</button>
               ))}
-              <span className="text-[0.8rem] text-white/35">{proMode ? "covers" : "people"}</span>
+              <span className="text-label-sm uppercase tracking-label text-outline ml-1">{proMode ? "covers" : "people"}</span>
             </div>
           </div>
 
           {/* Filters */}
           {isMobile ? (
             <div className={card}>
-              <div className={lbl}>⚙️ Preferences</div>
+              <div className={lbl}>Preferences</div>
               <MobileFilterBar />
-              <p className="text-[0.72rem] text-white/25 mt-2">Tap a pill to open options ↑</p>
+              <p className="text-label-sm text-outline mt-2 uppercase tracking-label">Tap to open options</p>
             </div>
           ) : <DesktopFilters />}
 
-          {/* Generate button */}
+          {/* Grid divider */}
+          <div className="w-full border-b border-primary mb-4" />
+
+          {/* Generate button — primary CTA */}
           <button
             disabled={loading}
             onClick={generate}
-            className={`w-full py-[1.1rem] rounded-xl border-none text-[0.9rem] font-extrabold tracking-[0.12em] uppercase flex items-center justify-center gap-2.5 transition-all duration-200 font-[inherit] ${
+            className={`w-full py-4 border border-primary text-label-md uppercase tracking-label font-bold font-[inherit] transition-colors duration-100 ease-linear ${
               loading
-                ? "bg-white/[0.08] text-white/35 cursor-not-allowed"
-                : proMode
-                  ? "bg-cta-pro   text-white cursor-pointer"
-                  : "bg-cta-home  text-white cursor-pointer"
+                ? "bg-surface-container text-outline cursor-not-allowed"
+                : "bg-[linear-gradient(to_bottom,#000000,#3b3b3b)] text-on-primary cursor-pointer hover:bg-none hover:bg-surface hover:text-primary"
             }`}
           >
             {loading
-              ? <>
-                  <span className="w-[18px] h-[18px] border-[2.5px] border-white/[0.15] border-t-white/60 rounded-full inline-block animate-[spin_0.7s_linear_infinite]" />
-                  {proMode ? "Generating professional recipe…" : "Crafting your recipe…"}
-                </>
-              : (proMode ? "👨‍🍳 Generate Professional Recipe" : "✨ Generate My Recipe")}
+              ? `${proMode ? "Generating professional recipe" : "Crafting your recipe"}…`
+              : (proMode ? "Generate Professional Recipe" : "Generate My Recipe")}
           </button>
 
           {error && (
-            <div className="bg-fl-red/[0.12] border border-fl-red/40 rounded-[10px] px-5 py-[0.9rem] text-fl-red text-[0.88rem] mt-4">
-              ⚠️ {error}
+            <div className="border border-primary bg-surface-container px-4 py-3 text-body-md mt-4">
+              {error}
             </div>
           )}
 
-          {/* RESULT */}
+          {/* ── RESULT ───────────────────────────────────────────────────────── */}
           {recipe && (
-            <div
-              id="result-anchor"
-              className={`bg-white/[0.04] border rounded-2xl overflow-hidden mt-8 animate-fade-up ${
-                proMode ? "border-fl-indigo/20" : "border-white/10"
-              }`}
-            >
+            <div id="result-anchor" className="border-2 border-primary mt-8 animate-fade-in">
+
               {/* Result header */}
-              <div className={`border-b border-white/[0.08] p-7 ${proMode ? "bg-result-pro" : "bg-result-home"}`}>
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  {recipe.badge   && <span className={bdg(proMode?"indigo":"gold")}>{recipe.badge}</span>}
-                  {proMode        && <span className={bdg("indigo")}>PRO</span>}
-                  {selectedDiets.map(d  => <span key={d}  className={bdg("green")}>{d}</span>)}
-                  {selectedMethod && <span className={bdg("indigo")}>{selectedMethod}</span>}
+              <div className="border-b border-primary p-6">
+                {/* Badges */}
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {recipe.badge   && <span className={bdg()}>{recipe.badge}</span>}
+                  {proMode        && <span className={bdg()}>Pro</span>}
+                  {selectedDiets.map(d  => <span key={d}  className={bdg()}>{d}</span>)}
+                  {selectedMethod && <span className={bdg()}>{selectedMethod}</span>}
                 </div>
-                <div className="text-[clamp(1.5rem,4vw,2.4rem)] font-extrabold mb-2 leading-[1.2]">{recipe.title}</div>
-                <p className="text-white/50 text-[0.95rem] leading-[1.7] italic mb-4">{recipe.intro}</p>
+
+                {/* Recipe title — Display-LG: the "Final Truth" output */}
+                <h2 className="text-display-lg font-extrabold leading-[1.05] mb-3">{recipe.title}</h2>
+                <p className="text-body-md text-outline mb-4 max-w-[600px]">{recipe.intro}</p>
+
+                {/* Ingredient tags used */}
                 {ingredientTags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-[1.1rem]">
-                    {ingredientTags.map((t, i) => {
-                      const cls = [
-                        "bg-fl-gold/[0.15]   border-fl-gold/35   text-fl-gold",
-                        "bg-fl-orange/[0.15] border-fl-orange/35 text-fl-orange",
-                        "bg-fl-indigo/[0.15] border-fl-indigo/35 text-fl-indigo",
-                        "bg-fl-green/[0.15]  border-fl-green/35  text-fl-green",
-                      ][i % 4];
-                      return <span key={t} className={`text-[0.7rem] border rounded-full px-[0.55rem] py-[0.15rem] font-semibold ${cls}`}>{t}</span>;
-                    })}
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {ingredientTags.map(t => (
+                      <span key={t} className="border border-primary text-label-sm px-2 py-[0.1rem] uppercase tracking-label">{t}</span>
+                    ))}
                   </div>
                 )}
-                <div className="flex gap-2.5 flex-wrap">
+
+                {/* Actions */}
+                <div className="flex gap-1 flex-wrap">
                   <button
                     onClick={() => toggleFav(recipe, nutrition, allergens, ingredientTags, proMode)}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-full border-[1.5px] text-[0.8rem] font-bold cursor-pointer font-[inherit] ${
+                    className={`border border-primary px-4 py-2 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
                       isFav
-                        ? "border-fl-red   bg-fl-red/[0.15]   text-fl-red"
-                        : "border-white/20 bg-white/[0.06]    text-white/70"
+                        ? "bg-primary text-on-primary"
+                        : "bg-surface text-primary hover:bg-surface-container"
                     }`}
-                  >{isFav ? "♥ Saved" : "♡ Save Recipe"}</button>
+                  >{isFav ? "Saved" : "Save Recipe"}</button>
                   <button
                     onClick={() => {
                       setExportingPDF(true);
@@ -483,78 +438,72 @@ export default function RecipeGenerator() {
                       else exportHomePDF(recipe, ingredientTags, nutrition, displayServings, ratio);
                       setTimeout(() => setExportingPDF(false), 1000);
                     }}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-full border-[1.5px] text-[0.8rem] font-bold cursor-pointer font-[inherit] ${
-                      proMode
-                        ? "border-fl-indigo/40 bg-fl-indigo/[0.12] text-fl-indigo"
-                        : "border-white/20     bg-white/[0.06]     text-white/70"
-                    }`}
-                  >{exportingPDF ? "⏳ Opening…" : (proMode ? "📋 Pro Recipe Card PDF" : "📄 Export PDF")}</button>
+                    className="border border-primary bg-surface text-primary px-4 py-2 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] hover:bg-surface-container transition-colors duration-100 ease-linear"
+                  >{exportingPDF ? "Opening…" : (proMode ? "Pro Recipe Card PDF" : "Export PDF")}</button>
                 </div>
               </div>
 
               {proMode && <ProResultTabs />}
 
-              {/* Two-column result layout — collapses to single column below 660px */}
+              {/* Two-column body — collapses at 660px */}
               <div className="grid grid-cols-1 wide:grid-cols-[1fr_300px]">
+
                 {/* Main column */}
-                <div className="p-7 border-b border-white/[0.08] wide:border-b-0 wide:border-r wide:border-white/[0.08]">
+                <div className="p-6 border-b border-primary wide:border-b-0 wide:border-r wide:border-primary">
                   {proMode && activeProTab === "mise"      && <MiseEnPlace   items={recipe.miseEnPlace} />}
                   {proMode && activeProTab === "allergens" && <AllergenMatrix allergens={allergens} />}
 
                   {(!proMode || activeProTab === "recipe") && (<>
                     <div className={secT}>Method</div>
                     {(recipe.steps || []).map((step, i) => (
-                      <div key={i} className={`flex gap-4 mb-[1.2rem] pb-[1.2rem] items-start ${i === recipe.steps.length - 1 ? "" : "border-b border-white/[0.06]"}`}>
-                        <div className={`min-w-[28px] h-7 rounded-[6px] flex items-center justify-center text-[0.75rem] font-extrabold text-white shrink-0 mt-0.5 ${proMode ? "bg-step-pro" : "bg-step-home"}`}>{i + 1}</div>
-                        <div className="text-[0.9rem] leading-[1.7] text-white/[0.82]">{step}</div>
+                      <div key={i} className={`flex gap-4 mb-4 pb-4 items-start ${i === recipe.steps.length - 1 ? "" : "border-b border-primary"}`}>
+                        {/* Step number — solid black square */}
+                        <div className="w-7 h-7 bg-primary text-on-primary flex items-center justify-center text-label-sm font-bold shrink-0 mt-[2px]">{i + 1}</div>
+                        <div className="text-body-md">{step}</div>
                       </div>
                     ))}
+
                     {recipe.tips && (
-                      <div className="bg-fl-orange/[0.08] border border-fl-orange/25 rounded-[10px] p-4 mt-6 text-[0.85rem] text-white/70 leading-[1.65]">
-                        <div className="text-[0.62rem] tracking-[0.15em] uppercase text-fl-orange font-bold mb-[0.4rem]">💡 Chef's Tip</div>
-                        {recipe.tips}
+                      <div className="border border-primary bg-surface-container p-4 mt-4">
+                        <div className={`${lbl} mb-2`}>Chef's Tip</div>
+                        <div className="text-body-md">{recipe.tips}</div>
                       </div>
                     )}
+
                     {recipe.proTips?.length > 0 && (
-                      <div className="mt-8">
-                        <div className={secT}>💡 Pro Tips</div>
-                        <div className="flex flex-col gap-3">
+                      <div className="mt-6">
+                        <div className={secT}>Pro Tips</div>
+                        <div className="flex flex-col gap-px bg-primary border border-primary">
                           {recipe.proTips.map((tip, i) => (
-                            <div key={i} className="flex gap-[0.9rem] items-start bg-fl-gold/[0.06] border border-fl-gold/[0.15] rounded-xl p-4">
-                              <span className="text-[1.3rem] shrink-0 leading-none mt-[0.1rem]">{tip.icon || "💡"}</span>
-                              <div>
-                                <div className="text-[0.82rem] font-bold text-fl-gold mb-1">{tip.title}</div>
-                                <div className="text-[0.85rem] text-white/68 leading-[1.65]">{tip.body}</div>
-                              </div>
+                            <div key={i} className="bg-surface p-4">
+                              <div className="text-label-sm uppercase tracking-label font-bold mb-1">{tip.title}</div>
+                              <div className="text-body-md text-outline">{tip.body}</div>
                             </div>
                           ))}
                         </div>
                       </div>
                     )}
+
                     {recipe.watchOuts?.length > 0 && (
-                      <div className="mt-7">
-                        <div className="text-[0.66rem] tracking-[0.2em] uppercase text-fl-red font-bold mb-4 pb-2 border-b border-fl-red/[0.15]">⚠️ What to Watch Out For</div>
-                        <div className="flex flex-col gap-3">
+                      <div className="mt-6">
+                        <div className={secT}>Watch Out For</div>
+                        <div className="flex flex-col gap-px bg-primary border border-primary">
                           {recipe.watchOuts.map((w, i) => (
-                            <div key={i} className="flex gap-[0.9rem] items-start bg-fl-red/[0.06] border border-fl-red/[0.18] rounded-xl p-4">
-                              <span className="text-[1.3rem] shrink-0 leading-none mt-[0.1rem]">{w.icon || "⚠️"}</span>
-                              <div>
-                                <div className="text-[0.82rem] font-bold text-[#f87171] mb-1">{w.title}</div>
-                                <div className="text-[0.85rem] text-white/65 leading-[1.65]">{w.body}</div>
-                              </div>
+                            <div key={i} className="bg-surface p-4">
+                              <div className="text-label-sm uppercase tracking-label font-bold mb-1">{w.title}</div>
+                              <div className="text-body-md text-outline">{w.body}</div>
                             </div>
                           ))}
                         </div>
                       </div>
                     )}
+
                     {proMode && recipe.haccp?.length > 0 && (
-                      <div className="mt-7">
-                        <div className="text-[0.66rem] tracking-[0.2em] uppercase text-fl-violet font-bold mb-4 pb-2 border-b border-fl-violet/[0.15]">🛡️ HACCP / Food Safety</div>
-                        <div className="flex flex-col gap-2">
+                      <div className="mt-6">
+                        <div className={secT}>HACCP / Food Safety</div>
+                        <div className="flex flex-col gap-px bg-primary border border-primary">
                           {recipe.haccp.map((h, i) => (
-                            <div key={i} className="flex gap-3 items-start bg-fl-violet/[0.06] border border-fl-violet/[0.18] rounded-[10px] px-4 py-[0.85rem] text-[0.83rem] text-white/70 leading-[1.6]">
-                              <span className="shrink-0 mt-[0.1rem]">⚠️</span>{h}
-                            </div>
+                            <div key={i} className="bg-surface-container p-4 text-body-md">{h}</div>
                           ))}
                         </div>
                       </div>
@@ -563,27 +512,22 @@ export default function RecipeGenerator() {
                 </div>
 
                 {/* Sidebar */}
-                <div className="p-7">
+                <div className="p-6">
+
                   {/* Scaler */}
-                  <div className={`flex items-center justify-between rounded-[10px] px-4 py-[0.65rem] mb-5 border ${
-                    proMode
-                      ? "bg-fl-indigo/[0.07] border-fl-indigo/20"
-                      : "bg-fl-gold/[0.07]   border-fl-gold/20"
-                  }`}>
-                    <span className="text-[0.7rem] text-white/40 tracking-[0.1em] uppercase">{proMode ? "Covers" : "Servings"}</span>
-                    <div className="flex items-center gap-[0.65rem]">
+                  <div className="flex items-center justify-between border border-primary px-3 py-2 mb-4">
+                    <span className="text-label-sm uppercase tracking-label text-outline">{proMode ? "Covers" : "Servings"}</span>
+                    <div className="flex items-center gap-2">
                       <button
                         onClick={() => setDisplayServings(s => Math.max(MIN_SERVINGS, s - 1))}
-                        className={`w-7 h-7 rounded-full border bg-transparent text-[1.1rem] font-bold flex items-center justify-center font-[inherit] transition-opacity ${
-                          proMode ? "border-fl-indigo/40 text-fl-indigo" : "border-fl-gold/40 text-fl-gold"
-                        } ${displayServings <= MIN_SERVINGS ? "cursor-not-allowed opacity-30" : "cursor-pointer opacity-100"}`}
+                        disabled={displayServings <= MIN_SERVINGS}
+                        className="w-7 h-7 border border-primary bg-surface text-primary flex items-center justify-center font-bold cursor-pointer font-[inherit] hover:bg-primary hover:text-on-primary transition-colors duration-100 ease-linear disabled:text-outline disabled:cursor-not-allowed"
                       >−</button>
-                      <span className={`text-[1.1rem] font-extrabold min-w-[24px] text-center ${proMode ? "text-fl-indigo" : "text-fl-gold"}`}>{displayServings}</span>
+                      <span className="text-headline-sm font-bold min-w-[2ch] text-center">{displayServings}</span>
                       <button
                         onClick={() => setDisplayServings(s => Math.min(MAX_SERVINGS, s + 1))}
-                        className={`w-7 h-7 rounded-full border bg-transparent text-[1.1rem] font-bold flex items-center justify-center font-[inherit] transition-opacity ${
-                          proMode ? "border-fl-indigo/40 text-fl-indigo" : "border-fl-gold/40 text-fl-gold"
-                        } ${displayServings >= MAX_SERVINGS ? "cursor-not-allowed opacity-30" : "cursor-pointer opacity-100"}`}
+                        disabled={displayServings >= MAX_SERVINGS}
+                        className="w-7 h-7 border border-primary bg-surface text-primary flex items-center justify-center font-bold cursor-pointer font-[inherit] hover:bg-primary hover:text-on-primary transition-colors duration-100 ease-linear disabled:text-outline disabled:cursor-not-allowed"
                       >+</button>
                     </div>
                   </div>
@@ -591,11 +535,11 @@ export default function RecipeGenerator() {
                   {/* Meta */}
                   {recipe.meta && (<>
                     <div className={secT}>At a Glance</div>
-                    <div className="grid grid-cols-2 gap-[0.55rem] mb-6">
-                      {[["⏱ Prep",recipe.meta.prep],["🔥 Cook",recipe.meta.cook],["📊 Level",recipe.meta.difficulty],["👨‍🍳 Method",recipe.meta.method||selectedMethod||"—"]].map(([k,v]) => (
-                        <div key={k} className="bg-black/25 rounded-[10px] p-[0.7rem] text-center">
-                          <div className="text-[0.56rem] tracking-[0.12em] uppercase text-white/30 mb-0.5">{k}</div>
-                          <div className={`text-[0.82rem] font-bold ${proMode ? "text-fl-indigo" : "text-fl-gold"}`}>{v || "—"}</div>
+                    <div className="grid grid-cols-2 gap-px bg-primary border border-primary mb-4">
+                      {[["Prep",recipe.meta.prep],["Cook",recipe.meta.cook],["Level",recipe.meta.difficulty],["Method",recipe.meta.method||selectedMethod||"—"]].map(([k,v]) => (
+                        <div key={k} className="bg-surface p-3">
+                          <div className="text-label-sm uppercase tracking-label text-outline mb-[0.75rem]">{k}</div>
+                          <div className="text-headline-sm font-bold">{v || "—"}</div>
                         </div>
                       ))}
                     </div>
@@ -603,19 +547,22 @@ export default function RecipeGenerator() {
 
                   {/* Ingredients */}
                   <div className={`${secT} flex items-center justify-between`}>
-                    Ingredients {ratio !== 1 && <span className={`text-[0.7rem] ${proMode ? "text-fl-indigo" : "text-fl-gold"}`}>×{formatNum(ratio)}</span>}
+                    <span>Ingredients</span>
+                    {ratio !== 1 && <span className="text-label-sm text-outline font-normal normal-case tracking-normal">×{formatNum(ratio)}</span>}
                   </div>
-                  {(recipe.ingredients || []).map((ing, i) => (
-                    <div key={i} className={`flex items-start gap-2 py-[0.45rem] text-[0.83rem] text-white/[0.78] leading-[1.5] ${i === recipe.ingredients.length - 1 ? "" : "border-b border-white/[0.06]"}`}>
-                      <div className={`w-[5px] h-[5px] rounded-full mt-[6px] shrink-0 ${proMode ? "bg-fl-indigo" : "bg-fl-gold"}`} />
-                      {scaleIngredient(ing, ratio)}
-                    </div>
-                  ))}
+                  <div className="flex flex-col gap-px bg-primary border border-primary mb-4">
+                    {(recipe.ingredients || []).map((ing, i) => (
+                      <div key={i} className="bg-surface px-3 py-2 text-body-md flex items-baseline gap-2">
+                        <span className="text-outline shrink-0">—</span>
+                        {scaleIngredient(ing, ratio)}
+                      </div>
+                    ))}
+                  </div>
 
                   {/* Allergen quick summary — pro sidebar */}
                   {proMode && allergens && (
-                    <div className="mt-6">
-                      <div className="text-[0.66rem] tracking-[0.2em] uppercase text-fl-red font-bold mb-4 pb-2 border-b border-fl-red/[0.15]">⚠️ Allergens</div>
+                    <div className="mb-4">
+                      <div className={secT}>Allergens</div>
                       <div className="flex flex-wrap gap-1 mb-2">
                         {ALLERGENS.map(a => {
                           const hit = allergens.find(x => x.id === a.id);
@@ -623,43 +570,36 @@ export default function RecipeGenerator() {
                           return (
                             <span
                               key={a.id}
-                              className={`text-[0.7rem] border rounded-[6px] px-2 py-[0.2rem] font-semibold ${
-                                hit.present
-                                  ? "bg-fl-red/[0.15]  border-fl-red/40  text-[#f87171]"
-                                  : "bg-fl-gold/10     border-fl-gold/30 text-fl-gold"
+                              className={`text-label-sm border border-primary px-2 py-[0.1rem] uppercase tracking-label font-bold ${
+                                hit.present ? "bg-primary text-on-primary" : "bg-surface-container text-primary"
                               }`}
-                            >{a.icon} {a.label}</span>
+                            >{a.label}</span>
                           );
                         })}
                       </div>
                       <button
                         onClick={() => setActiveProTab("allergens")}
-                        className="text-[0.7rem] text-white/30 bg-transparent border-none cursor-pointer font-[inherit] p-0 underline"
-                      >View full allergen matrix →</button>
+                        className="text-label-sm uppercase tracking-label text-outline border-none bg-transparent cursor-pointer font-[inherit] p-0 hover:text-primary transition-colors duration-100 ease-linear underline"
+                      >View full allergen matrix</button>
                     </div>
                   )}
 
                   {/* Nutrition */}
                   {nutrition && (<>
-                    <div className={`${secT} mt-6`}>
-                      Nutrition <span className="text-white/25 font-normal normal-case tracking-normal text-[0.7rem]">per serving</span>
+                    <div className={secT}>
+                      Nutrition <span className="text-outline font-normal normal-case tracking-normal text-label-sm">per serving</span>
                     </div>
-                    <div className={`border rounded-[10px] px-4 py-3 mb-4 flex items-center justify-between ${
-                      proMode
-                        ? "bg-fl-indigo/[0.08] border-fl-indigo/20"
-                        : "bg-fl-gold/[0.08]   border-fl-gold/20"
-                    }`}>
-                      <span className="text-[0.72rem] text-white/40 tracking-[0.1em] uppercase">Calories</span>
-                      <span className={`text-[1.4rem] font-extrabold ${proMode ? "text-fl-indigo" : "text-fl-gold"}`}>
-                        {nutrition.calories}<span className="text-[0.7rem] font-normal text-white/40 ml-[3px]">kcal</span>
-                      </span>
+                    {/* Calories — the focal data point */}
+                    <div className="border border-primary bg-surface-container px-3 py-3 mb-4 flex items-baseline justify-between">
+                      <span className="text-label-sm uppercase tracking-label text-outline">Calories</span>
+                      <span className="text-display-lg font-extrabold leading-none">{nutrition.calories}<span className="text-label-sm font-normal text-outline ml-1">kcal</span></span>
                     </div>
-                    <NutritionBar label="Protein"       value={nutrition.protein} unit="g"  max={60}   color="#4ade80" />
-                    <NutritionBar label="Carbohydrates" value={nutrition.carbs}   unit="g"  max={100}  color="#818cf8" />
-                    <NutritionBar label="Fat"           value={nutrition.fat}     unit="g"  max={60}   color="#f3722c" />
-                    <NutritionBar label="Fiber"         value={nutrition.fiber}   unit="g"  max={30}   color="#34d399" />
-                    <NutritionBar label="Sodium"        value={nutrition.sodium}  unit="mg" max={2300} color="#fb923c" />
-                    {nutrition.note && <p className="text-[0.65rem] text-white/22 mt-3 leading-[1.5]">ⓘ {nutrition.note}</p>}
+                    <NutritionBar label="Protein"       value={nutrition.protein} unit="g"  max={60}   />
+                    <NutritionBar label="Carbohydrates" value={nutrition.carbs}   unit="g"  max={100}  />
+                    <NutritionBar label="Fat"           value={nutrition.fat}     unit="g"  max={60}   />
+                    <NutritionBar label="Fiber"         value={nutrition.fiber}   unit="g"  max={30}   />
+                    <NutritionBar label="Sodium"        value={nutrition.sodium}  unit="mg" max={2300} />
+                    {nutrition.note && <p className="text-label-sm text-outline mt-2">{nutrition.note}</p>}
                   </>)}
                 </div>
               </div>
@@ -668,24 +608,24 @@ export default function RecipeGenerator() {
         </>)}
       </div>
 
-      {/* Toast — BP-07: role=status + aria-live */}
+      {/* Toast */}
       {savedToast && (
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-fl-green/[0.15] border border-fl-green/50 text-fl-green px-6 py-3 rounded-full text-[0.88rem] font-bold z-[300] animate-toast backdrop-blur-[10px] whitespace-nowrap"
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-primary text-on-primary border border-primary px-6 py-3 text-label-md uppercase tracking-label font-bold z-[300] animate-toast whitespace-nowrap"
         >
           {savedToast}
         </div>
       )}
 
       {/* Bottom Sheets */}
-      {Object.entries(sheetMap).map(([id, { title, color, content }]) => (
-        <BottomSheet key={id} open={activeSheet === id} onClose={() => setActiveSheet(null)} title={title} color={color}>
+      {Object.entries(sheetMap).map(([id, { title, content }]) => (
+        <BottomSheet key={id} open={activeSheet === id} onClose={() => setActiveSheet(null)} title={title}>
           {content}
           <button
             onClick={() => setActiveSheet(null)}
-            className={`w-full mt-6 py-[0.9rem] rounded-xl border-none text-white text-[0.88rem] font-extrabold tracking-[0.1em] uppercase cursor-pointer font-[inherit] ${proMode ? "bg-cta-pro" : "bg-cta-home"}`}
+            className="w-full mt-4 py-3 border border-primary bg-[linear-gradient(to_bottom,#000000,#3b3b3b)] text-on-primary text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] hover:bg-none hover:bg-surface hover:text-primary transition-colors duration-100 ease-linear"
           >Done</button>
         </BottomSheet>
       ))}

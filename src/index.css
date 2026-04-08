@@ -8,21 +8,23 @@
   }
 
   body {
-    @apply bg-app text-fl-text font-sans;
+    @apply bg-surface text-primary font-sans;
   }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar          { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-thumb    { background: rgba(255,255,255,0.15); border-radius: 3px; }
+  /* Minimal Swiss scrollbar */
+  ::-webkit-scrollbar         { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-thumb   { background: #000000; }
+  ::-webkit-scrollbar-track   { background: #f9f9f9; }
 
-  /* Global input focus ring — matches gold accent */
-  input:focus {
-    border-color: rgba(249,199,79,0.5) !important;
-    box-shadow:   0 0 0 3px rgba(249,199,79,0.08);
+  /* Input focus: surface-container fill, border maintained */
+  input:focus,
+  textarea:focus {
+    outline: none;
+    background-color: #eeeeee !important;
   }
 
-  /* Subtle brightness boost on interactive buttons */
+  /* Remove old brightness hack — hovers handled per-component */
   button:not(:disabled):hover {
-    filter: brightness(1.1);
+    filter: none;
   }
 }

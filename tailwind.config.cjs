@@ -6,69 +6,71 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    // ── Absolute Zero Rule — no border-radius anywhere ─────────────────────────
+    borderRadius: {
+      none:    '0px',
+      DEFAULT: '0px',
+      sm:      '0px',
+      md:      '0px',
+      lg:      '0px',
+      xl:      '0px',
+      '2xl':   '0px',
+      '3xl':   '0px',
+      full:    '0px',
+    },
     extend: {
-      // ── Design tokens ─────────────────────────────────────────────────────────
+      // ── Design tokens ──────────────────────────────────────────────────────────
       colors: {
-        fl: {
-          gold:         '#f9c74f',
-          orange:       '#f3722c',
-          red:          '#f94144',
-          indigo:       '#818cf8',
-          'indigo-deep':'#6366f1',
-          green:        '#4ade80',
-          teal:         '#34d399',
-          amber:        '#fb923c',
-          text:         '#f0ede6',
-          violet:       '#7c3aed',
-        },
+        primary:                   '#000000',
+        'on-primary':              '#e2e2e2',
+        'primary-container':       '#3b3b3b',
+        surface:                   '#f9f9f9',
+        'surface-container':       '#eeeeee',
+        'surface-container-high':  '#e8e8e8',
+        outline:                   '#777777',
       },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      // ── Type scale ─────────────────────────────────────────────────────────────
+      fontSize: {
+        'display-lg':  ['3.5rem',    { lineHeight: '1.05', fontWeight: '800' }],
+        'headline-sm': ['1.5rem',    { lineHeight: '1.2',  fontWeight: '700' }],
+        'label-sm':    ['0.6875rem', { lineHeight: '1.4',  letterSpacing: '0.05rem' }],
+        'label-md':    ['0.75rem',   { lineHeight: '1.4',  letterSpacing: '0.05rem' }],
+        'body-md':     ['0.875rem',  { lineHeight: '1.6' }],
+      },
+      letterSpacing: {
+        label: '0.05rem',
+      },
+      // ── CTA gradient mimics ink density variation of physical print ────────────
       backgroundImage: {
-        'app':         'linear-gradient(135deg,#0f0c29,#302b63,#24243e)',
-        'cta-home':    'linear-gradient(135deg,#f9c74f,#f3722c)',
-        'cta-pro':     'linear-gradient(135deg,#818cf8,#6366f1)',
-        'pro-banner':  'linear-gradient(90deg,rgba(129,140,248,0.12),rgba(99,102,241,0.08))',
-        'result-home': 'linear-gradient(135deg,rgba(249,199,79,0.15),rgba(243,114,44,0.1))',
-        'result-pro':  'linear-gradient(135deg,rgba(129,140,248,0.15),rgba(99,102,241,0.08))',
-        'sheet':       'linear-gradient(180deg,#1a1730,#141128)',
-        'hero-home':   'linear-gradient(90deg,#f9c74f,#f3722c,#f94144)',
-        'hero-pro':    'linear-gradient(90deg,#818cf8,#6366f1)',
-        'logo':        'linear-gradient(90deg,#f9c74f,#f3722c)',
-        'step-home':   'linear-gradient(135deg,#f9c74f,#f3722c)',
-        'step-pro':    'linear-gradient(135deg,#818cf8,#6366f1)',
+        'primary-cta': 'linear-gradient(to bottom, #000000, #3b3b3b)',
       },
       screens: {
-        // Custom breakpoint matching the original 660px collapse point
-        'wide': '660px',
+        wide: '660px',
       },
+      // ── Hard-cut animations (0.1s linear) ─────────────────────────────────────
       keyframes: {
-        fadeUp: {
-          from: { opacity: '0', transform: 'translateY(16px)' },
-          to:   { opacity: '1', transform: 'translateY(0)' },
+        fadeIn: {
+          from: { opacity: '0' },
+          to:   { opacity: '1' },
         },
         toast: {
-          '0%':   { opacity: '0', transform: 'translate(-50%, 12px)' },
-          '15%':  { opacity: '1', transform: 'translate(-50%, 0)' },
+          '0%':   { opacity: '0' },
+          '10%':  { opacity: '1' },
           '85%':  { opacity: '1' },
           '100%': { opacity: '0' },
         },
         tagPop: {
-          from: { opacity: '0', transform: 'scale(0.8)' },
-          to:   { opacity: '1', transform: 'scale(1)' },
-        },
-        proGlow: {
-          '0%, 100%': { boxShadow: '0 0 0 0 rgba(129,140,248,0.3)' },
-          '50%':      { boxShadow: '0 0 0 8px rgba(129,140,248,0)' },
+          from: { opacity: '0' },
+          to:   { opacity: '1' },
         },
       },
       animation: {
-        'fade-up':      'fadeUp 0.5s ease',
-        'fade-up-md':   'fadeUp 0.4s ease',
-        'fade-up-sm':   'fadeUp 0.3s ease',
-        'fade-up-xs':   'fadeUp 0.2s ease',
-        'fade-up-fast': 'fadeUp 0.15s ease',
-        'toast':        'toast 2.2s ease forwards',
-        'tag-pop':      'tagPop 0.18s ease',
-        'pro-glow':     'proGlow 2s infinite',
+        'fade-in': 'fadeIn 0.1s linear',
+        'toast':   'toast 2.2s linear forwards',
+        'tag-pop': 'tagPop 0.1s linear',
       },
     },
   },
