@@ -25,6 +25,7 @@ export async function generateRecipe({
   selectedFlavors,
   selectedDiets,
   selectedMethod,
+  selectedAllergens,
   servings,
   proMode,
 }) {
@@ -36,8 +37,9 @@ export async function generateRecipe({
 INGREDIENTS: ${ingList}
 ${cuisine             ? `CUISINE STYLE: ${cuisine}`                                       : ""}
 ${selectedFlavors.length ? `FLAVOR PROFILE: ${selectedFlavors.join(", ")}`              : ""}
-${selectedDiets.length   ? `DIETARY REQUIREMENTS (strictly follow ALL): ${selectedDiets.join(", ")}` : ""}
-${selectedMethod      ? `COOKING METHOD (must use this): ${selectedMethod}`              : ""}
+${selectedDiets.length      ? `DIETARY REQUIREMENTS (strictly follow ALL): ${selectedDiets.join(", ")}` : ""}
+${selectedAllergens?.length ? `ALLERGENS TO AVOID (recipe must contain absolutely none of these): ${selectedAllergens.join(", ")}` : ""}
+${selectedMethod            ? `COOKING METHOD (must use this): ${selectedMethod}`              : ""}
 SERVING SIZE: ${servings} people
 
 Respond ONLY with a valid JSON object. No markdown, no explanation. Exact structure:

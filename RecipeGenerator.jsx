@@ -84,6 +84,7 @@ export default function RecipeGenerator() {
   const [exportingPDF, setExportingPDF]       = useState(false);
   const [proFields, setProFields]             = useState({ chefName:"", station:"", version:"1.0", costPerPortion:"" });
   const [activeProTab, setActiveProTab]       = useState("recipe");
+  const [selectedAllergens, setSelectedAllergens] = useState([]);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 700);
@@ -114,7 +115,7 @@ export default function RecipeGenerator() {
     setError(""); setLoading(true); setRecipe(null); setNutrition(null); setAllergens(null); setIsFav(false);
     try {
       const result = await generateRecipe({
-        ingredientTags, cuisine, selectedFlavors, selectedDiets, selectedMethod, servings, proMode,
+        ingredientTags, cuisine, selectedFlavors, selectedDiets, selectedMethod, selectedAllergens, servings, proMode,
       });
       setRecipe(result.recipe);
       setNutrition(result.nutrition);
@@ -174,9 +175,10 @@ export default function RecipeGenerator() {
         ))}
       </div>
     </> },
+    allergies:{ title:"Allergens to Avoid",  content:<FilterChips items={ALLERGENS.map(a => ({ val:a.id, label:`${a.icon} ${a.label}` }))} selected={selectedAllergens} onToggle={v => toggle(v, selectedAllergens, setSelectedAllergens)} /> },
     profields:{ title:"Recipe Card Details", content:<ProFieldsPanel proFields={proFields} onChange={setProFields} /> },
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [selectedCuisine, customCuisine, selectedFlavors, selectedDiets, selectedMethod, servings, proMode, proFields, toggle]);
+  }), [selectedCuisine, customCuisine, selectedFlavors, selectedDiets, selectedMethod, selectedAllergens, servings, proMode, proFields, toggle]);
 
   const MobileFilterBar = () => {
     const pills = [
@@ -185,6 +187,7 @@ export default function RecipeGenerator() {
       { id:"diet",      label:selectedDiets.length   ? `${selectedDiets.length} Diet${selectedDiets.length>1?"s":""}` : "Diet",         active:selectedDiets.length>0 },
       { id:"method",    label:selectedMethod||"Method",                                                              active:!!selectedMethod },
       { id:"servings",  label:`${servings} ${proMode?"Covers":"People"}`,                                           active:true },
+      { id:"allergies", label:selectedAllergens.length ? `${selectedAllergens.length} Allergen${selectedAllergens.length>1?"s":""}` : "Allergens", active:selectedAllergens.length>0 },
       ...(proMode ? [{ id:"profields", label:"Card Details", active:!!(proFields.chefName||proFields.station) }] : []),
     ];
     return (
@@ -224,6 +227,16 @@ export default function RecipeGenerator() {
       <div className={lbl}>Dietary Requirements <span className="text-outline font-normal normal-case tracking-normal">— pick any</span></div>
       <div className="flex flex-wrap gap-1">
         {DIETS.map(d => <button key={d.val} className={chipClass(selectedDiets.includes(d.val))} onClick={() => toggle(d.val, selectedDiets, setSelectedDiets)}>{d.label}</button>)}
+      </div>
+    </div>
+    <div className={card}>
+      <div className={lbl}>Allergens to Avoid <span className="text-outline font-normal normal-case tracking-normal">— pick any</span></div>
+      <div className="flex flex-wrap gap-1">
+        {ALLERGENS.map(a => (
+          <button key={a.id} className={chipClass(selectedAllergens.includes(a.id))} onClick={() => toggle(a.id, selectedAllergens, setSelectedAllergens)}>
+            {a.icon} {a.label}
+          </button>
+        ))}
       </div>
     </div>
     <div className={card}>
