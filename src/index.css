@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    min-height: 100vh;
+  }
+
+  body {
+    @apply bg-app text-fl-text font-sans;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar          { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-thumb    { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+  /* Global input focus ring — matches gold accent */
+  input:focus {
+    border-color: rgba(249,199,79,0.5) !important;
+    box-shadow:   0 0 0 3px rgba(249,199,79,0.08);
+  }
+
+  /* Subtle brightness boost on interactive buttons */
+  button:not(:disabled):hover {
+    filter: brightness(1.1);
+  }
+}

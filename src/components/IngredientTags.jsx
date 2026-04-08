@@ -6,13 +6,14 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 import { SUGGESTIONS } from "../data/suggestions.js";
 
+// Full Tailwind class strings — must be complete literals so JIT scanner picks them up
 const TAG_COLORS = [
-  { bg:"rgba(249,199,79,0.18)",  border:"rgba(249,199,79,0.5)",  text:"#f9c74f" },
-  { bg:"rgba(243,114,44,0.18)",  border:"rgba(243,114,44,0.5)",  text:"#f3722c" },
-  { bg:"rgba(129,140,248,0.18)", border:"rgba(129,140,248,0.5)", text:"#818cf8" },
-  { bg:"rgba(74,222,128,0.18)",  border:"rgba(74,222,128,0.5)",  text:"#4ade80" },
-  { bg:"rgba(251,146,60,0.18)",  border:"rgba(251,146,60,0.5)",  text:"#fb923c" },
-  { bg:"rgba(52,211,153,0.18)",  border:"rgba(52,211,153,0.5)",  text:"#34d399" },
+  { wrap: "bg-fl-gold/[0.18]   border border-fl-gold/50   text-fl-gold" },
+  { wrap: "bg-fl-orange/[0.18] border border-fl-orange/50 text-fl-orange" },
+  { wrap: "bg-fl-indigo/[0.18] border border-fl-indigo/50 text-fl-indigo" },
+  { wrap: "bg-fl-green/[0.18]  border border-fl-green/50  text-fl-green" },
+  { wrap: "bg-fl-amber/[0.18]  border border-fl-amber/50  text-fl-amber" },
+  { wrap: "bg-fl-teal/[0.18]   border border-fl-teal/50   text-fl-teal" },
 ];
 
 // Quick-add defaults shown when the field is empty
@@ -27,9 +28,9 @@ export function IngredientTags({ tags, onChange }) {
   const [highlightIdx, setHighlightIdx] = useState(-1);
   const inputRef = useRef(null);
 
-  // BP-11: memoize filtered suggestions so the array isn't rebuilt on every render
-  const tagsLower  = useMemo(() => tags.map(t => t.toLowerCase()), [tags]);
-  const filtered   = useMemo(() => {
+  // BP-11: memoize filtered suggestions
+  const tagsLower = useMemo(() => tags.map(t => t.toLowerCase()), [tags]);
+  const filtered  = useMemo(() => {
     const q = input.trim().toLowerCase();
     if (!q) return [];
     return SUGGESTIONS
@@ -37,8 +38,7 @@ export function IngredientTags({ tags, onChange }) {
       .slice(0, 8);
   }, [input, tagsLower]);
 
-  // BP-01: useCallback so the function reference is stable and won't trigger
-  // unnecessary re-renders of consumers or stale closures in event handlers.
+  // BP-01: stable callback references
   const addTag = useCallback((val) => {
     const clean = val.trim().replace(/,+$/, "").trim();
     if (!clean) return;
@@ -67,8 +67,8 @@ export function IngredientTags({ tags, onChange }) {
   }, [highlightIdx, filtered, input, tags, onChange, addTag]);
 
   return (
-    <div style={{ position:"relative" }}>
-      {/* BP-08: aria-pressed not needed here; this is a combobox pattern */}
+    <div className="relative">
+      {/* BP-08: combobox pattern */}
       <div
         role="combobox"
         aria-expanded={focused && filtered.length > 0}
@@ -76,19 +76,23 @@ export function IngredientTags({ tags, onChange }) {
         aria-controls="ingredient-listbox"
         aria-label="Ingredient input"
         onClick={() => inputRef.current?.focus()}
-        style={{ minHeight:56, background:"rgba(0,0,0,0.3)", border:`1.5px solid ${focused?"rgba(249,199,79,0.5)":"rgba(255,255,255,0.15)"}`, borderRadius:12, padding:"0.5rem 0.75rem", display:"flex", flexWrap:"wrap", gap:"0.4rem", alignItems:"center", cursor:"text", transition:"border-color 0.2s, box-shadow 0.2s", boxShadow:focused?"0 0 0 3px rgba(249,199,79,0.08)":"none" }}
+        className={`min-h-14 bg-black/30 rounded-xl px-3 py-2 flex flex-wrap gap-1.5 items-center cursor-text transition-[border-color,box-shadow] duration-200 border-[1.5px] ${
+          focused
+            ? "border-fl-gold/50 shadow-[0_0_0_3px_rgba(249,199,79,0.08)]"
+            : "border-white/[0.15]"
+        }`}
       >
-        {/* BP-02: tag text is the stable key (tags must be unique within this component) */}
+        {/* BP-02: tag text is stable key */}
         {tags.map((tag, i) => {
           const c = TAG_COLORS[i % TAG_COLORS.length];
           return (
-            <span key={tag} style={{ display:"inline-flex", alignItems:"center", gap:"0.3rem", background:c.bg, border:`1px solid ${c.border}`, color:c.text, borderRadius:999, padding:"0.28rem 0.55rem 0.28rem 0.7rem", fontSize:"0.82rem", fontWeight:600, lineHeight:1, animation:"tagPop 0.18s ease" }}>
+            <span key={tag} className={`inline-flex items-center gap-1 rounded-full px-[0.7rem] py-[0.28rem] text-[0.82rem] font-semibold leading-none animate-tag-pop ${c.wrap}`}>
               {tag}
               {/* BP-06: aria-label on the remove button */}
               <button
                 onClick={e => { e.stopPropagation(); removeTag(i); }}
                 aria-label={`Remove ${tag}`}
-                style={{ background:"none", border:"none", color:c.text, cursor:"pointer", fontSize:"0.9rem", lineHeight:1, padding:"0 0.1rem", opacity:0.7, fontFamily:"inherit", display:"flex", alignItems:"center" }}
+                className="bg-transparent border-none cursor-pointer text-[0.9rem] leading-none px-[0.1rem] opacity-70 font-[inherit] flex items-center"
               >×</button>
             </span>
           );
@@ -106,7 +110,7 @@ export function IngredientTags({ tags, onChange }) {
           onFocus={() => setFocused(true)}
           onBlur={() => setTimeout(() => setFocused(false), 150)}
           placeholder={tags.length === 0 ? "Type an ingredient and press Enter or comma…" : "Add more…"}
-          style={{ flex:"1 1 120px", minWidth:120, background:"none", border:"none", outline:"none", color:"#f0ede6", fontSize:"0.9rem", fontFamily:"inherit", padding:"0.25rem" }}
+          className="flex-[1_1_120px] min-w-[120px] bg-transparent border-none outline-none text-fl-text text-[0.9rem] font-[inherit] p-1"
         />
       </div>
 
@@ -115,7 +119,7 @@ export function IngredientTags({ tags, onChange }) {
           id="ingredient-listbox"
           role="listbox"
           aria-label="Ingredient suggestions"
-          style={{ position:"absolute", top:"calc(100% + 6px)", left:0, right:0, background:"#1e1b3a", border:"1px solid rgba(255,255,255,0.12)", borderRadius:12, overflow:"hidden", zIndex:50, boxShadow:"0 8px 32px rgba(0,0,0,0.5)", animation:"fadeUp 0.15s ease" }}
+          className="absolute top-[calc(100%+6px)] left-0 right-0 bg-[#1e1b3a] border border-white/[0.12] rounded-xl overflow-hidden z-50 shadow-[0_8px_32px_rgba(0,0,0,0.5)] animate-fade-up-fast"
         >
           {filtered.map((s, i) => {
             const idx = s.toLowerCase().indexOf(input.toLowerCase());
@@ -126,12 +130,18 @@ export function IngredientTags({ tags, onChange }) {
                 role="option"
                 aria-selected={i === highlightIdx}
                 onMouseDown={() => addTag(s)}
-                style={{ padding:"0.65rem 1rem", cursor:"pointer", fontSize:"0.88rem", background:i===highlightIdx?"rgba(249,199,79,0.12)":"transparent", color:i===highlightIdx?"#f9c74f":"rgba(255,255,255,0.75)", borderBottom:i<filtered.length-1?"1px solid rgba(255,255,255,0.06)":"none", display:"flex", alignItems:"center", gap:"0.5rem" }}
+                className={`px-4 py-[0.65rem] cursor-pointer text-[0.88rem] flex items-center gap-2 ${
+                  i < filtered.length - 1 ? "border-b border-white/[0.06]" : ""
+                } ${
+                  i === highlightIdx
+                    ? "bg-fl-gold/[0.12] text-fl-gold"
+                    : "bg-transparent text-white/75"
+                }`}
               >
-                <span style={{ opacity:0.4, fontSize:"0.75rem" }}>+</span>
+                <span className="opacity-40 text-xs">+</span>
                 {idx === -1
                   ? s
-                  : <>{s.slice(0,idx)}<strong style={{ color:"#f9c74f", fontWeight:700 }}>{s.slice(idx,idx+input.length)}</strong>{s.slice(idx+input.length)}</>
+                  : <>{s.slice(0,idx)}<strong className="text-fl-gold font-bold">{s.slice(idx,idx+input.length)}</strong>{s.slice(idx+input.length)}</>
                 }
               </div>
             );
@@ -139,29 +149,35 @@ export function IngredientTags({ tags, onChange }) {
         </div>
       )}
 
-      <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginTop:"0.55rem" }}>
-        <p style={{ fontSize:"0.7rem", color:"rgba(255,255,255,0.25)", margin:0 }}>
-          Press <kbd style={{ background:"rgba(255,255,255,0.08)", borderRadius:4, padding:"0.1rem 0.35rem", fontSize:"0.65rem", fontFamily:"inherit" }}>Enter</kbd> or <kbd style={{ background:"rgba(255,255,255,0.08)", borderRadius:4, padding:"0.1rem 0.35rem", fontSize:"0.65rem", fontFamily:"inherit" }}>,</kbd> to add · <kbd style={{ background:"rgba(255,255,255,0.08)", borderRadius:4, padding:"0.1rem 0.35rem", fontSize:"0.65rem", fontFamily:"inherit" }}>⌫</kbd> to remove last
+      <div className="flex items-center justify-between mt-[0.55rem]">
+        <p className="text-[0.7rem] text-white/25 m-0">
+          Press{" "}
+          <kbd className="bg-white/[0.08] rounded px-[0.35rem] py-[0.1rem] text-[0.65rem] font-[inherit]">Enter</kbd>
+          {" "}or{" "}
+          <kbd className="bg-white/[0.08] rounded px-[0.35rem] py-[0.1rem] text-[0.65rem] font-[inherit]">,</kbd>
+          {" "}to add ·{" "}
+          <kbd className="bg-white/[0.08] rounded px-[0.35rem] py-[0.1rem] text-[0.65rem] font-[inherit]">⌫</kbd>
+          {" "}to remove last
         </p>
         {tags.length > 0 && (
           <button
             onClick={() => onChange([])}
             aria-label="Clear all ingredients"
-            style={{ background:"none", border:"none", color:"rgba(255,255,255,0.25)", fontSize:"0.7rem", cursor:"pointer", fontFamily:"inherit", padding:0 }}
+            className="bg-transparent border-none text-white/25 text-[0.7rem] cursor-pointer font-[inherit] p-0"
           >clear all</button>
         )}
       </div>
 
       {tags.length === 0 && !input && (
-        <div style={{ marginTop:"0.85rem" }}>
-          <p style={{ fontSize:"0.68rem", color:"rgba(255,255,255,0.25)", letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:"0.5rem" }}>Quick add</p>
-          <div style={{ display:"flex", flexWrap:"wrap", gap:"0.35rem" }}>
+        <div className="mt-[0.85rem]">
+          <p className="text-[0.68rem] text-white/25 tracking-[0.12em] uppercase mb-2">Quick add</p>
+          <div className="flex flex-wrap gap-[0.35rem]">
             {QUICK_ADD.map(s => (
               <button
                 key={s}
                 onMouseDown={() => addTag(s)}
                 aria-label={`Quick add ${s}`}
-                style={{ background:"rgba(255,255,255,0.05)", border:"1px solid rgba(255,255,255,0.1)", color:"rgba(255,255,255,0.5)", borderRadius:999, padding:"0.25rem 0.65rem", fontSize:"0.75rem", cursor:"pointer", fontFamily:"inherit" }}
+                className="bg-white/[0.05] border border-white/10 text-white/50 rounded-full px-[0.65rem] py-1 text-[0.75rem] cursor-pointer font-[inherit]"
               >+ {s}</button>
             ))}
           </div>

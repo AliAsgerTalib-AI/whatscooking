@@ -89,7 +89,8 @@ export function BottomSheet({ open, onClose, title, color = "#f9c74f", children 
       <div
         onClick={onClose}
         aria-hidden="true"
-        style={{ position:"fixed", inset:0, zIndex:200, background:`rgba(0,0,0,${Math.max(0, 0.6 - ty * 0.008)})`, backdropFilter:"blur(2px)", transition:"background 0.35s" }}
+        className="fixed inset-0 z-[200] backdrop-blur-sm transition-[background] duration-[350ms]"
+        style={{ background: `rgba(0,0,0,${Math.max(0, 0.6 - ty * 0.008)})` }}
       />
       {/* BP-10: role=dialog, aria-modal, aria-labelledby */}
       <div
@@ -97,20 +98,29 @@ export function BottomSheet({ open, onClose, title, color = "#f9c74f", children 
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        style={{ position:"fixed", left:0, right:0, bottom:0, zIndex:201, background:"linear-gradient(180deg,#1a1730,#141128)", borderTop:`2px solid ${color}55`, borderRadius:"20px 20px 0 0", maxHeight:"88vh", display:"flex", flexDirection:"column", transform:`translateY(${ty}%)`, transition:"transform 0.38s cubic-bezier(0.32,0.72,0,1)", boxShadow:"0 -8px 40px rgba(0,0,0,0.6)", touchAction:"none" }}
+        className="fixed left-0 right-0 bottom-0 z-[201] bg-sheet rounded-t-[20px] max-h-[88vh] flex flex-col touch-none shadow-[0_-8px_40px_rgba(0,0,0,0.6)]"
+        style={{
+          borderTop: `2px solid ${color}55`,
+          transform: `translateY(${ty}%)`,
+          transition: "transform 0.38s cubic-bezier(0.32,0.72,0,1)",
+        }}
       >
-        <div onMouseDown={onStart} onTouchStart={onStart} style={{ padding:"12px 0 8px", cursor:"grab", flexShrink:0, userSelect:"none" }}>
-          <div style={{ width:40, height:4, borderRadius:2, background:"rgba(255,255,255,0.2)", margin:"0 auto" }} aria-hidden="true" />
+        <div
+          onMouseDown={onStart}
+          onTouchStart={onStart}
+          className="pt-3 pb-2 cursor-grab shrink-0 select-none"
+        >
+          <div className="w-10 h-1 rounded-full bg-white/20 mx-auto" aria-hidden="true" />
         </div>
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", padding:"0 1.5rem 1rem", flexShrink:0 }}>
-          <div id={titleId} style={{ fontSize:"1.1rem", fontWeight:800 }}>{title}</div>
+        <div className="flex items-center justify-between px-6 pb-4 shrink-0">
+          <div id={titleId} className="text-[1.1rem] font-extrabold">{title}</div>
           <button
             onClick={onClose}
             aria-label="Close panel"
-            style={{ width:32, height:32, borderRadius:"50%", background:"rgba(255,255,255,0.08)", border:"none", color:"rgba(255,255,255,0.6)", fontSize:"1rem", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"inherit" }}
+            className="w-8 h-8 rounded-full bg-white/[0.08] border-none text-white/60 text-base cursor-pointer flex items-center justify-center font-[inherit]"
           >✕</button>
         </div>
-        <div style={{ overflowY:"auto", padding:"0 1.5rem 2rem", flex:1, WebkitOverflowScrolling:"touch" }}>{children}</div>
+        <div className="overflow-y-auto px-6 pb-8 flex-1" style={{ WebkitOverflowScrolling: "touch" }}>{children}</div>
       </div>
     </>
   );

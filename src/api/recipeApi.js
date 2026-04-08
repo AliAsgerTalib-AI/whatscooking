@@ -1,11 +1,8 @@
 /**
- * Anthropic Claude API call + prompt builder for FlavorLab.
+ * Recipe generation API client for FlavorLab.
  *
- * Uses the Anthropic Messages REST API (no SDK needed).
- * Endpoint: https://api.anthropic.com/v1/messages
- *
- * ⚠️ Security: API key is sent directly from the browser.
- *    Move to a server-side proxy before public deployment (see PLAN.md).
+ * Calls the /api/generate Vercel serverless function, which proxies to Anthropic.
+ * The API key is held server-side and never exposed to the browser.
  *
  * @param {import("../types/recipe.ts").GenerateRecipeParams} opts
  * @returns {Promise<import("../types/recipe.ts").GenerateRecipeResult>}
@@ -16,7 +13,7 @@ const HOME_MODEL = "claude-sonnet-4-20250514";
 const PRO_MODEL  = "claude-sonnet-4-20250514";
 
 // ── Constants ────────────────────────────────────────────────────────────────────
-const ANTHROPIC_BASE       = "https://api.anthropic.com/v1/messages";
+const ANTHROPIC_BASE       = "/api/generate";
 const MAX_RESPONSE_CHARS   = 32_000;   // guard against runaway JSON from the model
 const HOME_MAX_TOKENS      = 2800;
 const PRO_MAX_TOKENS       = 3200;
@@ -30,7 +27,6 @@ export async function generateRecipe({
   selectedMethod,
   servings,
   proMode,
-  apiKey,
 }) {
   const ingList = ingredientTags.join(", ");
   const model   = proMode ? PRO_MODEL : HOME_MODEL;
@@ -123,12 +119,7 @@ Respond ONLY with a valid JSON object. No markdown, no explanation. Exact struct
 
   const res = await fetch(ANTHROPIC_BASE, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-      "anthropic-dangerous-direct-browser-access": "true",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model,
       max_tokens:  proMode ? PRO_MAX_TOKENS : HOME_MAX_TOKENS,

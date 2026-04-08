@@ -7,80 +7,58 @@
  * }} props
  */
 
-const inp = (extra = {}) => ({
-  background: "rgba(0,0,0,0.3)",
-  border: "1px solid rgba(255,255,255,0.15)",
-  borderRadius: 8,
-  padding: "0.55rem 0.75rem",
-  color: "#f0ede6",
-  fontSize: "0.82rem",
-  fontFamily: "inherit",
-  outline: "none",
-  width: "100%",
-  ...extra,
-});
+const labelCls = "block text-[0.68rem] text-white/40 tracking-[0.1em] uppercase mb-1.5";
+const inputCls = "w-full bg-black/30 border border-white/[0.15] rounded-lg px-3 py-2 text-fl-text text-[0.82rem] font-[inherit] outline-none";
 
 export function ProFieldsPanel({ proFields, onChange }) {
   const f   = proFields;
   const set = (key, val) => onChange({ ...f, [key]: val });
 
   return (
-    <div style={{ display:"flex", flexDirection:"column", gap:"1rem" }}>
-      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"0.75rem" }}>
+    <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <div>
-          <label
-            htmlFor="pro-chef-name"
-            style={{ fontSize:"0.68rem", color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", display:"block", marginBottom:"0.35rem" }}
-          >Chef Name</label>
+          <label htmlFor="pro-chef-name" className={labelCls}>Chef Name</label>
           <input
             id="pro-chef-name"
             value={f.chefName || ""}
             onChange={e => set("chefName", e.target.value)}
             placeholder="e.g. Chef Marcos"
-            style={inp()}
+            className={inputCls}
           />
         </div>
         <div>
-          <label
-            htmlFor="pro-station"
-            style={{ fontSize:"0.68rem", color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", display:"block", marginBottom:"0.35rem" }}
-          >Station</label>
+          <label htmlFor="pro-station" className={labelCls}>Station</label>
           <input
             id="pro-station"
             value={f.station || ""}
             onChange={e => set("station", e.target.value)}
             placeholder="e.g. Hot line, Pastry"
-            style={inp()}
+            className={inputCls}
           />
         </div>
         <div>
-          <label
-            htmlFor="pro-version"
-            style={{ fontSize:"0.68rem", color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", display:"block", marginBottom:"0.35rem" }}
-          >Version</label>
+          <label htmlFor="pro-version" className={labelCls}>Version</label>
           <input
             id="pro-version"
             value={f.version || ""}
             onChange={e => set("version", e.target.value)}
             placeholder="e.g. 1.2"
-            style={inp()}
+            className={inputCls}
           />
         </div>
         <div>
-          <label
-            htmlFor="pro-cost"
-            style={{ fontSize:"0.68rem", color:"rgba(255,255,255,0.4)", letterSpacing:"0.1em", textTransform:"uppercase", display:"block", marginBottom:"0.35rem" }}
-          >Cost / Portion</label>
+          <label htmlFor="pro-cost" className={labelCls}>Cost / Portion</label>
           <input
             id="pro-cost"
             value={f.costPerPortion || ""}
             onChange={e => set("costPerPortion", e.target.value)}
             placeholder="e.g. $4.20"
-            style={inp()}
+            className={inputCls}
           />
         </div>
       </div>
-      <p style={{ fontSize:"0.7rem", color:"rgba(255,255,255,0.25)", lineHeight:1.5 }}>
+      <p className="text-[0.7rem] text-white/25 leading-[1.5]">
         These fields appear on the professional recipe card PDF alongside recipe ID, allergen matrix, and mise en place.
       </p>
     </div>

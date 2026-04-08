@@ -12,13 +12,13 @@ export function AllergenMatrix({ allergens }) {
   const mayContain = allergens.filter(a => a.mayContain);
 
   return (
-    <div style={{ marginTop:"1.5rem" }}>
-      <div style={{ fontSize:"0.66rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"#f94144", fontWeight:700, marginBottom:"1rem", paddingBottom:"0.5rem", borderBottom:"1px solid rgba(249,65,68,0.2)" }}>
+    <div className="mt-6">
+      <div className="text-[0.66rem] tracking-[0.2em] uppercase text-fl-red font-bold mb-4 pb-2 border-b border-fl-red/20">
         ⚠️ Allergen Matrix — EU Reg. 1169/2011
       </div>
 
       {/* Grid of all 14 — BP-02: use stable allergen id as key */}
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill, minmax(90px, 1fr))", gap:"0.5rem", marginBottom:"1rem" }}>
+      <div className="grid gap-2 mb-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr))" }}>
         {ALLERGENS.map(a => {
           const hit       = allergens.find(x => x.id === a.id);
           const isPresent = hit?.present;
@@ -26,42 +26,58 @@ export function AllergenMatrix({ allergens }) {
           return (
             <div
               key={a.id}
-              style={{ borderRadius:10, padding:"0.55rem 0.4rem", textAlign:"center", border:`1.5px solid ${isPresent?"rgba(249,65,68,0.6)":isMay?"rgba(249,199,79,0.4)":"rgba(255,255,255,0.07)"}`, background:isPresent?"rgba(249,65,68,0.12)":isMay?"rgba(249,199,79,0.07)":"rgba(0,0,0,0.2)", transition:"all 0.2s", position:"relative" }}
+              className={`relative rounded-[10px] py-2 px-[0.4rem] text-center border-[1.5px] transition-all duration-200 ${
+                isPresent
+                  ? "bg-fl-red/[0.12] border-fl-red/60"
+                  : isMay
+                    ? "bg-fl-gold/[0.07] border-fl-gold/40"
+                    : "bg-black/20 border-white/[0.07]"
+              }`}
               aria-label={`${a.label}: ${isPresent ? "contains" : isMay ? "may contain" : "not present"}`}
             >
-              <div style={{ fontSize:"1.3rem", lineHeight:1, marginBottom:"0.3rem" }}>{a.icon}</div>
-              <div style={{ fontSize:"0.6rem", color:isPresent?"#f87171":isMay?"#f9c74f":"rgba(255,255,255,0.25)", fontWeight:isPresent||isMay?700:400, lineHeight:1.2 }}>{a.label}</div>
-              {isPresent         && <div style={{ position:"absolute", top:4, right:4, width:8, height:8, borderRadius:"50%", background:"#f94144" }} aria-hidden="true" />}
-              {isMay && !isPresent && <div style={{ position:"absolute", top:4, right:4, width:8, height:8, borderRadius:"50%", background:"#f9c74f" }} aria-hidden="true" />}
+              <div className="text-[1.3rem] leading-none mb-1">{a.icon}</div>
+              <div className={`text-[0.6rem] leading-[1.2] ${
+                isPresent
+                  ? "text-[#f87171] font-bold"
+                  : isMay
+                    ? "text-fl-gold font-bold"
+                    : "text-white/25 font-normal"
+              }`}>{a.label}</div>
+              {isPresent           && <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-fl-red"          aria-hidden="true" />}
+              {isMay && !isPresent && <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-fl-gold"         aria-hidden="true" />}
             </div>
           );
         })}
       </div>
 
       {/* Legend */}
-      <div style={{ display:"flex", gap:"1rem", flexWrap:"wrap", marginBottom:"0.75rem" }}>
-        {[["#f94144","Contains"],["#f9c74f","May contain"],["rgba(255,255,255,0.15)","Not present"]].map(([bg,lbl]) => (
-          <div key={lbl} style={{ display:"flex", alignItems:"center", gap:"0.4rem", fontSize:"0.72rem", color:"rgba(255,255,255,0.5)" }}>
-            <div style={{ width:10, height:10, borderRadius:"50%", background:bg }} aria-hidden="true" />{lbl}
+      <div className="flex gap-4 flex-wrap mb-3">
+        {[
+          ["bg-fl-red",          "Contains"],
+          ["bg-fl-gold",         "May contain"],
+          ["bg-white/[0.15]",    "Not present"],
+        ].map(([bg, lbl]) => (
+          <div key={lbl} className="flex items-center gap-1.5 text-[0.72rem] text-white/50">
+            <div className={`w-2.5 h-2.5 rounded-full ${bg}`} aria-hidden="true" />{lbl}
           </div>
         ))}
       </div>
 
       {/* Summary */}
       {present.length > 0 && (
-        <div style={{ background:"rgba(249,65,68,0.08)", border:"1px solid rgba(249,65,68,0.25)", borderRadius:10, padding:"0.75rem 1rem", fontSize:"0.78rem", color:"rgba(255,255,255,0.65)", lineHeight:1.6, marginBottom:"0.5rem" }}>
-          <strong style={{ color:"#f87171" }}>Contains: </strong>
+        <div className="bg-fl-red/[0.08] border border-fl-red/25 rounded-[10px] px-4 py-3 text-[0.78rem] text-white/65 leading-[1.6] mb-2">
+          <strong className="text-[#f87171]">Contains: </strong>
           {present.map(a => ALLERGENS.find(x => x.id === a.id)?.label).filter(Boolean).join(", ")}
         </div>
       )}
       {mayContain.length > 0 && (
-        <div style={{ background:"rgba(249,199,79,0.06)", border:"1px solid rgba(249,199,79,0.2)", borderRadius:10, padding:"0.75rem 1rem", fontSize:"0.78rem", color:"rgba(255,255,255,0.55)", lineHeight:1.6 }}>
-          <strong style={{ color:"#f9c74f" }}>May contain: </strong>
+        <div className="bg-fl-gold/[0.06] border border-fl-gold/20 rounded-[10px] px-4 py-3 text-[0.78rem] text-white/55 leading-[1.6]">
+          <strong className="text-fl-gold">May contain: </strong>
           {mayContain.map(a => ALLERGENS.find(x => x.id === a.id)?.label).filter(Boolean).join(", ")}
         </div>
       )}
 
-      <p style={{ fontSize:"0.62rem", color:"rgba(255,255,255,0.2)", marginTop:"0.6rem", lineHeight:1.5 }}>
+      <p className="text-[0.62rem] text-white/20 mt-2.5 leading-[1.5]">
         ⓘ AI-generated allergen data. Always verify against actual ingredient labels before service. Not a substitute for professional allergen assessment.
       </p>
     </div>
