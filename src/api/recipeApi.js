@@ -1,8 +1,8 @@
 /**
- * Gemini API call + prompt builder for FlavorLab.
+ * Anthropic Claude API call + prompt builder for FlavorLab.
  *
- * Uses the Google Generative Language REST API (no SDK needed).
- * Endpoint: https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent
+ * Uses the Anthropic Messages REST API (no SDK needed).
+ * Endpoint: https://api.anthropic.com/v1/messages
  *
  * ⚠️ Security: API key is sent directly from the browser.
  *    Move to a server-side proxy before public deployment (see PLAN.md).
@@ -12,11 +12,11 @@
  */
 
 // ── Models — swap these strings to upgrade without touching any other code ──────
-const HOME_MODEL = "gemini-2.0-flash";
-const PRO_MODEL  = "gemini-2.5-pro-preview-03-25";
+const HOME_MODEL = "claude-sonnet-4-20250514";
+const PRO_MODEL  = "claude-sonnet-4-20250514";
 
 // ── Constants ────────────────────────────────────────────────────────────────────
-const GEMINI_BASE          = "https://generativelanguage.googleapis.com/v1beta/models";
+const ANTHROPIC_BASE       = "https://api.anthropic.com/v1/messages";
 const MAX_RESPONSE_CHARS   = 32_000;   // guard against runaway JSON from the model
 const HOME_MAX_TOKENS      = 2800;
 const PRO_MAX_TOKENS       = 3200;
@@ -121,36 +121,37 @@ Respond ONLY with a valid JSON object. No markdown, no explanation. Exact struct
   "nutrition": { "calories": 420, "protein": 32, "carbs": 38, "fat": 14, "fiber": 5, "sodium": 680, "note": "Estimated values per 100g edible portion" }
 }`;
 
-  const url = `${GEMINI_BASE}/${model}:generateContent?key=${apiKey}`;
-
-  const res = await fetch(url, {
+  const res = await fetch(ANTHROPIC_BASE, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+    },
     body: JSON.stringify({
-      contents: [{ parts: [{ text: proMode ? proPrompt : homePrompt }] }],
-      generationConfig: {
-        temperature:      GENERATION_TEMP,
-        maxOutputTokens:  proMode ? PRO_MAX_TOKENS : HOME_MAX_TOKENS,
-        responseMimeType: "application/json",   // Gemini returns clean JSON — no regex needed
-      },
+      model,
+      max_tokens:  proMode ? PRO_MAX_TOKENS : HOME_MAX_TOKENS,
+      temperature: GENERATION_TEMP,
+      messages: [{ role: "user", content: proMode ? proPrompt : homePrompt }],
     }),
   });
 
   if (!res.ok) {
     // BP-16: surface HTTP status clearly in the thrown error
     const e = await res.json().catch(() => ({}));
-    throw new Error(e.error?.message || `Gemini API error (HTTP ${res.status})`);
+    throw new Error(e.error?.message || `Anthropic API error (HTTP ${res.status})`);
   }
 
   const data = await res.json();
-  const raw  = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+  const raw  = data.content.map(b => b.text || "").join("");
 
   // BP-14: Guard against runaway responses before parsing
   if (raw.length > MAX_RESPONSE_CHARS) {
     throw new Error(`API response unexpectedly large (${raw.length} chars). Aborting parse.`);
   }
 
-  // responseMimeType:json means this should already be clean, but strip fences just in case
+  // Strip JSON fences in case the model wraps the response
   const text   = raw.replace(/```json|```/gi, "").trim();
   const parsed = JSON.parse(text);
 

@@ -12,16 +12,20 @@
 import { useState, useRef, useEffect, useCallback, useId } from "react";
 
 export function BottomSheet({ open, onClose, title, color = "#f9c74f", children }) {
-  const sheetRef = useRef(null);
-  const drag     = useRef({ on:false, startY:0, startT:0 });
+  const sheetRef   = useRef(null);
+  const drag       = useRef({ on:false, startY:0, startT:0 });
+  const tyRef      = useRef(100);
+  const onCloseRef = useRef(onClose);
   const [ty, setTy]           = useState(100);
   const [visible, setVisible] = useState(false);
   // BP-10: unique title id for aria-labelledby
   const titleId = useId();
 
+  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
+
   useEffect(() => {
-    if (open) { setVisible(true); requestAnimationFrame(() => setTy(0)); }
-    else { setTy(100); const t = setTimeout(() => setVisible(false), 380); return () => clearTimeout(t); }
+    if (open) { setVisible(true); requestAnimationFrame(() => { tyRef.current = 0; setTy(0); }); }
+    else { tyRef.current = 100; setTy(100); const t = setTimeout(() => setVisible(false), 380); return () => clearTimeout(t); }
   }, [open]);
 
   // BP-10: trap focus inside the sheet while open
@@ -33,7 +37,7 @@ export function BottomSheet({ open, onClose, title, color = "#f9c74f", children 
     if (focusable.length) /** @type {HTMLElement} */ (focusable[0]).focus();
 
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") { onClose(); return; }
+      if (e.key === "Escape") { onCloseRef.current(); return; }
       if (e.key !== "Tab" || !focusable.length) return;
       const first = focusable[0];
       const last  = focusable[focusable.length - 1];
@@ -42,26 +46,28 @@ export function BottomSheet({ open, onClose, title, color = "#f9c74f", children 
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
+  }, [open]);
 
   const getY = e => e.touches ? e.touches[0].clientY : e.clientY;
 
   const onStart = useCallback(e => {
-    drag.current = { on:true, startY:getY(e), startT:ty };
+    drag.current = { on:true, startY:getY(e), startT:tyRef.current };
     if (sheetRef.current) sheetRef.current.style.transition = "none";
-  }, [ty]);
+  }, []);
 
   const onMove = useCallback(e => {
     if (!drag.current.on) return;
-    setTy(Math.max(0, drag.current.startT + ((getY(e) - drag.current.startY) / window.innerHeight) * 100));
+    const next = Math.max(0, drag.current.startT + ((getY(e) - drag.current.startY) / window.innerHeight) * 100);
+    tyRef.current = next;
+    setTy(next);
   }, []);
 
   const onEnd = useCallback(() => {
     if (!drag.current.on) return;
     drag.current.on = false;
     if (sheetRef.current) sheetRef.current.style.transition = "";
-    ty > 35 ? onClose() : setTy(0);
-  }, [ty, onClose]);
+    tyRef.current > 35 ? onCloseRef.current() : (tyRef.current = 0, setTy(0));
+  }, []);
 
   useEffect(() => {
     window.addEventListener("mousemove", onMove);

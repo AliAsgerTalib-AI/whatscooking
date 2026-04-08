@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 
 // ── App-level constants ───────────────────────────────────────────────────────
-/** Maximum number of recipes stored in the favourites list. */
-const MAX_FAVORITES   = 20;
 /** Largest allowed displayed-servings value. */
 const MAX_SERVINGS    = 200;
 /** Smallest allowed displayed-servings value. */
@@ -22,10 +20,11 @@ import { ALLERGENS }                     from "./src/data/allergens.js";
 // ── Utilities ─────────────────────────────────────────────────────────────────
 import { formatNum }                     from "./src/utils/formatNum.js";
 import { scaleIngredient }               from "./src/utils/scaleIngredient.js";
-import { makeid }                        from "./src/utils/makeid.js";
-
 // ── API ───────────────────────────────────────────────────────────────────────
 import { generateRecipe }                from "./src/api/recipeApi.js";
+
+// ── Hooks ─────────────────────────────────────────────────────────────────────
+import { useFavorites }                  from "./src/hooks/useFavorites.js";
 
 // ── Export ────────────────────────────────────────────────────────────────────
 import { exportProPDF }                  from "./src/export/exportProPDF.js";
@@ -61,10 +60,6 @@ export default function RecipeGenerator() {
   const [displayServings, setDisplayServings] = useState(4);
   const [activeSheet, setActiveSheet]         = useState(null);
   const [isMobile, setIsMobile]               = useState(false);
-  const [favorites, setFavorites]             = useState(() => {
-    try { return JSON.parse(localStorage.getItem("flavorlab_favs") || "[]"); } catch { return []; }
-  });
-  const [isFav, setIsFav]                     = useState(false);
   const [savedToast, setSavedToast]           = useState("");
   const [exportingPDF, setExportingPDF]       = useState(false);
   const [proFields, setProFields]             = useState({ chefName:"", station:"", version:"1.0", costPerPortion:"" });
@@ -80,45 +75,18 @@ export default function RecipeGenerator() {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // ── Favorites helpers ────────────────────────────────────────────────────────
-  // BP-01: useCallback so stable references don't cause unnecessary re-renders
-  const saveFavorites = useCallback((favs) => {
-    setFavorites(favs);
-    // BP-05: log storage errors instead of silently swallowing them
-    try { localStorage.setItem("flavorlab_favs", JSON.stringify(favs)); }
-    catch (err) { console.warn("[FlavorLab] Could not persist favourites:", err); }
-  }, []);
-
+  // ── Toast ─────────────────────────────────────────────────────────────────────
   const showToast = useCallback((msg) => {
     setSavedToast(msg);
     setTimeout(() => setSavedToast(""), TOAST_DURATION_MS); // BP-18
   }, []);
 
-  const toggleFav = useCallback(() => {
-    if (!recipe) return;
-    if (isFav) {
-      saveFavorites(favorites.filter(f => f.recipe.title !== recipe.title));
-      setIsFav(false);
-    } else {
-      const entry = { id:makeid(), recipe, nutrition, allergens, tags:ingredientTags, savedAt:Date.now(), proMode };
-      saveFavorites([entry, ...favorites].slice(0, MAX_FAVORITES)); // BP-18
-      setIsFav(true); showToast("♥ Recipe saved!");
-    }
-  }, [recipe, isFav, favorites, nutrition, allergens, ingredientTags, proMode, saveFavorites, showToast]);
-
-  const loadFavorite = useCallback((fav) => {
-    setRecipe(fav.recipe); setNutrition(fav.nutrition || null); setAllergens(fav.allergens || null);
-    setIngredientTags(fav.tags || []);
-    const sv = parseInt(fav.recipe.meta?.serves, 10) || 4; // BP-04: always pass radix 10
-    setBaseServings(sv); setDisplayServings(sv);
-    setIsFav(true); setProMode(fav.proMode || false); setTab("generator");
-    setTimeout(() => document.getElementById("result-anchor")?.scrollIntoView({ behavior:"smooth" }), 200);
-  }, []);
-
-  const deleteFavorite = useCallback((id) => {
-    saveFavorites(favorites.filter(f => f.id !== id));
-    showToast("🗑 Recipe removed");
-  }, [favorites, saveFavorites, showToast]);
+  // ── Favorites helpers ────────────────────────────────────────────────────────
+  const { favorites, isFav, setIsFav, toggleFav, loadFavorite, deleteFavorite } = useFavorites({
+    showToast,
+    setRecipe, setNutrition, setAllergens, setIngredientTags,
+    setBaseServings, setDisplayServings, setProMode, setTab,
+  });
 
   const toggle = useCallback((val, list, setList) => {
     setList(p => p.includes(val) ? p.filter(x => x !== val) : [...p, val]);
@@ -129,7 +97,7 @@ export default function RecipeGenerator() {
     if (ingredientTags.length === 0) { setError("Please add at least one ingredient."); return; }
     // BP-17: validate API key BEFORE setLoading(true) — prevents spinner sticking on early return
     if (!apiKey.trim()) {
-      setError("Please enter your Google AI Studio API key (click the 🔑 button in the nav).");
+      setError("Please enter your Anthropic API key (click the 🔑 button in the nav).");
       return;
     }
     const cuisine = customCuisine.trim() || selectedCuisine;
@@ -330,7 +298,7 @@ export default function RecipeGenerator() {
       {showKey && (
         <div style={{ background:"rgba(0,0,0,0.5)", borderBottom:"1px solid rgba(255,255,255,0.1)", padding:"0.75rem 1.5rem", display:"flex", alignItems:"center", gap:"0.75rem", animation:"fadeUp 0.2s ease" }}>
           {/* BP-09: proper label on the API key input */}
-          <label htmlFor="api-key-input" style={{ fontSize:"0.75rem", color:"rgba(255,255,255,0.4)", whiteSpace:"nowrap", flexShrink:0 }}>🔑 Google AI Studio Key</label>
+          <label htmlFor="api-key-input" style={{ fontSize:"0.75rem", color:"rgba(255,255,255,0.4)", whiteSpace:"nowrap", flexShrink:0 }}>🔑 Anthropic API Key</label>
           <input
             id="api-key-input"
             type="password"
@@ -339,7 +307,7 @@ export default function RecipeGenerator() {
               setApiKey(e.target.value);
               sessionStorage.setItem("flavorlab_key", e.target.value); // BP-15: sessionStorage
             }}
-            placeholder="AIza..."
+            placeholder="sk-ant-..."
             style={{ flex:1, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.15)", borderRadius:8, padding:"0.45rem 0.9rem", color:"#f0ede6", fontSize:"0.85rem", fontFamily:"inherit", outline:"none" }}
           />
           <button onClick={() => setShowKey(false)} aria-label="Close API key panel" style={{ background:"none", border:"none", color:"rgba(255,255,255,0.35)", fontSize:"1rem", cursor:"pointer", fontFamily:"inherit", flexShrink:0 }}>✕</button>
@@ -442,7 +410,7 @@ export default function RecipeGenerator() {
                   </div>
                 )}
                 <div style={{ display:"flex", gap:"0.6rem", flexWrap:"wrap" }}>
-                  <button onClick={toggleFav} style={{ display:"flex", alignItems:"center", gap:"0.4rem", padding:"0.5rem 1rem", borderRadius:999, border:`1.5px solid ${isFav?"#f94144":"rgba(255,255,255,0.2)"}`, background:isFav?"rgba(249,65,68,0.15)":"rgba(255,255,255,0.06)", color:isFav?"#f94144":"rgba(255,255,255,0.7)", fontSize:"0.8rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
+                  <button onClick={() => toggleFav(recipe, nutrition, allergens, ingredientTags, proMode)} style={{ display:"flex", alignItems:"center", gap:"0.4rem", padding:"0.5rem 1rem", borderRadius:999, border:`1.5px solid ${isFav?"#f94144":"rgba(255,255,255,0.2)"}`, background:isFav?"rgba(249,65,68,0.15)":"rgba(255,255,255,0.06)", color:isFav?"#f94144":"rgba(255,255,255,0.7)", fontSize:"0.8rem", fontWeight:700, cursor:"pointer", fontFamily:"inherit" }}>
                     {isFav ? "♥ Saved" : "♡ Save Recipe"}
                   </button>
                   <button onClick={() => {
