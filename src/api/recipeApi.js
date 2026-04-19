@@ -9,8 +9,8 @@
  */
 
 // ── Models — swap these strings to upgrade without touching any other code ──────
-const HOME_MODEL = "claude-sonnet-4-20250514";
-const PRO_MODEL  = "claude-sonnet-4-20250514";
+const HOME_MODEL = "gemini-2.5-flash-preview-05-20";
+const PRO_MODEL  = "gemini-2.5-flash-preview-05-20";
 
 // ── Constants ────────────────────────────────────────────────────────────────────
 const ANTHROPIC_BASE       = "/api/generate";
@@ -124,20 +124,21 @@ Respond ONLY with a valid JSON object. No markdown, no explanation. Exact struct
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model,
-      max_tokens:  proMode ? PRO_MAX_TOKENS : HOME_MAX_TOKENS,
-      temperature: GENERATION_TEMP,
-      messages: [{ role: "user", content: proMode ? proPrompt : homePrompt }],
+      generationConfig: {
+        temperature:    GENERATION_TEMP,
+        maxOutputTokens: proMode ? PRO_MAX_TOKENS : HOME_MAX_TOKENS,
+      },
+      contents: [{ role: "user", parts: [{ text: proMode ? proPrompt : homePrompt }] }],
     }),
   });
 
   if (!res.ok) {
-    // BP-16: surface HTTP status clearly in the thrown error
     const e = await res.json().catch(() => ({}));
-    throw new Error(e.error?.message || `Anthropic API error (HTTP ${res.status})`);
+    throw new Error(e.error?.message || `Gemini API error (HTTP ${res.status})`);
   }
 
   const data = await res.json();
-  const raw  = data.content.map(b => b.text || "").join("");
+  const raw  = (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text || "").join("");
 
   // BP-14: Guard against runaway responses before parsing
   if (raw.length > MAX_RESPONSE_CHARS) {
