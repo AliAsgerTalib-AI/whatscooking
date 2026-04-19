@@ -1,16 +1,38 @@
-# React + Vite
+# FlavorLab
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An open-source AI recipe generator powered by Claude Sonnet. Two modes: **Home** (casual, imperial units) and **Pro** (professional kitchen, metric weights, EU allergen compliance, HACCP notes).
 
-Currently, two official plugins are available:
+**[Try it live →](https://whatscooking.vercel.app)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Quick Start
 
-## React Compiler
+```bash
+# Install
+cd testbed && npm install
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# Full-stack dev (AI generation enabled)
+cd ..  # repo root
+vercel dev  # requires ANTHROPIC_API_KEY in .env
 
-## Expanding the ESLint configuration
+# Frontend only
+cd testbed && npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Environment
+
+Create `.env` at repo root:
+```
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+## Tech Stack
+
+React 18 · Vite · Tailwind CSS · Claude Sonnet (`claude-sonnet-4-20250514`) · Vercel Serverless
+
+## Docs
+
+- [Product Requirements Document](../docs/superpowers/specs/2026-04-19-flavorlab-prd.md)
+
+## Contributing
+
+See the PRD for contribution areas. Key invariant: **never remove the allergen disclaimer** in `src/export/exportProPDF.js` — it is legally required.
