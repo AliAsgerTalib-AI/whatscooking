@@ -11,20 +11,24 @@
     @apply bg-surface text-primary font-sans;
   }
 
-  /* Minimal Swiss scrollbar */
   ::-webkit-scrollbar         { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-thumb   { background: #000000; }
-  ::-webkit-scrollbar-track   { background: #f9f9f9; }
+  ::-webkit-scrollbar-thumb   { background: #C9C6C0; border-radius: 9999px; }
+  ::-webkit-scrollbar-track   { background: #FAFAF9; }
 
-  /* Input focus: surface-container fill, border maintained */
   input:focus,
   textarea:focus {
     outline: none;
-    background-color: #eeeeee !important;
   }
 
-  /* Remove old brightness hack — hovers handled per-component */
   button:not(:disabled):hover {
     filter: none;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 }

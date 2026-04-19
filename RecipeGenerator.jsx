@@ -31,34 +31,6 @@ import { MiseEnPlace }     from "./src/components/MiseEnPlace.jsx";
 import { FavoritesPanel }  from "./src/components/FavoritesPanel.jsx";
 import { ProFieldsPanel }  from "./src/components/ProFieldsPanel.jsx";
 
-// ── Design-system class strings ───────────────────────────────────────────────
-
-/** 1px bordered grid cell */
-const card = "border border-primary bg-surface p-6 mb-4";
-
-/** Section label — uppercase annotation */
-const lbl  = "text-label-sm uppercase tracking-label font-bold mb-3";
-
-/** Section title inside result panel */
-const secT = "text-label-sm uppercase tracking-label font-bold mb-3 pb-1 border-b border-primary";
-
-/** Inline badge pill */
-const bdg  = () => "inline-block border border-primary text-label-sm uppercase tracking-label px-2 py-[0.15rem] font-bold";
-
-/** Filter chip — active = black fill, inactive = outline */
-const chipClass = (active) =>
-  `px-3 py-1 border border-primary text-label-md uppercase tracking-label cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
-    active
-      ? "bg-primary text-on-primary"
-      : "bg-surface text-primary hover:bg-surface-container"
-  }`;
-
-/** Mobile filter pill */
-const pillClass = (active) =>
-  `flex items-center gap-1 px-3 py-1 border border-primary text-label-md uppercase tracking-label cursor-pointer font-[inherit] whitespace-nowrap transition-colors duration-100 ease-linear ${
-    active ? "bg-primary text-on-primary" : "bg-surface text-primary"
-  }`;
-
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RecipeGenerator() {
   // ── State ────────────────────────────────────────────────────────────────────
@@ -108,6 +80,81 @@ export default function RecipeGenerator() {
     setList(p => p.includes(val) ? p.filter(x => x !== val) : [...p, val]);
   }, []);
 
+  // ── Mode-aware design tokens ──────────────────────────────────────────────────
+  const m = proMode ? {
+    logoGrad:        "from-indigo-600 to-purple-500",
+    proToggle:       "bg-gradient-to-r from-indigo-600 to-purple-500 text-white border-transparent shadow-sm",
+    heroBadge:       "bg-indigo-100 text-indigo-700",
+    heroGrad:        "from-indigo-600 to-purple-500",
+    chipActive:      "bg-indigo-600 text-white border-transparent shadow-sm",
+    pillActive:      "bg-indigo-600 text-white border-transparent",
+    servBtn:         "bg-indigo-600 text-white border-transparent shadow-md",
+    ctaBtn:          "bg-gradient-to-r from-indigo-600 to-purple-500 text-white shadow-lg shadow-indigo-200/60 hover:shadow-xl hover:shadow-indigo-200/80 hover:scale-[1.005]",
+    resultTint:      "from-indigo-50/60 to-purple-50/40",
+    badge:           "border-indigo-200 bg-indigo-50 text-indigo-700",
+    savedBtn:        "bg-indigo-600 text-white border-transparent",
+    tipCard:         "bg-indigo-50 border border-indigo-100",
+    tipLabel:        "text-indigo-600",
+    stepNum:         "bg-indigo-600",
+    watchCard:       "bg-slate-50 border border-slate-100",
+    watchLabel:      "text-slate-700",
+    calCard:         "bg-indigo-50 border-indigo-100",
+    calText:         "text-indigo-700",
+    dot:             "bg-indigo-400",
+    barColor:        "bg-indigo-500",
+    allergenPresent: "bg-indigo-600 text-white",
+    allergenMaybe:   "bg-indigo-100 text-indigo-700",
+    allergenLink:    "text-indigo-500 hover:text-indigo-700",
+    proTabActive:    "bg-indigo-600 text-white",
+    toast:           "bg-indigo-600",
+    sheetDone:       "bg-gradient-to-r from-indigo-600 to-purple-500 text-white shadow-md",
+    navBanner:       "from-indigo-600/8 to-purple-500/8 border-indigo-100 text-indigo-600",
+  } : {
+    logoGrad:        "from-orange-500 to-amber-400",
+    proToggle:       "bg-white text-slate-600 border-slate-200 hover:border-slate-400",
+    heroBadge:       "bg-orange-100 text-orange-700",
+    heroGrad:        "from-orange-500 to-amber-400",
+    chipActive:      "bg-orange-500 text-white border-transparent shadow-sm",
+    pillActive:      "bg-orange-500 text-white border-transparent",
+    servBtn:         "bg-orange-500 text-white border-transparent shadow-md",
+    ctaBtn:          "bg-gradient-to-r from-orange-500 to-amber-400 text-white shadow-lg shadow-orange-200/60 hover:shadow-xl hover:shadow-orange-200/80 hover:scale-[1.005]",
+    resultTint:      "from-orange-50/60 to-amber-50/40",
+    badge:           "border-orange-200 bg-orange-50 text-orange-700",
+    savedBtn:        "bg-orange-500 text-white border-transparent",
+    tipCard:         "bg-orange-50 border border-orange-100",
+    tipLabel:        "text-orange-600",
+    stepNum:         "bg-orange-500",
+    watchCard:       "bg-amber-50 border border-amber-100",
+    watchLabel:      "text-amber-700",
+    calCard:         "bg-orange-50 border-orange-100",
+    calText:         "text-orange-600",
+    dot:             "bg-orange-400",
+    barColor:        "bg-orange-500",
+    allergenPresent: "bg-orange-600 text-white",
+    allergenMaybe:   "bg-orange-100 text-orange-700",
+    allergenLink:    "text-orange-500 hover:text-orange-700",
+    proTabActive:    "bg-orange-500 text-white",
+    toast:           "bg-orange-500",
+    sheetDone:       "bg-gradient-to-r from-orange-500 to-amber-400 text-white shadow-md",
+    navBanner:       "",
+  };
+
+  // ── Design-system class strings ───────────────────────────────────────────────
+  const card = "bg-white rounded-2xl border border-slate-200 shadow-card p-6 mb-4";
+  const lbl  = "text-[0.7rem] font-semibold tracking-widest uppercase text-slate-400 mb-3";
+  const secT = "text-[0.7rem] font-semibold tracking-widest uppercase text-slate-400 mb-3 pb-2 border-b border-slate-100";
+  const bdg  = () => `inline-block rounded-full border text-[0.65rem] uppercase tracking-widest px-2.5 py-0.5 font-bold ${m.badge}`;
+
+  const chipClass = (active) =>
+    `px-3 py-1.5 rounded-full text-[0.7rem] font-semibold tracking-wide uppercase cursor-pointer font-[inherit] transition-all duration-150 border ${
+      active ? m.chipActive : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
+    }`;
+
+  const pillClass = (active) =>
+    `flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.7rem] font-semibold tracking-wide uppercase cursor-pointer font-[inherit] whitespace-nowrap transition-all duration-150 border ${
+      active ? m.pillActive : "bg-white text-slate-600 border-slate-200"
+    }`;
+
   // ── Generate ──────────────────────────────────────────────────────────────────
   const generate = async () => {
     if (ingredientTags.length === 0) { setError("Please add at least one ingredient."); return; }
@@ -136,7 +183,7 @@ export default function RecipeGenerator() {
   // ── Shell-local sub-components ────────────────────────────────────────────────
 
   const FilterChips = ({ items, selected, onToggle, single }) => (
-    <div className="flex flex-wrap gap-1">
+    <div className="flex flex-wrap gap-1.5">
       {items.map(item => (
         <button
           key={item.val}
@@ -147,6 +194,8 @@ export default function RecipeGenerator() {
     </div>
   );
 
+  const inputCls = "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-[inherit] outline-none focus:border-slate-400 focus:bg-slate-50/50 transition-colors duration-150";
+
   const sheetMap = useMemo(() => ({
     cuisine:  { title:"Cuisine Style", content:<>
       <FilterChips items={CUISINES} selected={selectedCuisine} onToggle={v => { setSelectedCuisine(v); setCustomCuisine(""); }} single />
@@ -155,21 +204,21 @@ export default function RecipeGenerator() {
         placeholder="Or type your own..."
         value={customCuisine}
         onChange={e => { setCustomCuisine(e.target.value); setSelectedCuisine(""); }}
-        className="w-full mt-3 border border-primary bg-surface px-2 py-2 text-body-md font-[inherit] outline-none focus:bg-surface-container transition-colors duration-100 ease-linear"
+        className={inputCls + " mt-3"}
       />
     </> },
     flavor:   { title:"Flavor Profile",       content:<FilterChips items={FLAVORS} selected={selectedFlavors} onToggle={v => toggle(v, selectedFlavors, setSelectedFlavors)} /> },
     diet:     { title:"Dietary Requirements", content:<FilterChips items={DIETS}   selected={selectedDiets}   onToggle={v => toggle(v, selectedDiets, setSelectedDiets)} /> },
     method:   { title:"Cooking Method",       content:<FilterChips items={METHODS} selected={selectedMethod}  onToggle={setSelectedMethod} single /> },
     servings: { title:"Serving Size",         content:<>
-      <p className="text-body-md text-outline mb-3">How many {proMode ? "covers" : "people"}?</p>
-      <div className="flex gap-1 flex-wrap">
+      <p className="text-sm text-slate-500 mb-4">How many {proMode ? "covers" : "people"}?</p>
+      <div className="flex gap-2 flex-wrap">
         {(proMode ? PRO_BATCH_PRESETS : SERVING_PRESETS).map(n => (
           <button
             key={n}
             onClick={() => setServings(n)}
-            className={`w-14 h-14 border border-primary text-headline-sm font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
-              servings === n ? "bg-primary text-on-primary" : "bg-surface text-primary hover:bg-surface-container"
+            className={`w-14 h-14 rounded-xl text-lg font-bold cursor-pointer font-[inherit] transition-all duration-150 border ${
+              servings === n ? m.servBtn : "bg-white text-slate-700 border-slate-200 hover:border-slate-400"
             }`}
           >{n}</button>
         ))}
@@ -191,10 +240,10 @@ export default function RecipeGenerator() {
       ...(proMode ? [{ id:"profields", label:"Card Details", active:!!(proFields.chefName||proFields.station) }] : []),
     ];
     return (
-      <div className="flex gap-1 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling:"touch" }}>
+      <div className="flex gap-1.5 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling:"touch" }}>
         {pills.map(p => (
           <button key={p.id} onClick={() => setActiveSheet(p.id)} className={pillClass(p.active)}>
-            {p.label} <span className="text-label-sm">▾</span>
+            {p.label} <span className="opacity-50 text-[0.65rem]">▾</span>
           </button>
         ))}
       </div>
@@ -204,7 +253,7 @@ export default function RecipeGenerator() {
   const DesktopFilters = () => (<>
     <div className={card}>
       <div className={lbl}>Cuisine Style</div>
-      <div className="flex flex-wrap gap-1 mb-3">
+      <div className="flex flex-wrap gap-1.5 mb-3">
         {CUISINES.map(c => (
           <button key={c.val} className={chipClass(selectedCuisine===c.val&&!customCuisine)} onClick={() => { setSelectedCuisine(c.val); setCustomCuisine(""); }}>{c.label}</button>
         ))}
@@ -214,24 +263,24 @@ export default function RecipeGenerator() {
         placeholder="Or type your own (e.g. Cajun, Hawaiian...)"
         value={customCuisine}
         onChange={e => { setCustomCuisine(e.target.value); setSelectedCuisine(""); }}
-        className="w-full border border-primary bg-surface px-2 py-2 text-body-md font-[inherit] outline-none transition-colors duration-100 ease-linear focus:bg-surface-container"
+        className={inputCls}
       />
     </div>
     <div className={card}>
-      <div className={lbl}>Flavor Profile <span className="text-outline font-normal normal-case tracking-normal">— pick any</span></div>
-      <div className="flex flex-wrap gap-1">
+      <div className={lbl}>Flavor Profile <span className="font-normal normal-case tracking-normal text-slate-300">— pick any</span></div>
+      <div className="flex flex-wrap gap-1.5">
         {FLAVORS.map(f => <button key={f.val} className={chipClass(selectedFlavors.includes(f.val))} onClick={() => toggle(f.val, selectedFlavors, setSelectedFlavors)}>{f.label}</button>)}
       </div>
     </div>
     <div className={card}>
-      <div className={lbl}>Dietary Requirements <span className="text-outline font-normal normal-case tracking-normal">— pick any</span></div>
-      <div className="flex flex-wrap gap-1">
+      <div className={lbl}>Dietary Requirements <span className="font-normal normal-case tracking-normal text-slate-300">— pick any</span></div>
+      <div className="flex flex-wrap gap-1.5">
         {DIETS.map(d => <button key={d.val} className={chipClass(selectedDiets.includes(d.val))} onClick={() => toggle(d.val, selectedDiets, setSelectedDiets)}>{d.label}</button>)}
       </div>
     </div>
     <div className={card}>
-      <div className={lbl}>Allergens to Avoid <span className="text-outline font-normal normal-case tracking-normal">— pick any</span></div>
-      <div className="flex flex-wrap gap-1">
+      <div className={lbl}>Allergens to Avoid <span className="font-normal normal-case tracking-normal text-slate-300">— pick any</span></div>
+      <div className="flex flex-wrap gap-1.5">
         {ALLERGENS.map(a => (
           <button key={a.id} className={chipClass(selectedAllergens.includes(a.id))} onClick={() => toggle(a.id, selectedAllergens, setSelectedAllergens)}>
             {a.icon} {a.label}
@@ -240,14 +289,14 @@ export default function RecipeGenerator() {
       </div>
     </div>
     <div className={card}>
-      <div className={lbl}>Cooking Method <span className="text-outline font-normal normal-case tracking-normal">— pick one</span></div>
-      <div className="flex flex-wrap gap-1">
-        {METHODS.map(m => <button key={m.val} className={chipClass(selectedMethod===m.val)} onClick={() => setSelectedMethod(selectedMethod===m.val?"":m.val)}>{m.label}</button>)}
+      <div className={lbl}>Cooking Method <span className="font-normal normal-case tracking-normal text-slate-300">— pick one</span></div>
+      <div className="flex flex-wrap gap-1.5">
+        {METHODS.map(me => <button key={me.val} className={chipClass(selectedMethod===me.val)} onClick={() => setSelectedMethod(selectedMethod===me.val?"":me.val)}>{me.label}</button>)}
       </div>
     </div>
     {proMode && (
       <div className={card}>
-        <div className={lbl}>Recipe Card Details <span className="text-outline font-normal normal-case tracking-normal">— optional</span></div>
+        <div className={lbl}>Recipe Card Details <span className="font-normal normal-case tracking-normal text-slate-300">— optional</span></div>
         <ProFieldsPanel proFields={proFields} onChange={setProFields} />
       </div>
     )}
@@ -256,15 +305,13 @@ export default function RecipeGenerator() {
   const ProResultTabs = () => {
     const tabs = [{ id:"recipe", label:"Recipe" }, { id:"allergens", label:"Allergens" }, { id:"mise", label:"Mise en Place" }];
     return (
-      <div className="flex border-b border-primary">
+      <div className="flex gap-1.5 p-4 border-b border-slate-100">
         {tabs.map(t => (
           <button
             key={t.id}
             onClick={() => setActiveProTab(t.id)}
-            className={`px-4 py-2 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] border-r border-primary transition-colors duration-100 ease-linear last:border-r-0 ${
-              activeProTab === t.id
-                ? "bg-primary text-on-primary"
-                : "bg-surface text-primary hover:bg-surface-container"
+            className={`px-4 py-2 rounded-full text-[0.7rem] font-semibold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-150 ${
+              activeProTab === t.id ? m.proTabActive : "text-slate-500 hover:text-slate-800 hover:bg-slate-100"
             }`}
           >{t.label}</button>
         ))}
@@ -274,30 +321,29 @@ export default function RecipeGenerator() {
 
   // ── Render ────────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-surface text-primary font-sans">
+    <div className="min-h-screen bg-[#FAFAF9] text-slate-900 font-sans">
 
-      {/* NAV — 2px bottom border as primary structural rule */}
-      <nav className="flex items-center justify-between px-6 md:px-[5.5rem] py-4 border-b-2 border-primary bg-surface sticky top-0 z-[100]">
-        <div className="text-headline-sm font-bold tracking-tight">FLAVORLAB</div>
-        <div className="flex items-center gap-1">
-          {/* Pro toggle — plain bordered button, no visual flourish */}
+      {/* NAV — glassmorphism */}
+      <nav className="flex items-center justify-between px-6 md:px-16 py-3.5 sticky top-0 z-[100] glass border-b border-slate-200/70">
+        <div className={`font-display text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r ${m.logoGrad}`}>
+          FlavorLab
+        </div>
+        <div className="flex items-center gap-2">
           <button
             role="switch"
             aria-checked={proMode}
             aria-label="Toggle Pro mode"
             onClick={() => setProMode(p => !p)}
             onKeyDown={e => (e.key === " " || e.key === "Enter") && setProMode(p => !p)}
-            className={`border border-primary px-3 py-1 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
-              proMode ? "bg-primary text-on-primary" : "bg-surface text-primary"
-            }`}
-          >{proMode ? "Pro: On" : "Pro: Off"}</button>
+            className={`rounded-full px-4 py-1.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-200 border ${m.proToggle}`}
+          >{proMode ? "Pro: On" : "Pro"}</button>
           {["generator","favorites"].map(t => (
             <button
               key={t}
               onClick={() => setTab(t)}
               aria-pressed={tab === t}
-              className={`border border-primary px-3 py-1 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
-                tab === t ? "bg-primary text-on-primary" : "bg-surface text-primary hover:bg-surface-container"
+              className={`rounded-full px-4 py-1.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-200 ${
+                tab === t ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"
               }`}
             >
               {t === "generator" ? "Generator" : `Saved${favorites.length ? ` (${favorites.length})` : ""}`}
@@ -306,21 +352,21 @@ export default function RecipeGenerator() {
         </div>
       </nav>
 
-      {/* Pro Mode annotation — full-width ruled banner */}
+      {/* Pro Mode banner */}
       {proMode && (
-        <div className="px-6 md:px-[5.5rem] py-2 border-b border-primary bg-surface-container animate-fade-in">
-          <span className="text-label-sm uppercase tracking-label">
+        <div className={`px-6 md:px-16 py-2.5 bg-gradient-to-r border-b animate-fade-in ${m.navBanner}`}>
+          <span className="text-[0.7rem] font-semibold tracking-widest uppercase">
             Professional Mode — Metric weights · Mise en place · HACCP · Allergen matrix · Pro recipe card PDF
           </span>
         </div>
       )}
 
-      <div className="max-w-[940px] mx-auto px-6 md:px-[5.5rem] py-10">
+      <div className="max-w-[960px] mx-auto px-6 md:px-16 py-10">
 
         {/* FAVORITES */}
         {tab === "favorites" && (
           <div className="animate-fade-in">
-            <h2 className="text-headline-sm font-bold mb-6 uppercase tracking-label">Saved Recipes</h2>
+            <h2 className="font-display text-3xl font-bold mb-6 text-slate-900">Saved Recipes</h2>
             <FavoritesPanel favorites={favorites} onLoad={loadFavorite} onDelete={deleteFavorite} />
           </div>
         )}
@@ -328,14 +374,14 @@ export default function RecipeGenerator() {
         {/* GENERATOR */}
         {tab === "generator" && (<>
 
-          {/* Hero — flush-left per Swiss grid rules */}
-          <div className="mb-10 border-b border-primary pb-8">
-            <h1 className="text-[clamp(1.9rem,5vw,3.2rem)] font-extrabold leading-[1.1] mb-2">
+          {/* Hero */}
+          <div className="mb-10 pt-4 pb-10 border-b border-slate-100">
+            <h1 className="font-display text-[clamp(2.2rem,6vw,4rem)] font-bold leading-[1.06] mb-4 tracking-tight text-slate-900 animate-fade-up">
               {proMode
-                ? <>Professional kitchen-grade<br />recipe generation.</>
-                : <>Any ingredients,<br />any cuisine, any craving.</>}
+                ? <>Professional <span className={`text-transparent bg-clip-text bg-gradient-to-r ${m.heroGrad}`}>kitchen-grade</span><br />recipe generation.</>
+                : <>Any ingredients,<br /><span className={`text-transparent bg-clip-text bg-gradient-to-r ${m.heroGrad}`}>any cuisine</span>, any craving.</>}
             </h1>
-            <p className="text-body-md text-outline">
+            <p className="text-[0.9375rem] text-slate-500 max-w-md leading-relaxed animate-fade-up" style={{ animationDelay: "60ms" }}>
               {proMode
                 ? "Metric weights, mise en place, HACCP notes, and full allergen matrix."
                 : "Tell us what you have. We'll craft the perfect recipe."}
@@ -347,7 +393,7 @@ export default function RecipeGenerator() {
             <div className={`${lbl} flex items-center justify-between`}>
               <span>{proMode ? "Kitchen Inventory" : "Your Ingredients"}</span>
               {ingredientTags.length > 0 && (
-                <span className="border border-primary px-2 py-[0.1rem] text-label-sm font-bold">
+                <span className={`text-[0.65rem] font-bold rounded-full px-2.5 py-0.5 ${m.heroBadge}`}>
                   {ingredientTags.length} added
                 </span>
               )}
@@ -358,19 +404,17 @@ export default function RecipeGenerator() {
           {/* Serving size */}
           <div className={card}>
             <div className={lbl}>{proMode ? "Covers / Yield" : "Serving Size"}</div>
-            <div className="flex items-center gap-1 flex-wrap">
+            <div className="flex items-center gap-2 flex-wrap">
               {(proMode ? PRO_BATCH_PRESETS : SERVING_PRESETS).map(n => (
                 <button
                   key={n}
                   onClick={() => setServings(n)}
-                  className={`w-11 h-11 border border-primary text-headline-sm font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
-                    servings === n
-                      ? "bg-primary text-on-primary"
-                      : "bg-surface text-primary hover:bg-surface-container"
+                  className={`w-11 h-11 rounded-xl text-base font-bold cursor-pointer font-[inherit] transition-all duration-150 border ${
+                    servings === n ? m.servBtn : "bg-white text-slate-700 border-slate-200 hover:border-slate-400"
                   }`}
                 >{n}</button>
               ))}
-              <span className="text-label-sm uppercase tracking-label text-outline ml-1">{proMode ? "covers" : "people"}</span>
+              <span className="text-[0.7rem] font-semibold tracking-widest uppercase text-slate-400 ml-1">{proMode ? "covers" : "people"}</span>
             </div>
           </div>
 
@@ -379,71 +423,66 @@ export default function RecipeGenerator() {
             <div className={card}>
               <div className={lbl}>Preferences</div>
               <MobileFilterBar />
-              <p className="text-label-sm text-outline mt-2 uppercase tracking-label">Tap to open options</p>
+              <p className="text-[0.65rem] text-slate-400 mt-2.5 font-semibold tracking-widest uppercase">Tap to open options</p>
             </div>
           ) : <DesktopFilters />}
 
-          {/* Grid divider */}
-          <div className="w-full border-b border-primary mb-4" />
-
-          {/* Generate button — primary CTA */}
+          {/* Generate CTA */}
           <button
             disabled={loading}
             onClick={generate}
-            className={`w-full py-4 border border-primary text-label-md uppercase tracking-label font-bold font-[inherit] transition-colors duration-100 ease-linear ${
-              loading
-                ? "bg-surface-container text-outline cursor-not-allowed"
-                : "bg-[linear-gradient(to_bottom,#000000,#3b3b3b)] text-on-primary cursor-pointer hover:bg-none hover:bg-surface hover:text-primary"
+            className={`w-full py-4 rounded-2xl text-sm font-bold tracking-wider uppercase font-[inherit] transition-all duration-200 active:scale-[0.999] ${
+              loading ? "bg-slate-100 text-slate-400 cursor-not-allowed" : m.ctaBtn
             }`}
           >
             {loading
-              ? `${proMode ? "Generating professional recipe" : "Crafting your recipe"}…`
+              ? <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  </svg>
+                  {proMode ? "Generating professional recipe…" : "Crafting your recipe…"}
+                </span>
               : (proMode ? "Generate Professional Recipe" : "Generate My Recipe")}
           </button>
 
           {error && (
-            <div className="border border-primary bg-surface-container px-4 py-3 text-body-md mt-4">
+            <div className="rounded-2xl border border-red-100 bg-red-50 px-5 py-4 text-sm text-red-600 mt-4">
               {error}
             </div>
           )}
 
           {/* ── RESULT ───────────────────────────────────────────────────────── */}
           {recipe && (
-            <div id="result-anchor" className="border-2 border-primary mt-8 animate-fade-in">
+            <div id="result-anchor" className="rounded-3xl border border-slate-200 shadow-card-lg mt-10 bg-white overflow-hidden animate-scale-in">
 
               {/* Result header */}
-              <div className="border-b border-primary p-6">
-                {/* Badges */}
-                <div className="flex flex-wrap gap-1 mb-4">
+              <div className={`p-6 md:p-8 border-b border-slate-100 bg-gradient-to-br ${m.resultTint}`}>
+                <div className="flex flex-wrap gap-1.5 mb-5">
                   {recipe.badge   && <span className={bdg()}>{recipe.badge}</span>}
                   {proMode        && <span className={bdg()}>Pro</span>}
                   {selectedDiets.map(d  => <span key={d}  className={bdg()}>{d}</span>)}
                   {selectedMethod && <span className={bdg()}>{selectedMethod}</span>}
                 </div>
 
-                {/* Recipe title — Display-LG: the "Final Truth" output */}
-                <h2 className="text-display-lg font-extrabold leading-[1.05] mb-3">{recipe.title}</h2>
-                <p className="text-body-md text-outline mb-4 max-w-[600px]">{recipe.intro}</p>
+                <h2 className="font-display text-[clamp(1.8rem,4.5vw,3.2rem)] font-bold leading-[1.05] mb-3 text-slate-900 tracking-tight">{recipe.title}</h2>
+                <p className="text-[0.9375rem] text-slate-500 mb-5 max-w-[600px] leading-relaxed">{recipe.intro}</p>
 
-                {/* Ingredient tags used */}
                 {ingredientTags.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mb-4">
+                  <div className="flex flex-wrap gap-1.5 mb-5">
                     {ingredientTags.map(t => (
-                      <span key={t} className="border border-primary text-label-sm px-2 py-[0.1rem] uppercase tracking-label">{t}</span>
+                      <span key={t} className="rounded-full bg-white border border-slate-200 text-[0.7rem] px-3 py-0.5 font-semibold text-slate-600 uppercase tracking-wide">{t}</span>
                     ))}
                   </div>
                 )}
 
-                {/* Actions */}
-                <div className="flex gap-1 flex-wrap">
+                <div className="flex gap-2 flex-wrap">
                   <button
                     onClick={() => toggleFav(recipe, nutrition, allergens, ingredientTags, proMode)}
-                    className={`border border-primary px-4 py-2 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] transition-colors duration-100 ease-linear ${
-                      isFav
-                        ? "bg-primary text-on-primary"
-                        : "bg-surface text-primary hover:bg-surface-container"
+                    className={`rounded-full px-5 py-2.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-150 border ${
+                      isFav ? m.savedBtn : "bg-white text-slate-700 border-slate-200 hover:border-slate-400"
                     }`}
-                  >{isFav ? "Saved" : "Save Recipe"}</button>
+                  >{isFav ? "✓ Saved" : "Save Recipe"}</button>
                   <button
                     onClick={() => {
                       setExportingPDF(true);
@@ -451,7 +490,7 @@ export default function RecipeGenerator() {
                       else exportHomePDF(recipe, ingredientTags, nutrition, displayServings, ratio);
                       setTimeout(() => setExportingPDF(false), 1000);
                     }}
-                    className="border border-primary bg-surface text-primary px-4 py-2 text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] hover:bg-surface-container transition-colors duration-100 ease-linear"
+                    className="rounded-full bg-white text-slate-700 border border-slate-200 px-5 py-2.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] hover:border-slate-400 transition-all duration-150"
                   >{exportingPDF ? "Opening…" : (proMode ? "Pro Recipe Card PDF" : "Export PDF")}</button>
                 </div>
               </div>
@@ -462,35 +501,34 @@ export default function RecipeGenerator() {
               <div className="grid grid-cols-1 wide:grid-cols-[1fr_300px]">
 
                 {/* Main column */}
-                <div className="p-6 border-b border-primary wide:border-b-0 wide:border-r wide:border-primary">
+                <div className="p-6 md:p-8 border-b border-slate-100 wide:border-b-0 wide:border-r wide:border-slate-100">
                   {proMode && activeProTab === "mise"      && <MiseEnPlace   items={recipe.miseEnPlace} />}
                   {proMode && activeProTab === "allergens" && <AllergenMatrix allergens={allergens} />}
 
                   {(!proMode || activeProTab === "recipe") && (<>
                     <div className={secT}>Method</div>
                     {(recipe.steps || []).map((step, i) => (
-                      <div key={i} className={`flex gap-4 mb-4 pb-4 items-start ${i === recipe.steps.length - 1 ? "" : "border-b border-primary"}`}>
-                        {/* Step number — solid black square */}
-                        <div className="w-7 h-7 bg-primary text-on-primary flex items-center justify-center text-label-sm font-bold shrink-0 mt-[2px]">{i + 1}</div>
-                        <div className="text-body-md">{step}</div>
+                      <div key={i} className={`flex gap-4 mb-5 pb-5 items-start ${i === recipe.steps.length - 1 ? "" : "border-b border-slate-100"}`}>
+                        <div className={`w-7 h-7 rounded-lg ${m.stepNum} text-white flex items-center justify-center text-[0.7rem] font-bold shrink-0 mt-[2px]`}>{i + 1}</div>
+                        <div className="text-[0.9375rem] text-slate-700 leading-relaxed">{step}</div>
                       </div>
                     ))}
 
                     {recipe.tips && (
-                      <div className="border border-primary bg-surface-container p-4 mt-4">
-                        <div className={`${lbl} mb-2`}>Chef's Tip</div>
-                        <div className="text-body-md">{recipe.tips}</div>
+                      <div className={`rounded-2xl ${m.tipCard} p-5 mt-5`}>
+                        <div className={`text-[0.7rem] font-semibold tracking-widest uppercase mb-2 ${m.tipLabel}`}>Chef's Tip</div>
+                        <div className="text-[0.9375rem] text-slate-700 leading-relaxed">{recipe.tips}</div>
                       </div>
                     )}
 
                     {recipe.proTips?.length > 0 && (
                       <div className="mt-6">
                         <div className={secT}>Pro Tips</div>
-                        <div className="flex flex-col gap-px bg-primary border border-primary">
+                        <div className="flex flex-col gap-3">
                           {recipe.proTips.map((tip, i) => (
-                            <div key={i} className="bg-surface p-4">
-                              <div className="text-label-sm uppercase tracking-label font-bold mb-1">{tip.title}</div>
-                              <div className="text-body-md text-outline">{tip.body}</div>
+                            <div key={i} className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                              <div className="text-[0.7rem] font-bold tracking-widest uppercase mb-1 text-slate-700">{tip.title}</div>
+                              <div className="text-[0.9375rem] text-slate-500 leading-relaxed">{tip.body}</div>
                             </div>
                           ))}
                         </div>
@@ -500,11 +538,11 @@ export default function RecipeGenerator() {
                     {recipe.watchOuts?.length > 0 && (
                       <div className="mt-6">
                         <div className={secT}>Watch Out For</div>
-                        <div className="flex flex-col gap-px bg-primary border border-primary">
+                        <div className="flex flex-col gap-3">
                           {recipe.watchOuts.map((w, i) => (
-                            <div key={i} className="bg-surface p-4">
-                              <div className="text-label-sm uppercase tracking-label font-bold mb-1">{w.title}</div>
-                              <div className="text-body-md text-outline">{w.body}</div>
+                            <div key={i} className={`rounded-xl ${m.watchCard} p-4`}>
+                              <div className={`text-[0.7rem] font-bold tracking-widest uppercase mb-1 ${m.watchLabel}`}>{w.title}</div>
+                              <div className="text-[0.9375rem] text-slate-500 leading-relaxed">{w.body}</div>
                             </div>
                           ))}
                         </div>
@@ -514,9 +552,9 @@ export default function RecipeGenerator() {
                     {proMode && recipe.haccp?.length > 0 && (
                       <div className="mt-6">
                         <div className={secT}>HACCP / Food Safety</div>
-                        <div className="flex flex-col gap-px bg-primary border border-primary">
+                        <div className="flex flex-col gap-3">
                           {recipe.haccp.map((h, i) => (
-                            <div key={i} className="bg-surface-container p-4 text-body-md">{h}</div>
+                            <div key={i} className="bg-slate-50 rounded-xl p-4 border border-slate-100 text-[0.9375rem] text-slate-600 leading-relaxed">{h}</div>
                           ))}
                         </div>
                       </div>
@@ -528,19 +566,19 @@ export default function RecipeGenerator() {
                 <div className="p-6">
 
                   {/* Scaler */}
-                  <div className="flex items-center justify-between border border-primary px-3 py-2 mb-4">
-                    <span className="text-label-sm uppercase tracking-label text-outline">{proMode ? "Covers" : "Servings"}</span>
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 mb-5">
+                    <span className="text-[0.7rem] font-semibold tracking-widest uppercase text-slate-400">{proMode ? "Covers" : "Servings"}</span>
+                    <div className="flex items-center gap-3">
                       <button
                         onClick={() => setDisplayServings(s => Math.max(MIN_SERVINGS, s - 1))}
                         disabled={displayServings <= MIN_SERVINGS}
-                        className="w-7 h-7 border border-primary bg-surface text-primary flex items-center justify-center font-bold cursor-pointer font-[inherit] hover:bg-primary hover:text-on-primary transition-colors duration-100 ease-linear disabled:text-outline disabled:cursor-not-allowed"
+                        className="w-7 h-7 rounded-lg border border-slate-200 bg-white text-slate-700 flex items-center justify-center font-bold cursor-pointer font-[inherit] hover:border-slate-400 transition-all duration-150 disabled:text-slate-300 disabled:cursor-not-allowed"
                       >−</button>
-                      <span className="text-headline-sm font-bold min-w-[2ch] text-center">{displayServings}</span>
+                      <span className="text-lg font-bold min-w-[2ch] text-center text-slate-900">{displayServings}</span>
                       <button
                         onClick={() => setDisplayServings(s => Math.min(MAX_SERVINGS, s + 1))}
                         disabled={displayServings >= MAX_SERVINGS}
-                        className="w-7 h-7 border border-primary bg-surface text-primary flex items-center justify-center font-bold cursor-pointer font-[inherit] hover:bg-primary hover:text-on-primary transition-colors duration-100 ease-linear disabled:text-outline disabled:cursor-not-allowed"
+                        className="w-7 h-7 rounded-lg border border-slate-200 bg-white text-slate-700 flex items-center justify-center font-bold cursor-pointer font-[inherit] hover:border-slate-400 transition-all duration-150 disabled:text-slate-300 disabled:cursor-not-allowed"
                       >+</button>
                     </div>
                   </div>
@@ -548,11 +586,11 @@ export default function RecipeGenerator() {
                   {/* Meta */}
                   {recipe.meta && (<>
                     <div className={secT}>At a Glance</div>
-                    <div className="grid grid-cols-2 gap-px bg-primary border border-primary mb-4">
+                    <div className="grid grid-cols-2 gap-2 mb-5">
                       {[["Prep",recipe.meta.prep],["Cook",recipe.meta.cook],["Level",recipe.meta.difficulty],["Method",recipe.meta.method||selectedMethod||"—"]].map(([k,v]) => (
-                        <div key={k} className="bg-surface p-3">
-                          <div className="text-label-sm uppercase tracking-label text-outline mb-[0.75rem]">{k}</div>
-                          <div className="text-headline-sm font-bold">{v || "—"}</div>
+                        <div key={k} className="bg-slate-50 rounded-xl p-3 border border-slate-100">
+                          <div className="text-[0.65rem] font-semibold tracking-widest uppercase text-slate-400 mb-1">{k}</div>
+                          <div className="text-base font-bold text-slate-800">{v || "—"}</div>
                         </div>
                       ))}
                     </div>
@@ -561,12 +599,12 @@ export default function RecipeGenerator() {
                   {/* Ingredients */}
                   <div className={`${secT} flex items-center justify-between`}>
                     <span>Ingredients</span>
-                    {ratio !== 1 && <span className="text-label-sm text-outline font-normal normal-case tracking-normal">×{formatNum(ratio)}</span>}
+                    {ratio !== 1 && <span className="text-[0.65rem] text-slate-400 font-normal normal-case tracking-normal">×{formatNum(ratio)}</span>}
                   </div>
-                  <div className="flex flex-col gap-px bg-primary border border-primary mb-4">
+                  <div className="flex flex-col mb-5">
                     {(recipe.ingredients || []).map((ing, i) => (
-                      <div key={i} className="bg-surface px-3 py-2 text-body-md flex items-baseline gap-2">
-                        <span className="text-outline shrink-0">—</span>
+                      <div key={i} className="py-2.5 border-b border-slate-100 last:border-0 text-[0.9375rem] text-slate-700 flex items-baseline gap-2.5">
+                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 mt-[0.45rem] ${m.dot}`}></span>
                         {scaleIngredient(ing, ratio)}
                       </div>
                     ))}
@@ -574,17 +612,17 @@ export default function RecipeGenerator() {
 
                   {/* Allergen quick summary — pro sidebar */}
                   {proMode && allergens && (
-                    <div className="mb-4">
+                    <div className="mb-5">
                       <div className={secT}>Allergens</div>
-                      <div className="flex flex-wrap gap-1 mb-2">
+                      <div className="flex flex-wrap gap-1.5 mb-3">
                         {ALLERGENS.map(a => {
                           const hit = allergens.find(x => x.id === a.id);
                           if (!hit?.present && !hit?.mayContain) return null;
                           return (
                             <span
                               key={a.id}
-                              className={`text-label-sm border border-primary px-2 py-[0.1rem] uppercase tracking-label font-bold ${
-                                hit.present ? "bg-primary text-on-primary" : "bg-surface-container text-primary"
+                              className={`text-[0.65rem] rounded-full px-2.5 py-0.5 font-bold uppercase tracking-wide ${
+                                hit.present ? m.allergenPresent : m.allergenMaybe
                               }`}
                             >{a.label}</span>
                           );
@@ -592,27 +630,26 @@ export default function RecipeGenerator() {
                       </div>
                       <button
                         onClick={() => setActiveProTab("allergens")}
-                        className="text-label-sm uppercase tracking-label text-outline border-none bg-transparent cursor-pointer font-[inherit] p-0 hover:text-primary transition-colors duration-100 ease-linear underline"
-                      >View full allergen matrix</button>
+                        className={`text-[0.7rem] font-semibold uppercase tracking-widest bg-transparent border-none cursor-pointer font-[inherit] p-0 transition-colors duration-150 ${m.allergenLink}`}
+                      >View full allergen matrix →</button>
                     </div>
                   )}
 
                   {/* Nutrition */}
                   {nutrition && (<>
                     <div className={secT}>
-                      Nutrition <span className="text-outline font-normal normal-case tracking-normal text-label-sm">per serving</span>
+                      Nutrition <span className="text-slate-300 font-normal normal-case tracking-normal text-[0.65rem]">per serving</span>
                     </div>
-                    {/* Calories — the focal data point */}
-                    <div className="border border-primary bg-surface-container px-3 py-3 mb-4 flex items-baseline justify-between">
-                      <span className="text-label-sm uppercase tracking-label text-outline">Calories</span>
-                      <span className="text-display-lg font-extrabold leading-none">{nutrition.calories}<span className="text-label-sm font-normal text-outline ml-1">kcal</span></span>
+                    <div className={`rounded-xl border px-4 py-4 mb-4 flex items-baseline justify-between ${m.calCard}`}>
+                      <span className="text-[0.7rem] font-semibold tracking-widest uppercase text-slate-400">Calories</span>
+                      <span className={`font-display text-3xl font-bold leading-none ${m.calText}`}>{nutrition.calories}<span className="text-[0.65rem] font-normal text-slate-400 ml-1">kcal</span></span>
                     </div>
-                    <NutritionBar label="Protein"       value={nutrition.protein} unit="g"  max={60}   />
-                    <NutritionBar label="Carbohydrates" value={nutrition.carbs}   unit="g"  max={100}  />
-                    <NutritionBar label="Fat"           value={nutrition.fat}     unit="g"  max={60}   />
-                    <NutritionBar label="Fiber"         value={nutrition.fiber}   unit="g"  max={30}   />
-                    <NutritionBar label="Sodium"        value={nutrition.sodium}  unit="mg" max={2300} />
-                    {nutrition.note && <p className="text-label-sm text-outline mt-2">{nutrition.note}</p>}
+                    <NutritionBar label="Protein"       value={nutrition.protein} unit="g"  max={60}   barColor={m.barColor} />
+                    <NutritionBar label="Carbohydrates" value={nutrition.carbs}   unit="g"  max={100}  barColor={m.barColor} />
+                    <NutritionBar label="Fat"           value={nutrition.fat}     unit="g"  max={60}   barColor={m.barColor} />
+                    <NutritionBar label="Fiber"         value={nutrition.fiber}   unit="g"  max={30}   barColor={m.barColor} />
+                    <NutritionBar label="Sodium"        value={nutrition.sodium}  unit="mg" max={2300} barColor={m.barColor} />
+                    {nutrition.note && <p className="text-[0.7rem] text-slate-400 mt-2">{nutrition.note}</p>}
                   </>)}
                 </div>
               </div>
@@ -626,7 +663,7 @@ export default function RecipeGenerator() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-primary text-on-primary border border-primary px-6 py-3 text-label-md uppercase tracking-label font-bold z-[300] animate-toast whitespace-nowrap"
+          className={`fixed bottom-8 left-1/2 -translate-x-1/2 ${m.toast} text-white rounded-full px-6 py-3 text-[0.7rem] font-bold tracking-widest uppercase z-[300] animate-toast whitespace-nowrap shadow-lg`}
         >
           {savedToast}
         </div>
@@ -638,7 +675,7 @@ export default function RecipeGenerator() {
           {content}
           <button
             onClick={() => setActiveSheet(null)}
-            className="w-full mt-4 py-3 border border-primary bg-[linear-gradient(to_bottom,#000000,#3b3b3b)] text-on-primary text-label-md uppercase tracking-label font-bold cursor-pointer font-[inherit] hover:bg-none hover:bg-surface hover:text-primary transition-colors duration-100 ease-linear"
+            className={`w-full mt-5 py-3.5 rounded-2xl text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-150 ${m.sheetDone}`}
           >Done</button>
         </BottomSheet>
       ))}

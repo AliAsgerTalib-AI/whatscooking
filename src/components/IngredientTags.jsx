@@ -1,8 +1,3 @@
-/**
- * IngredientTags — tokenised multi-value ingredient input with autocomplete.
- *
- * @param {{ tags: string[], onChange: (tags: string[]) => void }} props
- */
 import { useState, useRef, useCallback, useMemo } from "react";
 import { SUGGESTIONS } from "../data/suggestions.js";
 
@@ -62,17 +57,17 @@ export function IngredientTags({ tags, onChange }) {
         aria-controls="ingredient-listbox"
         aria-label="Ingredient input"
         onClick={() => inputRef.current?.focus()}
-        className={`min-h-[56px] border bg-surface px-2 py-2 flex flex-wrap gap-1 items-center cursor-text transition-colors duration-100 ease-linear ${
-          focused ? "border-primary bg-surface-container" : "border-primary"
+        className={`min-h-[56px] rounded-xl border px-3 py-2.5 flex flex-wrap gap-1.5 items-center cursor-text transition-colors duration-150 ${
+          focused ? "border-slate-400 bg-slate-50/50" : "border-slate-200 bg-white"
         }`}
       >
         {tags.map((tag, i) => (
-          <span key={tag} className="inline-flex items-center gap-1 border border-primary bg-surface px-2 py-[0.2rem] text-body-md font-medium animate-tag-pop">
+          <span key={tag} className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-3 py-0.5 text-sm font-medium text-slate-700 animate-tag-pop">
             {tag}
             <button
               onClick={e => { e.stopPropagation(); removeTag(i); }}
               aria-label={`Remove ${tag}`}
-              className="bg-transparent border-none cursor-pointer text-[0.9rem] leading-none px-[0.1rem] font-[inherit] flex items-center hover:bg-primary hover:text-on-primary transition-colors duration-100 ease-linear"
+              className="bg-transparent border-none cursor-pointer text-[0.9rem] leading-none px-0.5 font-[inherit] flex items-center text-slate-400 hover:text-slate-700 transition-colors duration-100"
             >×</button>
           </span>
         ))}
@@ -89,7 +84,7 @@ export function IngredientTags({ tags, onChange }) {
           onFocus={() => setFocused(true)}
           onBlur={() => setTimeout(() => setFocused(false), 150)}
           placeholder={tags.length === 0 ? "Type an ingredient and press Enter or comma…" : "Add more…"}
-          className="flex-[1_1_120px] min-w-[120px] bg-transparent border-none outline-none text-primary text-body-md font-[inherit] px-1 py-[0.25rem]"
+          className="flex-[1_1_120px] min-w-[120px] bg-transparent border-none outline-none text-slate-800 text-sm font-[inherit] px-1 py-[0.25rem] placeholder:text-slate-400"
         />
       </div>
 
@@ -98,7 +93,7 @@ export function IngredientTags({ tags, onChange }) {
           id="ingredient-listbox"
           role="listbox"
           aria-label="Ingredient suggestions"
-          className="absolute top-full left-0 right-0 bg-surface border border-primary border-t-0 z-50 animate-fade-in"
+          className="absolute top-full left-0 right-0 bg-white rounded-xl border border-slate-200 border-t-0 rounded-t-none z-50 animate-fade-in shadow-lg overflow-hidden"
         >
           {filtered.map((s, i) => {
             const idx = s.toLowerCase().indexOf(input.toLowerCase());
@@ -109,11 +104,11 @@ export function IngredientTags({ tags, onChange }) {
                 role="option"
                 aria-selected={i === highlightIdx}
                 onMouseDown={() => addTag(s)}
-                className={`px-3 py-2 cursor-pointer text-body-md flex items-center gap-2 transition-colors duration-100 ease-linear ${
-                  i < filtered.length - 1 ? "border-b border-primary" : ""
-                } ${i === highlightIdx ? "bg-primary text-on-primary" : "bg-surface text-primary"}`}
+                className={`px-4 py-2.5 cursor-pointer text-sm flex items-center gap-2 transition-colors duration-100 ${
+                  i < filtered.length - 1 ? "border-b border-slate-100" : ""
+                } ${i === highlightIdx ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"}`}
               >
-                <span className="text-label-sm text-outline">+</span>
+                <span className="text-[0.65rem] text-slate-400">+</span>
                 {idx === -1
                   ? s
                   : <>{s.slice(0,idx)}<strong className="font-bold">{s.slice(idx,idx+input.length)}</strong>{s.slice(idx+input.length)}</>
@@ -124,35 +119,35 @@ export function IngredientTags({ tags, onChange }) {
         </div>
       )}
 
-      <div className="flex items-center justify-between mt-2">
-        <p className="text-label-sm text-outline m-0">
+      <div className="flex items-center justify-between mt-2.5">
+        <p className="text-[0.7rem] text-slate-400 m-0">
           Press{" "}
-          <kbd className="border border-outline px-1 font-[inherit] text-label-sm">Enter</kbd>
+          <kbd className="rounded border border-slate-200 bg-slate-100 px-1 font-[inherit] text-[0.65rem] text-slate-600">Enter</kbd>
           {" "}or{" "}
-          <kbd className="border border-outline px-1 font-[inherit] text-label-sm">,</kbd>
-          {" "}to add &middot;{" "}
-          <kbd className="border border-outline px-1 font-[inherit] text-label-sm">⌫</kbd>
+          <kbd className="rounded border border-slate-200 bg-slate-100 px-1 font-[inherit] text-[0.65rem] text-slate-600">,</kbd>
+          {" "}to add · {" "}
+          <kbd className="rounded border border-slate-200 bg-slate-100 px-1 font-[inherit] text-[0.65rem] text-slate-600">⌫</kbd>
           {" "}to remove last
         </p>
         {tags.length > 0 && (
           <button
             onClick={() => onChange([])}
             aria-label="Clear all ingredients"
-            className="text-label-sm text-outline uppercase tracking-label border-none bg-transparent cursor-pointer font-[inherit] hover:text-primary transition-colors duration-100 ease-linear p-0"
+            className="text-[0.7rem] text-slate-400 uppercase tracking-widest font-semibold border-none bg-transparent cursor-pointer font-[inherit] hover:text-slate-700 transition-colors duration-150 p-0"
           >Clear all</button>
         )}
       </div>
 
       {!input && (
         <div className="mt-3">
-          <p className="text-label-sm uppercase tracking-label text-outline mb-2">Quick add</p>
-          <div className="flex flex-wrap gap-1">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-slate-400 mb-2">Quick add</p>
+          <div className="flex flex-wrap gap-1.5">
             {QUICK_ADD.map(s => (
               <button
                 key={s}
                 onMouseDown={() => addTag(s)}
                 aria-label={`Quick add ${s}`}
-                className="border border-primary bg-surface text-primary px-2 py-1 text-label-md cursor-pointer font-[inherit] hover:bg-primary hover:text-on-primary transition-colors duration-100 ease-linear"
+                className="rounded-full border border-slate-200 bg-white text-slate-600 px-3 py-1 text-[0.7rem] font-semibold cursor-pointer font-[inherit] hover:border-slate-400 hover:text-slate-900 transition-all duration-150"
               >+ {s}</button>
             ))}
           </div>
