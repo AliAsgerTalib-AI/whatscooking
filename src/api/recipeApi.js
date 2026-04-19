@@ -125,8 +125,9 @@ Respond ONLY with a valid JSON object. No markdown, no explanation. Exact struct
     body: JSON.stringify({
       model,
       generationConfig: {
-        temperature:    GENERATION_TEMP,
-        maxOutputTokens: proMode ? PRO_MAX_TOKENS : HOME_MAX_TOKENS,
+        temperature:      GENERATION_TEMP,
+        maxOutputTokens:  proMode ? PRO_MAX_TOKENS : HOME_MAX_TOKENS,
+        responseMimeType: "application/json",
       },
       contents: [{ role: "user", parts: [{ text: proMode ? proPrompt : homePrompt }] }],
     }),
