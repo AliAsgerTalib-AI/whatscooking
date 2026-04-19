@@ -9,8 +9,8 @@
  */
 
 // ── Models — swap these strings to upgrade without touching any other code ──────
-const HOME_MODEL = "gemini-2.5-flash-preview-05-20";
-const PRO_MODEL  = "gemini-2.5-flash-preview-05-20";
+const HOME_MODEL = "gemini-2.5-flash";
+const PRO_MODEL  = "gemini-2.5-flash";
 
 // ── Constants ────────────────────────────────────────────────────────────────────
 const ANTHROPIC_BASE       = "/api/generate";
