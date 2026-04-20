@@ -70,8 +70,13 @@ export function CookingMode({ steps, proMode, onClose }) {
   }
 
   function commitEdit() {
-    const parts = editVal.split(":").map(n => parseInt(n, 10) || 0);
-    const total = parts.length === 2 ? parts[0] * 60 + parts[1] : parts[0] * 60;
+    let total;
+    if (editVal.includes(":")) {
+      const parts = editVal.split(":").map(n => parseInt(n, 10) || 0);
+      total = parts[0] * 60 + (parts[1] || 0);
+    } else {
+      total = parseInt(editVal, 10) || 0;
+    }
     setSecondsLeft(Math.max(0, total));
     setEditing(false);
   }
@@ -188,7 +193,7 @@ export function CookingMode({ steps, proMode, onClose }) {
 }
 
 const overlay = {
-  position: "fixed", inset: 0, zIndex: 200,
+  position: "fixed", inset: 0, zIndex: 250,
   background: "#111",
   display: "flex", flexDirection: "column",
   fontFamily: "inherit",
