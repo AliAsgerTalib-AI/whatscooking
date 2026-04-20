@@ -31,6 +31,14 @@ export function exportHomePDF(recipe, tags, nutrition, displayServings, ratio) {
     .ing{font-size:0.85rem;padding:0.35rem 0;border-bottom:1px solid #f0f0f0;display:flex;gap:0.5rem;}
     .ing-dot{width:5px;height:5px;border-radius:50%;background:#f3722c;margin-top:6px;flex-shrink:0;}
     .footer{margin-top:2rem;padding-top:1rem;border-top:1px solid #eee;font-size:0.65rem;color:#bbb;font-family:sans-serif;display:flex;justify-content:space-between;}
+    @media print{
+      body{font-size:9pt;}
+      @page{margin:1.2cm;size:A4;}
+      .grid{display:block;}
+      .grid>div{display:block;width:100%;break-inside:auto;}
+      .step{break-inside:avoid;}
+      .footer{break-inside:avoid;}
+    }
   </style></head><body>
 
   <div class="header">

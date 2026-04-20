@@ -106,7 +106,12 @@ export function exportProPDF(recipe, tags, nutrition, allergens, displayServings
     @media print{
       body{font-size:9pt;}
       .page{max-width:100%;}
-      @page{margin:0.8cm;size:A4;}
+      @page{margin:1.2cm;size:A4;}
+      .body-grid{display:block;}
+      .main-col,.side-col{display:block;width:100%;border:none;break-inside:auto;}
+      .step{break-inside:avoid;}
+      .allergen-section{break-inside:avoid;}
+      .footer{break-inside:avoid;}
     }
   </style>
   </head><body><div class="page">
