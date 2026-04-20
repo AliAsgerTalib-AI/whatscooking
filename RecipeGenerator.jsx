@@ -84,12 +84,26 @@ export default function RecipeGenerator() {
       "─".repeat(28),
       ...scaledIngs.map(i => `□ ${i}`),
     ].join("\n");
-    try {
-      await navigator.clipboard.writeText(text);
+    let copied = false;
+    if (navigator.clipboard?.writeText) {
+      try { await navigator.clipboard.writeText(text); copied = true; } catch { /* fall through */ }
+    }
+    if (!copied) {
+      try {
+        const ta = Object.assign(document.createElement("textarea"), {
+          value: text, style: "position:fixed;opacity:0"
+        });
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        copied = document.execCommand("copy");
+        document.body.removeChild(ta);
+      } catch { /* ignore */ }
+    }
+    if (copied) {
       showToast("Copied to clipboard!");
       setCopyingList(true);
       setTimeout(() => setCopyingList(false), 2000);
-    } catch {
+    } else {
       showToast("Copy failed — try again.");
     }
   }, [recipe, ratio, displayServings, showToast]);
