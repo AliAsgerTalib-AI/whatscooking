@@ -4,12 +4,16 @@
  * Priority: hours > minutes range > minutes > seconds.
  */
 export function parseStepTime(text) {
+  // Range: "1–2 hours", "1-2 hours", "1 to 2 hours" — take upper bound
+  const hourRangeMatch = text.match(/(\d+)\s*(?:[–—\-]|to)\s*(\d+)\s*hour/i);
+  if (hourRangeMatch) return parseInt(hourRangeMatch[2], 10) * 3600;
+
   // 1 hour / 2 hours
   const hourMatch = text.match(/(\d+)\s*hour/i);
   if (hourMatch) return parseInt(hourMatch[1], 10) * 3600;
 
   // Range: "3–4 min", "3-4 minutes", "3 to 4 minutes" — take upper bound
-  const rangeMatch = text.match(/(\d+)\s*(?:[–\-]|to)\s*(\d+)\s*min/i);
+  const rangeMatch = text.match(/(\d+)\s*(?:[–—\-]|to)\s*(\d+)\s*min/i);
   if (rangeMatch) return parseInt(rangeMatch[2], 10) * 60;
 
   // Single minutes: "10 minutes", "about 5 min"

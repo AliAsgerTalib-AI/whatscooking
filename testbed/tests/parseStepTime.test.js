@@ -35,6 +35,10 @@ describe("parseStepTime", () => {
     expect(parseStepTime("Roast for 1 hour until caramelised")).toBe(3600);
   });
 
+  it("handles '1-2 hours' → 7200 (takes upper bound)", () => {
+    expect(parseStepTime("Braise for 1–2 hours until tender")).toBe(7200);
+  });
+
   it("prefers minutes over seconds when both appear", () => {
     expect(parseStepTime("Cook for 2 minutes, stirring every 30 seconds")).toBe(120);
   });
