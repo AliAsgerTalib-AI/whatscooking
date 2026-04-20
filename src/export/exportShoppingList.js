@@ -1,5 +1,8 @@
 import { scaleIngredient } from "../utils/scaleIngredient.js";
 
+/**
+ * Opens a new window with a branded shopping list and auto-triggers print.
+ */
 export function exportShoppingList(recipe, displayServings, ratio) {
   const win = window.open("", "_blank");
   if (!win) return;
@@ -16,8 +19,8 @@ export function exportShoppingList(recipe, displayServings, ratio) {
     h1{font-size:1.4rem;line-height:1.2;margin-bottom:0.3rem;}
     .serves{font-size:0.75rem;color:#999;font-family:sans-serif;}
     .ing-list{display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem;margin-top:1rem;}
-    .ing{display:flex;gap:0.6rem;padding:0.4rem 0;border-bottom:1px solid #f0f0f0;font-size:0.88rem;align-items:baseline;}
-    .box{width:14px;height:14px;border:1.5px solid #ccc;border-radius:3px;flex-shrink:0;margin-top:3px;}
+    .ing{display:flex;gap:0.6rem;padding:0.4rem 0;border-bottom:1px solid #f0f0f0;font-size:0.88rem;align-items:flex-start;}
+    .box{width:14px;height:14px;border:1.5px solid #ccc;border-radius:3px;flex-shrink:0;margin-top:2px;}
     .footer{margin-top:2rem;padding-top:0.8rem;border-top:1px solid #eee;font-size:0.6rem;color:#bbb;font-family:sans-serif;}
     @media print{
       body{font-size:9pt;}
