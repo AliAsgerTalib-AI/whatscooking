@@ -74,6 +74,8 @@ export default function RecipeGenerator() {
     setTimeout(() => setSavedToast(""), TOAST_DURATION_MS);
   }, []);
 
+  const ratio = baseServings > 0 ? displayServings / baseServings : 1;
+
   const copyShoppingList = useCallback(async () => {
     if (!recipe) return;
     const scaledIngs = (recipe.ingredients || []).map(i => scaleIngredient(i, ratio));
@@ -199,8 +201,6 @@ export default function RecipeGenerator() {
       setLoading(false);
     }
   };
-
-  const ratio = baseServings > 0 ? displayServings / baseServings : 1;
 
   // ── Shell-local sub-components ────────────────────────────────────────────────
 
