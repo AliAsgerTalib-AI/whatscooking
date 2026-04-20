@@ -15,8 +15,8 @@ const PRO_MODEL  = "gemini-2.5-flash";
 // ── Constants ────────────────────────────────────────────────────────────────────
 const ANTHROPIC_BASE       = "/api/generate";
 const MAX_RESPONSE_CHARS   = 32_000;   // guard against runaway JSON from the model
-const HOME_MAX_TOKENS      = 2800;
-const PRO_MAX_TOKENS       = 3200;
+const HOME_MAX_TOKENS      = 8192;
+const PRO_MAX_TOKENS       = 8192;
 const GENERATION_TEMP      = 0.8;
 
 export async function generateRecipe({
@@ -138,8 +138,12 @@ Respond ONLY with a valid JSON object. No markdown, no explanation. Exact struct
     throw new Error(e.error?.message || `Gemini API error (HTTP ${res.status})`);
   }
 
-  const data = await res.json();
-  const raw  = (data.candidates?.[0]?.content?.parts ?? []).map(p => p.text || "").join("");
+  const data      = await res.json();
+  const candidate = data.candidates?.[0];
+  if (candidate?.finishReason === "MAX_TOKENS") {
+    throw new Error("Recipe response was cut off (token limit hit). Please try again.");
+  }
+  const raw  = (candidate?.content?.parts ?? []).map(p => p.text || "").join("");
 
   // BP-14: Guard against runaway responses before parsing
   if (raw.length > MAX_RESPONSE_CHARS) {
