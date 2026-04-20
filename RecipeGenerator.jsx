@@ -21,6 +21,8 @@ import { generateRecipe }  from "./src/api/recipeApi.js";
 import { useFavorites }    from "./src/hooks/useFavorites.js";
 import { exportProPDF }    from "./src/export/exportProPDF.js";
 import { exportHomePDF }   from "./src/export/exportHomePDF.js";
+import { CookingMode }        from "./src/components/CookingMode.jsx";
+import { exportShoppingList } from "./src/export/exportShoppingList.js";
 
 // ── Components ────────────────────────────────────────────────────────────────
 import { IngredientTags }  from "./src/components/IngredientTags.jsx";
@@ -54,6 +56,8 @@ export default function RecipeGenerator() {
   const [isMobile, setIsMobile]               = useState(false);
   const [savedToast, setSavedToast]           = useState("");
   const [exportingPDF, setExportingPDF]       = useState(false);
+  const [cookingMode, setCookingMode]         = useState(false);
+  const [copyingList, setCopyingList]         = useState(false);
   const [proFields, setProFields]             = useState({ chefName:"", station:"", version:"1.0", costPerPortion:"" });
   const [activeProTab, setActiveProTab]       = useState("recipe");
   const [selectedAllergens, setSelectedAllergens] = useState([]);
@@ -69,6 +73,24 @@ export default function RecipeGenerator() {
     setSavedToast(msg);
     setTimeout(() => setSavedToast(""), TOAST_DURATION_MS);
   }, []);
+
+  const copyShoppingList = useCallback(async () => {
+    if (!recipe) return;
+    const scaledIngs = (recipe.ingredients || []).map(i => scaleIngredient(i, ratio));
+    const text = [
+      `${recipe.title} — serves ${displayServings}`,
+      "─".repeat(28),
+      ...scaledIngs.map(i => `□ ${i}`),
+    ].join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast("Copied to clipboard!");
+    } catch {
+      showToast("Copy failed — try again.");
+    }
+    setCopyingList(true);
+    setTimeout(() => setCopyingList(false), 2000);
+  }, [recipe, ratio, displayServings, showToast]);
 
   const { favorites, isFav, setIsFav, toggleFav, loadFavorite, deleteFavorite } = useFavorites({
     showToast,
@@ -117,7 +139,7 @@ export default function RecipeGenerator() {
     chipActive:      "bg-orange-500 text-white border-transparent shadow-sm",
     pillActive:      "bg-orange-500 text-white border-transparent",
     servBtn:         "bg-orange-500 text-white border-transparent shadow-md",
-    ctaBtn:          "bg-gradient-to-r from-orange-500 to-amber-400 text-white shadow-lg shadow-orange-200/60 hover:shadow-xl hover:shadow-orange-200/80 hover:scale-[1.005]",
+    ctaBtn:          "bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-lg shadow-green-200/60 hover:shadow-xl hover:shadow-green-200/80 hover:scale-[1.005]",
     resultTint:      "from-orange-50/60 to-amber-50/40",
     badge:           "border-orange-200 bg-orange-50 text-orange-700",
     savedBtn:        "bg-orange-500 text-white border-transparent",
@@ -492,6 +514,19 @@ export default function RecipeGenerator() {
                     }}
                     className="rounded-full bg-white text-slate-700 border border-slate-200 px-5 py-2.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] hover:border-slate-400 transition-all duration-150"
                   >{exportingPDF ? "Opening…" : (proMode ? "Pro Recipe Card PDF" : "Export PDF")}</button>
+                  <button
+                    onClick={() => setCookingMode(true)}
+                    className="rounded-full bg-white text-slate-700 border border-slate-200 px-5 py-2.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] hover:border-slate-400 transition-all duration-150"
+                  >Start Cooking</button>
+                  <button
+                    onClick={copyShoppingList}
+                    disabled={copyingList}
+                    className="rounded-full bg-white text-slate-700 border border-slate-200 px-5 py-2.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] hover:border-slate-400 transition-all duration-150 disabled:opacity-50"
+                  >{copyingList ? "✓ Copied" : "📋 Copy List"}</button>
+                  <button
+                    onClick={() => exportShoppingList(recipe, displayServings, ratio)}
+                    className="rounded-full bg-white text-slate-700 border border-slate-200 px-5 py-2.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] hover:border-slate-400 transition-all duration-150"
+                  >🖨 Print List</button>
                 </div>
               </div>
 
@@ -635,22 +670,6 @@ export default function RecipeGenerator() {
                     </div>
                   )}
 
-                  {/* Nutrition */}
-                  {nutrition && (<>
-                    <div className={secT}>
-                      Nutrition <span className="text-slate-300 font-normal normal-case tracking-normal text-[0.65rem]">per serving</span>
-                    </div>
-                    <div className={`rounded-xl border px-4 py-4 mb-4 flex items-baseline justify-between ${m.calCard}`}>
-                      <span className="text-[0.7rem] font-semibold tracking-widest uppercase text-slate-400">Calories</span>
-                      <span className={`font-display text-3xl font-bold leading-none ${m.calText}`}>{nutrition.calories}<span className="text-[0.65rem] font-normal text-slate-400 ml-1">kcal</span></span>
-                    </div>
-                    <NutritionBar label="Protein"       value={nutrition.protein} unit="g"  max={60}   barColor={m.barColor} />
-                    <NutritionBar label="Carbohydrates" value={nutrition.carbs}   unit="g"  max={100}  barColor={m.barColor} />
-                    <NutritionBar label="Fat"           value={nutrition.fat}     unit="g"  max={60}   barColor={m.barColor} />
-                    <NutritionBar label="Fiber"         value={nutrition.fiber}   unit="g"  max={30}   barColor={m.barColor} />
-                    <NutritionBar label="Sodium"        value={nutrition.sodium}  unit="mg" max={2300} barColor={m.barColor} />
-                    {nutrition.note && <p className="text-[0.7rem] text-slate-400 mt-2">{nutrition.note}</p>}
-                  </>)}
                 </div>
               </div>
             </div>
@@ -679,6 +698,15 @@ export default function RecipeGenerator() {
           >Done</button>
         </BottomSheet>
       ))}
+
+      {/* Cooking Mode overlay */}
+      {cookingMode && recipe && (
+        <CookingMode
+          steps={recipe.steps || []}
+          proMode={proMode}
+          onClose={() => setCookingMode(false)}
+        />
+      )}
     </div>
   );
 }
