@@ -85,11 +85,11 @@ export default function RecipeGenerator() {
     try {
       await navigator.clipboard.writeText(text);
       showToast("Copied to clipboard!");
+      setCopyingList(true);
+      setTimeout(() => setCopyingList(false), 2000);
     } catch {
       showToast("Copy failed — try again.");
     }
-    setCopyingList(true);
-    setTimeout(() => setCopyingList(false), 2000);
   }, [recipe, ratio, displayServings, showToast]);
 
   const { favorites, isFav, setIsFav, toggleFav, loadFavorite, deleteFavorite } = useFavorites({
