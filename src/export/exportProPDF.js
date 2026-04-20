@@ -175,15 +175,6 @@ export function exportProPDF(recipe, tags, nutrition, allergens, displayServings
       <div class="sec" style="margin-top:0">Ingredients × ${displayServings}</div>
       ${scaledIngs.map(i => `<div class="ing"><div class="ing-dot"></div>${i}</div>`).join("")}
 
-      ${nutrition ? `
-      <div class="sec" style="margin-top:1rem">Nutrition / serving</div>
-      <div class="nut-cal-label">Calories</div>
-      <div class="nut-cal">${nutrition.calories} kcal</div>
-      <div class="nut-row"><span>Protein</span><strong>${nutrition.protein}g</strong></div>
-      <div class="nut-row"><span>Carbs</span><strong>${nutrition.carbs}g</strong></div>
-      <div class="nut-row"><span>Fat</span><strong>${nutrition.fat}g</strong></div>
-      <div class="nut-row"><span>Fiber</span><strong>${nutrition.fiber}g</strong></div>
-      <div class="nut-row"><span>Sodium</span><strong>${nutrition.sodium}mg</strong></div>` : ""}
 
       ${proFields?.ingredients?.some(i => i.cost) ? `
       <div class="sec" style="margin-top:1rem">Cost Breakdown</div>

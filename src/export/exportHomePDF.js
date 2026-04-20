@@ -24,7 +24,8 @@ export function exportHomePDF(recipe, tags, nutrition, displayServings, ratio) {
     .meta-key{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:0.2rem;font-family:sans-serif;}
     .meta-val{font-size:0.85rem;font-weight:bold;color:#f3722c;}
     .section-title{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:#f3722c;font-weight:bold;padding-bottom:0.4rem;border-bottom:1px solid #eee;margin:1.5rem 0 0.75rem;font-family:sans-serif;}
-    .grid{display:grid;grid-template-columns:1fr 220px;gap:1.5rem;}
+    .ing-list{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem;margin-bottom:1.5rem;}
+    .grid{display:grid;grid-template-columns:1fr;gap:1.5rem;}
     .step{display:flex;gap:0.75rem;margin-bottom:0.9rem;align-items:flex-start;}
     .step-num{min-width:24px;height:24px;background:#f3722c;color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold;flex-shrink:0;margin-top:2px;font-family:sans-serif;}
     .step-text{font-size:0.88rem;line-height:1.65;}
@@ -34,8 +35,7 @@ export function exportHomePDF(recipe, tags, nutrition, displayServings, ratio) {
     @media print{
       body{font-size:9pt;}
       @page{margin:1.2cm;size:A4;}
-      .grid{display:block;}
-      .grid>div{display:block;width:100%;break-inside:auto;}
+      .ing-list{grid-template-columns:1fr 1fr;}
       .step{break-inside:avoid;}
       .footer{break-inside:avoid;}
     }
@@ -54,22 +54,16 @@ export function exportHomePDF(recipe, tags, nutrition, displayServings, ratio) {
     </div>
   </div>
 
+  <div class="section-title">Ingredients (serves ${displayServings})</div>
+  <div class="ing-list">
+    ${scaledIngs.map(i => `<div class="ing"><div class="ing-dot"></div>${i}</div>`).join("")}
+  </div>
+
   <div class="grid">
     <div>
       <div class="section-title">Method</div>
       ${(recipe.steps || []).map((s, i) => `<div class="step"><div class="step-num">${i + 1}</div><div class="step-text">${s}</div></div>`).join("")}
       ${recipe.tips ? `<div style="background:#fff8f5;border-left:3px solid #f3722c;padding:0.75rem 1rem;margin-top:1rem;font-size:0.85rem;line-height:1.6;color:#555;"><strong>💡 Chef's Tip:</strong> ${recipe.tips}</div>` : ""}
-    </div>
-    <div>
-      <div class="section-title">Ingredients (serves ${displayServings})</div>
-      ${scaledIngs.map(i => `<div class="ing"><div class="ing-dot"></div>${i}</div>`).join("")}
-      ${nutrition ? `
-      <div class="section-title">Nutrition (per serving)</div>
-      <div style="background:#fafafa;border-radius:6px;padding:1rem;">
-        <div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid #eee;font-size:0.82rem;"><span>Calories</span><strong>${nutrition.calories} kcal</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:0.35rem 0;border-bottom:1px solid #eee;font-size:0.82rem;"><span>Protein</span><strong>${nutrition.protein}g</strong></div>
-        <div style="display:flex;justify-content:space-between;padding:0.35rem 0;font-size:0.82rem;"><span>Carbs</span><strong>${nutrition.carbs}g</strong></div>
-      </div>` : ""}
     </div>
   </div>
 
