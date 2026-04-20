@@ -31,12 +31,15 @@ export function exportHomePDF(recipe, tags, nutrition, displayServings, ratio) {
     .step-text{font-size:0.88rem;line-height:1.65;}
     .ing{font-size:0.85rem;padding:0.35rem 0;border-bottom:1px solid #f0f0f0;display:flex;gap:0.5rem;}
     .ing-dot{width:5px;height:5px;border-radius:50%;background:#f3722c;margin-top:6px;flex-shrink:0;}
+    .tip-card{display:flex;gap:0.5rem;background:#fff8f5;border:1px solid #fde8d8;border-radius:6px;padding:0.6rem 0.8rem;margin-bottom:0.4rem;font-size:0.83rem;line-height:1.5;}
+    .warn-card{display:flex;gap:0.5rem;background:#fffbea;border:1px solid #f0d060;border-radius:6px;padding:0.6rem 0.8rem;margin-bottom:0.4rem;font-size:0.83rem;line-height:1.5;}
     .footer{margin-top:2rem;padding-top:1rem;border-top:1px solid #eee;font-size:0.65rem;color:#bbb;font-family:sans-serif;display:flex;justify-content:space-between;}
     @media print{
       body{font-size:9pt;}
       @page{margin:1.2cm;size:A4;}
       .ing-list{grid-template-columns:1fr 1fr;}
       .step{break-inside:avoid;}
+      .tip-card,.warn-card{break-inside:avoid;}
       .footer{break-inside:avoid;}
     }
   </style></head><body>
@@ -64,6 +67,14 @@ export function exportHomePDF(recipe, tags, nutrition, displayServings, ratio) {
       <div class="section-title">Method</div>
       ${(recipe.steps || []).map((s, i) => `<div class="step"><div class="step-num">${i + 1}</div><div class="step-text">${s}</div></div>`).join("")}
       ${recipe.tips ? `<div style="background:#fff8f5;border-left:3px solid #f3722c;padding:0.75rem 1rem;margin-top:1rem;font-size:0.85rem;line-height:1.6;color:#555;"><strong>💡 Chef's Tip:</strong> ${recipe.tips}</div>` : ""}
+
+      ${(recipe.proTips || []).length ? `
+      <div class="section-title" style="margin-top:1.5rem">💡 Pro Tips</div>
+      ${(recipe.proTips || []).map(t => `<div class="tip-card"><span>${t.icon || "💡"}</span><div><strong>${t.title}</strong> — ${t.body}</div></div>`).join("")}` : ""}
+
+      ${(recipe.watchOuts || []).length ? `
+      <div class="section-title" style="margin-top:1.5rem;color:#c0392b">⚠️ Watch Out For</div>
+      ${(recipe.watchOuts || []).map(w => `<div class="warn-card"><span>${w.icon || "⚠️"}</span><div><strong>${w.title}</strong> — ${w.body}</div></div>`).join("")}` : ""}
     </div>
   </div>
 
