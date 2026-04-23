@@ -68,9 +68,13 @@ export function exportHomePDF(recipe, tags, nutrition, displayServings, ratio) {
       ${(recipe.steps || []).map((s, i) => `<div class="step"><div class="step-num">${i + 1}</div><div class="step-text">${s}</div></div>`).join("")}
       ${recipe.tips ? `<div style="background:#fff8f5;border-left:3px solid #f3722c;padding:0.75rem 1rem;margin-top:1rem;font-size:0.85rem;line-height:1.6;color:#555;"><strong>💡 Chef's Tip:</strong> ${recipe.tips}</div>` : ""}
 
-      ${(recipe.proTips || []).length ? `
-      <div class="section-title" style="margin-top:1.5rem">💡 Pro Tips</div>
-      ${(recipe.proTips || []).map(t => `<div class="tip-card"><span>${t.icon || "💡"}</span><div><strong>${t.title}</strong> — ${t.body}</div></div>`).join("")}` : ""}
+      ${(recipe.flavourTips || []).length ? `
+      <div class="section-title" style="margin-top:1.5rem">🌿 Flavour Tips</div>
+      ${(recipe.flavourTips || []).map(t => `<div class="tip-card"><div><strong>${t.title}</strong> — ${t.body}</div></div>`).join("")}` : ""}
+
+      ${(recipe.kitchenTips || []).length ? `
+      <div class="section-title" style="margin-top:1.5rem">🔪 Kitchen Tips</div>
+      ${(recipe.kitchenTips || []).map(t => `<div class="tip-card"><div><strong>${t.title}</strong> — ${t.body}</div></div>`).join("")}` : ""}
 
       ${(recipe.watchOuts || []).length ? `
       <div class="section-title" style="margin-top:1.5rem;color:#c0392b">⚠️ Watch Out For</div>

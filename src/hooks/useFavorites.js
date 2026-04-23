@@ -4,30 +4,13 @@ import { makeid } from "../utils/makeid.js";
 
 const MAX_FAVORITES = 20;
 
-/**
- * Manages favourites state with crash-guarded localStorage persistence.
- *
- * @param {{
- *   showToast: (msg: string) => void,
- *   setRecipe: Function,
- *   setNutrition: Function,
- *   setAllergens: Function,
- *   setIngredientTags: Function,
- *   setBaseServings: Function,
- *   setDisplayServings: Function,
- *   setProMode: Function,
- *   setTab: Function,
- * }} setters
- */
 export function useFavorites({
   showToast,
   setRecipe,
   setNutrition,
-  setAllergens,
   setIngredientTags,
   setBaseServings,
   setDisplayServings,
-  setProMode,
   setTab,
 }) {
   const [favorites, setFavorites] = useState(() => storageGet("favs", []).value);
@@ -39,7 +22,7 @@ export function useFavorites({
     if (!ok) showToast("⚠️ Couldn't save — storage unavailable in this browser");
   }, [showToast]);
 
-  const toggleFav = useCallback((recipe, nutrition, allergens, ingredientTags, proMode) => {
+  const toggleFav = useCallback((recipe, nutrition, ingredientTags) => {
     if (!recipe) return;
     if (isFav) {
       setFavorites(prev => {
@@ -50,7 +33,7 @@ export function useFavorites({
       });
       setIsFav(false);
     } else {
-      const entry = { id: makeid(), recipe, nutrition, allergens, tags: ingredientTags, savedAt: Date.now(), proMode };
+      const entry = { id: makeid(), recipe, nutrition, tags: ingredientTags, savedAt: Date.now() };
       setFavorites(prev => {
         const next = [entry, ...prev].slice(0, MAX_FAVORITES);
         const { ok } = storageSet("favs", next);
@@ -65,16 +48,14 @@ export function useFavorites({
   const loadFavorite = useCallback((fav) => {
     setRecipe(fav.recipe);
     setNutrition(fav.nutrition || null);
-    setAllergens(fav.allergens || null);
     setIngredientTags(fav.tags || []);
     const sv = parseInt(fav.recipe.meta?.serves, 10) || 4;
     setBaseServings(sv);
     setDisplayServings(sv);
     setIsFav(true);
-    setProMode(fav.proMode || false);
     setTab("generator");
     setTimeout(() => document.getElementById("result-anchor")?.scrollIntoView({ behavior: "smooth" }), 200);
-  }, [setRecipe, setNutrition, setAllergens, setIngredientTags, setBaseServings, setDisplayServings, setProMode, setTab]);
+  }, [setRecipe, setNutrition, setIngredientTags, setBaseServings, setDisplayServings, setTab]);
 
   const deleteFavorite = useCallback((id) => {
     setFavorites(prev => {

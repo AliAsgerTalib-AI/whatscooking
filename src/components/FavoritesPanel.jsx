@@ -23,9 +23,6 @@ export function FavoritesPanel({ favorites, onLoad, onDelete }) {
             <div className="text-body-md font-bold mb-1 truncate">{fav.recipe.title}</div>
             <div className="text-label-sm text-outline uppercase tracking-label mb-2">
               {fav.recipe.badge} &middot; {fav.recipe.meta?.serves} servings &middot; {new Date(fav.savedAt).toLocaleDateString()}
-              {fav.proMode && (
-                <span className="ml-2 border border-primary px-1 font-bold">PRO</span>
-              )}
             </div>
             {fav.tags?.length > 0 && (
               <div className="flex flex-wrap gap-1">

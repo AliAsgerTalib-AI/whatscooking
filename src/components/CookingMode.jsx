@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { parseStepTime } from "../utils/parseStepTime.js";
 
-export function CookingMode({ steps, proMode, onClose }) {
+export function CookingMode({ steps, onClose }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [secondsLeft, setSecondsLeft]   = useState(null);
   const [running, setRunning]           = useState(false);
@@ -10,7 +10,7 @@ export function CookingMode({ steps, proMode, onClose }) {
   const [done, setDone]                 = useState(false);
   const intervalRef = useRef(null);
 
-  const accent = proMode ? "#6366f1" : "#f3722c";
+  const accent = "#f3722c";
 
   const loadStep = useCallback((idx) => {
     clearInterval(intervalRef.current);

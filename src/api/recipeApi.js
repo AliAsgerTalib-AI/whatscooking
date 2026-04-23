@@ -1,22 +1,10 @@
-/**
- * Recipe generation API client for FlavorLab.
- *
- * Calls the /api/generate Vercel serverless function, which proxies to Anthropic.
- * The API key is held server-side and never exposed to the browser.
- *
- * @param {import("../types/recipe.ts").GenerateRecipeParams} opts
- * @returns {Promise<import("../types/recipe.ts").GenerateRecipeResult>}
- */
-
 // ── Models — swap these strings to upgrade without touching any other code ──────
-const HOME_MODEL = "gemini-2.5-flash";
-const PRO_MODEL  = "gemini-2.5-flash";
+const MODEL = "gemini-2.5-flash";
 
 // ── Constants ────────────────────────────────────────────────────────────────────
 const ANTHROPIC_BASE       = "/api/generate";
-const MAX_RESPONSE_CHARS   = 32_000;   // guard against runaway JSON from the model
-const HOME_MAX_TOKENS      = 8192;
-const PRO_MAX_TOKENS       = 8192;
+const MAX_RESPONSE_CHARS   = 32_000;
+const MAX_TOKENS           = 8192;
 const GENERATION_TEMP      = 0.8;
 
 export async function generateRecipe({
@@ -27,11 +15,9 @@ export async function generateRecipe({
   selectedMethod,
   selectedAllergens,
   servings,
-  proMode,
   cookType,
 }) {
   const ingList = ingredientTags.join(", ");
-  const model   = proMode ? PRO_MODEL : HOME_MODEL;
 
   const cookTypeInstruction = cookType?.prompt ? `\nCOOK PERSONA: ${cookType.prompt}` : "";
 
@@ -64,75 +50,30 @@ Respond ONLY with a valid JSON object. No markdown, no explanation. Exact struct
     { "icon": "🌡️", "title": "Temperature warning", "body": "Heat and doneness tips." },
     { "icon": "🧪", "title": "Texture pitfall", "body": "What ruins this dish." }
   ],
+  "flavourTips": [
+    { "title": "Tip title", "body": "Specific technique to intensify or balance the flavour of this dish." },
+    { "title": "Tip title", "body": "A seasoning, acid, fat, or umami suggestion tailored to these ingredients." },
+    { "title": "Tip title", "body": "A finishing touch or garnish that elevates the final flavour." }
+  ],
+  "kitchenTips": [
+    { "title": "Tip title", "body": "Equipment or preparation advice that makes this recipe easier." },
+    { "title": "Tip title", "body": "Knife, heat, or timing technique specific to this dish." },
+    { "title": "Tip title", "body": "Storage, make-ahead, or leftover guidance for this recipe." }
+  ],
   "nutrition": { "calories": 420, "protein": 32, "carbs": 38, "fat": 14, "fiber": 5, "sodium": 680, "note": "Estimated values per serving" }
-}`;
-
-  const proPrompt = `You are an executive chef and food safety expert creating a professional kitchen recipe card.
-
-INGREDIENTS: ${ingList}
-${cuisine             ? `CUISINE STYLE: ${cuisine}`                                       : ""}
-${selectedFlavors.length ? `FLAVOR PROFILE: ${selectedFlavors.join(", ")}`              : ""}
-${selectedDiets.length   ? `DIETARY REQUIREMENTS (strictly follow ALL): ${selectedDiets.join(", ")}` : ""}
-${selectedMethod      ? `COOKING METHOD: ${selectedMethod}`                              : ""}
-YIELD / SERVING SIZE: ${servings} portions${cookTypeInstruction}
-
-Writing for a professional kitchen brigade. Use metric weights, precise temperatures (°C), and correct culinary technique.
-
-Respond ONLY with a valid JSON object. No markdown, no explanation. Exact structure:
-{
-  "title": "Professional dish name",
-  "badge": "Cuisine category",
-  "intro": "One precise professional description.",
-  "meta": { "prep": "20 min", "cook": "35 min", "serves": "${servings}", "difficulty": "Intermediate", "method": "${selectedMethod || "Stovetop"}" },
-  "ingredients": ["200g chicken breast (trimmed)", "... use metric weights for all"],
-  "steps": ["Precise step with temp e.g. Sear at 220°C for 2 min each side until golden.", "..."],
-  "tips": "Professional chef tip.",
-  "miseEnPlace": ["Brunoise 200g shallots", "Reduce 500ml stock to 150ml", "..."],
-  "proTips": [
-    { "icon": "🌡️", "title": "Internal temp", "body": "Exact probe temperature and doneness." },
-    { "icon": "🔪", "title": "Knife technique", "body": "Specific cut for best result." },
-    { "icon": "⏱", "title": "Timing & resting", "body": "Resting or holding guidance." }
-  ],
-  "watchOuts": [
-    { "icon": "⚠️", "title": "Professional mistake", "body": "What fails in a kitchen." },
-    { "icon": "🌡️", "title": "Heat management", "body": "Temperature pitfall for this dish." },
-    { "icon": "🧪", "title": "Texture/emulsion risk", "body": "Texture risk and remedy." }
-  ],
-  "haccp": [
-    "Store raw proteins below 4°C and use within 48 hours.",
-    "Ensure internal temperature of [protein] reaches [°C] before service.",
-    "Cool sauce from 60°C to 20°C within 2 hours if holding."
-  ],
-  "allergens": [
-    { "id": "gluten",      "present": false, "mayContain": false },
-    { "id": "crustaceans", "present": false, "mayContain": false },
-    { "id": "eggs",        "present": false, "mayContain": false },
-    { "id": "fish",        "present": false, "mayContain": false },
-    { "id": "peanuts",     "present": false, "mayContain": false },
-    { "id": "soybeans",    "present": false, "mayContain": false },
-    { "id": "dairy",       "present": false, "mayContain": false },
-    { "id": "nuts",        "present": false, "mayContain": false },
-    { "id": "celery",      "present": false, "mayContain": false },
-    { "id": "mustard",     "present": false, "mayContain": false },
-    { "id": "sesame",      "present": false, "mayContain": false },
-    { "id": "sulphites",   "present": false, "mayContain": false },
-    { "id": "lupin",       "present": false, "mayContain": false },
-    { "id": "molluscs",    "present": false, "mayContain": false }
-  ],
-  "nutrition": { "calories": 420, "protein": 32, "carbs": 38, "fat": 14, "fiber": 5, "sodium": 680, "note": "Estimated values per 100g edible portion" }
 }`;
 
   const res = await fetch(ANTHROPIC_BASE, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model,
+      model: MODEL,
       generationConfig: {
         temperature:      GENERATION_TEMP,
-        maxOutputTokens:  proMode ? PRO_MAX_TOKENS : HOME_MAX_TOKENS,
+        maxOutputTokens:  MAX_TOKENS,
         responseMimeType: "application/json",
       },
-      contents: [{ role: "user", parts: [{ text: proMode ? proPrompt : homePrompt }] }],
+      contents: [{ role: "user", parts: [{ text: homePrompt }] }],
     }),
   });
 
@@ -157,14 +98,15 @@ Respond ONLY with a valid JSON object. No markdown, no explanation. Exact struct
   const text   = raw.replace(/```json|```/gi, "").trim();
   const parsed = JSON.parse(text);
 
-  const { nutrition, allergens, proTips, watchOuts, ...recipeData } = parsed;
-  recipeData.proTips   = proTips   || [];
-  recipeData.watchOuts = watchOuts || [];
+  const { nutrition, proTips, watchOuts, flavourTips, kitchenTips, ...recipeData } = parsed;
+  recipeData.proTips    = proTips    || [];
+  recipeData.watchOuts  = watchOuts  || [];
+  recipeData.flavourTips = flavourTips || [];
+  recipeData.kitchenTips = kitchenTips || [];
 
   return {
     recipe:    recipeData,
     nutrition: nutrition || null,
-    allergens: allergens || null,
     // BP-04: always pass radix 10 to parseInt
     servings:  parseInt(parsed.meta?.serves, 10) || servings,
   };
