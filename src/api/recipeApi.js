@@ -28,9 +28,12 @@ export async function generateRecipe({
   selectedAllergens,
   servings,
   proMode,
+  cookType,
 }) {
   const ingList = ingredientTags.join(", ");
   const model   = proMode ? PRO_MODEL : HOME_MODEL;
+
+  const cookTypeInstruction = cookType?.prompt ? `\nCOOK PERSONA: ${cookType.prompt}` : "";
 
   const homePrompt = `You are a creative world-class chef and nutritionist. Create a complete recipe.
 
@@ -40,7 +43,7 @@ ${selectedFlavors.length ? `FLAVOR PROFILE: ${selectedFlavors.join(", ")}`      
 ${selectedDiets.length      ? `DIETARY REQUIREMENTS (strictly follow ALL): ${selectedDiets.join(", ")}` : ""}
 ${selectedAllergens?.length ? `ALLERGENS TO AVOID (recipe must contain absolutely none of these): ${selectedAllergens.join(", ")}` : ""}
 ${selectedMethod            ? `COOKING METHOD (must use this): ${selectedMethod}`              : ""}
-SERVING SIZE: ${servings} people
+SERVING SIZE: ${servings} people${cookTypeInstruction}
 
 Respond ONLY with a valid JSON object. No markdown, no explanation. Exact structure:
 {
@@ -71,7 +74,7 @@ ${cuisine             ? `CUISINE STYLE: ${cuisine}`                             
 ${selectedFlavors.length ? `FLAVOR PROFILE: ${selectedFlavors.join(", ")}`              : ""}
 ${selectedDiets.length   ? `DIETARY REQUIREMENTS (strictly follow ALL): ${selectedDiets.join(", ")}` : ""}
 ${selectedMethod      ? `COOKING METHOD: ${selectedMethod}`                              : ""}
-YIELD / SERVING SIZE: ${servings} portions
+YIELD / SERVING SIZE: ${servings} portions${cookTypeInstruction}
 
 Writing for a professional kitchen brigade. Use metric weights, precise temperatures (°C), and correct culinary technique.
 

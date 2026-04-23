@@ -11,6 +11,7 @@ import { FLAVORS }                               from "./src/data/flavors.js";
 import { DIETS }                                 from "./src/data/diets.js";
 import { METHODS, SERVING_PRESETS, PRO_BATCH_PRESETS } from "./src/data/methods.js";
 import { ALLERGENS }                             from "./src/data/allergens.js";
+import { COOK_TYPES }                            from "./src/data/cookTypes.js";
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
 import { formatNum }       from "./src/utils/formatNum.js";
@@ -61,6 +62,7 @@ export default function RecipeGenerator() {
   const [proFields, setProFields]             = useState({ chefName:"", station:"", version:"1.0", costPerPortion:"" });
   const [activeProTab, setActiveProTab]       = useState("recipe");
   const [selectedAllergens, setSelectedAllergens] = useState([]);
+  const [cookType, setCookType]                   = useState(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 700);
@@ -201,6 +203,7 @@ export default function RecipeGenerator() {
     try {
       const result = await generateRecipe({
         ingredientTags, cuisine, selectedFlavors, selectedDiets, selectedMethod, selectedAllergens, servings, proMode,
+        cookType: COOK_TYPES.find(t => t.val === cookType) ?? null,
       });
       setRecipe(result.recipe);
       setNutrition(result.nutrition);
@@ -422,6 +425,39 @@ export default function RecipeGenerator() {
                 ? "Metric weights, mise en place, HACCP notes, and full allergen matrix."
                 : "Tell us what you have. We'll craft the perfect recipe."}
             </p>
+          </div>
+
+          {/* Cook Type */}
+          <div className={card}>
+            <div className={`${lbl} flex items-center justify-between`}>
+              <span>Your Cooking Style</span>
+              {cookType && (
+                <button
+                  onClick={() => setCookType(null)}
+                  className="text-[0.6rem] font-semibold tracking-widest uppercase text-slate-400 hover:text-slate-600 transition-colors"
+                >Clear</button>
+              )}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+              {COOK_TYPES.map(ct => {
+                const active = cookType === ct.val;
+                return (
+                  <button
+                    key={ct.val}
+                    onClick={() => setCookType(active ? null : ct.val)}
+                    className={`flex flex-col items-center gap-1.5 rounded-xl px-2 py-3 text-center cursor-pointer font-[inherit] transition-all duration-150 border ${
+                      active
+                        ? `${m.chipActive} shadow-sm`
+                        : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
+                    }`}
+                  >
+                    <span className="text-xl leading-none">{ct.icon}</span>
+                    <span className="text-[0.65rem] font-bold tracking-wide uppercase leading-tight">{ct.label}</span>
+                    <span className={`text-[0.6rem] leading-tight ${active ? "text-white/80" : "text-slate-400"}`}>{ct.tagline}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* Ingredients */}
