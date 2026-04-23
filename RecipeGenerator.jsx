@@ -149,6 +149,7 @@ export default function RecipeGenerator() {
     toast:           "bg-indigo-600",
     sheetDone:       "bg-gradient-to-r from-indigo-600 to-purple-500 text-white shadow-md",
     navBanner:       "from-indigo-600/8 to-purple-500/8 border-indigo-100 text-indigo-600",
+    footerLink:      "text-indigo-500 hover:text-indigo-700",
   } : {
     logoGrad:        "from-orange-500 to-amber-400",
     proToggle:       "bg-white text-slate-600 border-slate-200 hover:border-slate-400",
@@ -177,6 +178,7 @@ export default function RecipeGenerator() {
     toast:           "bg-orange-500",
     sheetDone:       "bg-gradient-to-r from-orange-500 to-amber-400 text-white shadow-md",
     navBanner:       "",
+    footerLink:      "text-orange-500 hover:text-orange-700",
   };
 
   // ── Design-system class strings ───────────────────────────────────────────────
@@ -757,6 +759,30 @@ export default function RecipeGenerator() {
           onClose={() => setCookingMode(false)}
         />
       )}
+
+      {/* Footer */}
+      <footer className="mt-16 border-t border-slate-100 py-8 px-6 text-center">
+        <p className="text-[0.75rem] font-medium text-slate-500 mb-1">
+          Questions or feedback?{" "}
+          <a
+            href="mailto:aliasgertalib@gmail.com"
+            className={`underline underline-offset-2 transition-colors ${m.footerLink}`}
+          >
+            aliasgertalib@gmail.com
+          </a>
+        </p>
+        <p className="text-[0.65rem] leading-relaxed text-slate-400 max-w-xl mx-auto mt-3">
+          FlavorLab is provided for informational and entertainment purposes only. Recipes are AI-generated and may
+          contain errors — always verify ingredients, quantities, cooking temperatures, and techniques before
+          preparing food. FlavorLab is not responsible for adverse reactions, dietary harm, or any outcomes
+          resulting from use of generated content. Allergen information is indicative only and must not replace
+          professional dietary or medical advice. Pro mode HACCP notes are illustrative and do not constitute
+          certified food-safety guidance.
+        </p>
+        <p className="text-[0.6rem] text-slate-300 mt-3">
+          © {new Date().getFullYear()} FlavorLab. All rights reserved.
+        </p>
+      </footer>
     </div>
   );
 }
