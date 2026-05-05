@@ -25,7 +25,14 @@
       "Bash(Test-Path *)",
       "Bash(npx playwright *)",
       "Bash(Remove-Item \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\tests\\\\example.spec.js\")",
-      "Bash(Get-ChildItem -Recurse -Path . -Include \"*.tsx\", \"*.ts\", \"*.css\", \"*.scss\")"
+      "Bash(Get-ChildItem -Recurse -Path . -Include \"*.tsx\", \"*.ts\", \"*.css\", \"*.scss\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\" -Force)",
+      "Bash(Select-Object Name, FullName)",
+      "Bash(Format-Table -AutoSize)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\src\" -Force -Recurse | Select-Object Name, @{Name=\"RelativePath\"; Expression={$_.FullName -replace [regex]::Escape\\(\"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\\"\\), \"\"}} | Format-Table -AutoSize)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\testbed\" -Force -Recurse | Select-Object Name, @{Name=\"RelativePath\"; Expression={$_.FullName -replace [regex]::Escape\\(\"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\\"\\), \"\"}} | Format-Table -AutoSize)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\api\" -Force -Recurse | Select-Object Name, @{Name=\"RelativePath\"; Expression={$_.FullName -replace [regex]::Escape\\(\"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\\"\\), \"\"}} | Format-Table -AutoSize)",
+      "PowerShell(ls \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\" | Where-Object { $_.PSIsContainer -eq $false } | Select-Object Name)"
     ]
   }
 }

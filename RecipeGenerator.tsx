@@ -148,7 +148,7 @@ export default function RecipeGenerator() {
     }
   };
 
-  const actionBtnCls = `rounded-full px-4 py-2 text-[0.68rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-150 border bg-white text-[#7A6B5E] border-[#E5DDD3] hover:border-[#C5B9AD] hover:text-[#1A1208]`;
+  const actionBtnCls = `rounded-full px-4 py-2 text-[0.68rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-150 border bg-white text-[#6B5A48] border-[#E6DFD0] hover:border-[#C5BAA8] hover:text-[#3B2D1C]`;
 
   const sheetMap = useMemo(() => ({
     cuisine:  { title:"Cuisine Style", content:<>
@@ -165,7 +165,7 @@ export default function RecipeGenerator() {
     diet:     { title:"Dietary Requirements", content:<FilterChips items={DIETS}     selected={selectedDiets}     onToggle={v => toggle(v, selectedDiets, setSelectedDiets)} /> },
     method:   { title:"Cooking Method",       content:<FilterChips items={METHODS}   selected={selectedMethod}    onToggle={setSelectedMethod} single /> },
     servings: { title:"Serving Size",         content:<>
-      <p className="text-sm text-[#7A6B5E] mb-4">How many people?</p>
+      <p className="text-sm text-[#6B5A48] mb-4">How many people?</p>
       <div className="flex gap-2 flex-wrap">
         {SERVING_PRESETS.map(n => (
           <button
@@ -173,8 +173,8 @@ export default function RecipeGenerator() {
             onClick={() => setServings(n)}
             className={`w-14 h-14 rounded-xl text-lg font-bold cursor-pointer font-[inherit] transition-all duration-150 border ${
               servings === n
-                ? "bg-[#2C5F4A] text-white border-[#2C5F4A] shadow-sm"
-                : "bg-[#F5F0E8] text-[#7A6B5E] border-[#E5DDD3] hover:border-[#C5B9AD]"
+                ? "bg-[#6B7730] text-white border-[#6B7730] shadow-sm"
+                : "bg-[#EBE4D2] text-[#6B5A48] border-[#E6DFD0] hover:border-[#C5BAA8]"
             }`}
           >{n}</button>
         ))}
@@ -194,12 +194,12 @@ export default function RecipeGenerator() {
     : [];
 
   return (
-    <div className="min-h-screen bg-[#FDFAF5] text-[#1A1208] font-sans">
+    <div className="min-h-screen bg-[#F6F3EA] text-[#3B2D1C] font-sans">
 
       {/* ── Navbar ── */}
-      <nav className="flex items-center justify-between px-6 md:px-16 py-4 sticky top-0 z-[100] glass border-b border-[#E5DDD3]">
+      <nav className="flex items-center justify-between px-6 md:px-16 py-4 sticky top-0 z-[100] glass border-b border-[#E6DFD0]">
         <span
-          style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 700, fontSize: "1.45rem", letterSpacing: "-0.01em", color: "#1A1208" }}
+          style={{ fontFamily: "'Lora', Georgia, serif", fontWeight: 700, fontSize: "1.45rem", letterSpacing: "-0.01em", color: "#3B2D1C" }}
         >
           Karigar
         </span>
@@ -208,8 +208,8 @@ export default function RecipeGenerator() {
           aria-pressed={tab === "favorites"}
           className={`rounded-full px-4 py-1.5 text-[0.72rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-200 border ${
             tab === "favorites"
-              ? "bg-[#1A1208] text-white border-[#1A1208]"
-              : "bg-transparent text-[#7A6B5E] border-[#E5DDD3] hover:border-[#C5B9AD] hover:text-[#1A1208]"
+              ? "bg-[#3B2D1C] text-white border-[#3B2D1C]"
+              : "bg-transparent text-[#6B5A48] border-[#E6DFD0] hover:border-[#C5BAA8] hover:text-[#3B2D1C]"
           }`}
         >
           {`Saved${favorites.length ? ` (${favorites.length})` : ""}`}
@@ -222,8 +222,8 @@ export default function RecipeGenerator() {
         {tab === "favorites" && (
           <div className="animate-fade-in">
             <h2
-              className="mb-6 text-[#1A1208]"
-              style={{ fontFamily: "'Fraunces', Georgia, serif", fontWeight: 700, fontSize: "2rem" }}
+              className="mb-6 text-[#3B2D1C]"
+              style={{ fontFamily: "'Lora', Georgia, serif", fontWeight: 700, fontSize: "2rem" }}
             >
               Saved Recipes
             </h2>
@@ -234,8 +234,8 @@ export default function RecipeGenerator() {
         {/* ── Generator tab ── */}
         {tab === "generator" && (<>
 
-          <div className="mb-8 pt-4 pb-8 border-b border-[#E5DDD3]">
-            <p className="text-[1rem] text-[#7A6B5E] max-w-md leading-relaxed animate-fade-up">
+          <div className="mb-8 pt-4 pb-8 border-b border-[#E6DFD0]">
+            <p className="text-[1rem] text-[#6B5A48] max-w-md leading-relaxed animate-fade-up">
               Tell us what you have. We'll craft the perfect recipe — with flavour tips and kitchen tricks.
             </p>
           </div>
@@ -247,7 +247,7 @@ export default function RecipeGenerator() {
               {cookType && (
                 <button
                   onClick={() => setCookType(null)}
-                  className="text-[0.62rem] font-semibold tracking-widest uppercase text-[#B5A898] hover:text-[#7A6B5E] transition-colors"
+                  className="text-[0.62rem] font-semibold tracking-widest uppercase text-[#A88E7C] hover:text-[#6B5A48] transition-colors"
                 >Clear</button>
               )}
             </div>
@@ -260,8 +260,8 @@ export default function RecipeGenerator() {
                     onClick={() => setCookType(active ? null : ct.val)}
                     className={`flex-none flex flex-col items-center gap-1.5 rounded-xl px-3 py-3.5 text-center cursor-pointer font-[inherit] transition-all duration-150 border w-[96px] shrink-0 ${
                       active
-                        ? "bg-[#2C5F4A] text-white border-[#2C5F4A] shadow-sm"
-                        : "bg-[#F5F0E8] text-[#7A6B5E] border-[#E5DDD3] hover:border-[#C5B9AD] hover:text-[#1A1208]"
+                        ? "bg-[#6B7730] text-white border-[#6B7730] shadow-sm"
+                        : "bg-[#EBE4D2] text-[#6B5A48] border-[#E6DFD0] hover:border-[#C5BAA8] hover:text-[#3B2D1C]"
                     }`}
                   >
                     <span className="text-xl leading-none">{ct.icon}</span>
@@ -277,7 +277,7 @@ export default function RecipeGenerator() {
             <div className={`${lbl} flex items-center justify-between`}>
               <span>Your Ingredients</span>
               {ingredientTags.length > 0 && (
-                <span className="text-[0.65rem] font-bold rounded-full px-2.5 py-0.5 bg-[#E8F2ED] text-[#2C5F4A]">
+                <span className="text-[0.65rem] font-bold rounded-full px-2.5 py-0.5 bg-[#E4EDD6] text-[#6B7730]">
                   {ingredientTags.length} added
                 </span>
               )}
@@ -295,12 +295,12 @@ export default function RecipeGenerator() {
                   onClick={() => setServings(n)}
                   className={`w-11 h-11 rounded-xl text-base font-bold cursor-pointer font-[inherit] transition-all duration-150 border ${
                     servings === n
-                      ? "bg-[#2C5F4A] text-white border-[#2C5F4A] shadow-sm"
-                      : "bg-[#F5F0E8] text-[#7A6B5E] border-[#E5DDD3] hover:border-[#C5B9AD] hover:text-[#1A1208]"
+                      ? "bg-[#6B7730] text-white border-[#6B7730] shadow-sm"
+                      : "bg-[#EBE4D2] text-[#6B5A48] border-[#E6DFD0] hover:border-[#C5BAA8] hover:text-[#3B2D1C]"
                   }`}
                 >{n}</button>
               ))}
-              <span className="text-[0.7rem] font-semibold tracking-widest uppercase text-[#9A8878] ml-1">people</span>
+              <span className="text-[0.7rem] font-semibold tracking-widest uppercase text-[#8B7A6A] ml-1">people</span>
             </div>
           </div>
 
@@ -318,7 +318,7 @@ export default function RecipeGenerator() {
                 selectedAllergens={selectedAllergens}
                 onOpen={setActiveSheet}
               />
-              <p className="text-[0.65rem] text-[#B5A898] mt-2.5 font-semibold tracking-widest uppercase">Tap to open options</p>
+              <p className="text-[0.65rem] text-[#A88E7C] mt-2.5 font-semibold tracking-widest uppercase">Tap to open options</p>
             </div>
           ) : (
             <DesktopFilters
@@ -343,8 +343,8 @@ export default function RecipeGenerator() {
             onClick={generate}
             className={`w-full py-4 rounded-2xl text-[0.85rem] font-bold tracking-wider uppercase font-[inherit] transition-all duration-200 active:scale-[0.999] ${
               loading
-                ? "bg-[#E5DDD3] text-[#B5A898] cursor-not-allowed"
-                : "bg-[#2C5F4A] text-white shadow-lg shadow-[#2C5F4A]/20 hover:bg-[#1E4433] hover:shadow-xl hover:shadow-[#2C5F4A]/25 hover:scale-[1.003]"
+                ? "bg-[#E6DFD0] text-[#A88E7C] cursor-not-allowed"
+                : "bg-[#6B7730] text-white shadow-lg shadow-[#6B7730]/20 hover:bg-[#556020] hover:shadow-xl hover:shadow-[#6B7730]/25 hover:scale-[1.003]"
             }`}
           >
             {loading
@@ -366,10 +366,10 @@ export default function RecipeGenerator() {
 
           {/* ── Recipe output ── */}
           {recipe && (
-            <div id="result-anchor" className="rounded-3xl border border-[#E5DDD3] shadow-card-lg mt-10 bg-white overflow-hidden animate-scale-in">
+            <div id="result-anchor" className="rounded-3xl border border-[#E6DFD0] shadow-card-lg mt-10 bg-white overflow-hidden animate-scale-in">
 
               {/* Header */}
-              <div className="p-8 md:p-10 border-b border-[#E5DDD3]">
+              <div className="p-8 md:p-10 border-b border-[#E6DFD0]">
                 <div className="flex flex-wrap gap-1.5 mb-5">
                   {recipe.badge   && <span className={bdg()}>{recipe.badge}</span>}
                   {selectedDiets.map(d  => <span key={d}  className={bdg()}>{d}</span>)}
@@ -377,9 +377,9 @@ export default function RecipeGenerator() {
                 </div>
 
                 <h2
-                  className="leading-[1.05] mb-4 text-[#1A1208] tracking-tight"
+                  className="leading-[1.05] mb-4 text-[#3B2D1C] tracking-tight"
                   style={{
-                    fontFamily: "'Fraunces', Georgia, serif",
+                    fontFamily: "'Lora', Georgia, serif",
                     fontWeight: 700,
                     fontSize: "clamp(2rem, 5vw, 3.5rem)",
                   }}
@@ -387,12 +387,12 @@ export default function RecipeGenerator() {
                   {recipe.title}
                 </h2>
 
-                <p className="text-[1rem] text-[#7A6B5E] mb-6 max-w-[640px] leading-[1.72]">{recipe.intro}</p>
+                <p className="text-[1rem] text-[#6B5A48] mb-6 max-w-[640px] leading-[1.72]">{recipe.intro}</p>
 
                 {ingredientTags.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 mb-6">
                     {ingredientTags.map(t => (
-                      <span key={t} className="rounded-full bg-[#F5F0E8] border border-[#E5DDD3] text-[0.68rem] px-3 py-0.5 font-semibold text-[#7A6B5E] uppercase tracking-wide">{t}</span>
+                      <span key={t} className="rounded-full bg-[#EBE4D2] border border-[#E6DFD0] text-[0.68rem] px-3 py-0.5 font-semibold text-[#6B5A48] uppercase tracking-wide">{t}</span>
                     ))}
                   </div>
                 )}
@@ -402,7 +402,7 @@ export default function RecipeGenerator() {
                     onClick={() => toggleFav(recipe, ingredientTags)}
                     className={`rounded-full px-4 py-2 text-[0.68rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-150 border ${
                       isFav
-                        ? "bg-[#2C5F4A] text-white border-[#2C5F4A]"
+                        ? "bg-[#6B7730] text-white border-[#6B7730]"
                         : actionBtnCls
                     }`}
                   >{isFav ? "✓ Saved" : "Save Recipe"}</button>
@@ -426,14 +426,14 @@ export default function RecipeGenerator() {
 
               {/* Meta strip */}
               {metaFields.length > 0 && (
-                <div className="grid grid-cols-2 wide:grid-cols-5 border-b border-[#E5DDD3] bg-[#FDFAF5]">
+                <div className="grid grid-cols-2 wide:grid-cols-5 border-b border-[#E6DFD0] bg-[#F6F3EA]">
                   {metaFields.map(([k, v], idx) => (
                     <div
                       key={k}
-                      className={`px-5 py-4 ${idx < metaFields.length - 1 ? "border-r border-[#E5DDD3]" : ""}`}
+                      className={`px-5 py-4 ${idx < metaFields.length - 1 ? "border-r border-[#E6DFD0]" : ""}`}
                     >
-                      <div className="text-[0.62rem] font-semibold tracking-widest uppercase text-[#9A8878] mb-1">{k}</div>
-                      <div className="text-[0.95rem] font-bold text-[#1A1208]">{v}</div>
+                      <div className="text-[0.62rem] font-semibold tracking-widest uppercase text-[#8B7A6A] mb-1">{k}</div>
+                      <div className="text-[0.95rem] font-bold text-[#3B2D1C]">{v}</div>
                     </div>
                   ))}
                 </div>
@@ -443,22 +443,22 @@ export default function RecipeGenerator() {
               <div className="grid grid-cols-1 wide:grid-cols-[1fr_288px]">
 
                 {/* Steps & tips column */}
-                <div className="p-8 md:p-10 border-b border-[#E5DDD3] wide:border-b-0 wide:border-r wide:border-[#E5DDD3]">
+                <div className="p-8 md:p-10 border-b border-[#E6DFD0] wide:border-b-0 wide:border-r wide:border-[#E6DFD0]">
 
                   <div className={secT}>Method</div>
                   {(recipe.steps || []).map((step, i) => (
-                    <div key={i} className={`flex gap-5 mb-6 pb-6 items-start ${i === recipe.steps.length - 1 ? "" : "border-b border-[#EDE8E0]"}`}>
-                      <div className="w-8 h-8 rounded-full bg-[#2C5F4A] text-white flex items-center justify-center text-[0.68rem] font-bold shrink-0 mt-[3px]">
+                    <div key={i} className={`flex gap-5 mb-6 pb-6 items-start ${i === recipe.steps.length - 1 ? "" : "border-b border-[#E6DFD0]"}`}>
+                      <div className="w-8 h-8 rounded-full bg-[#6B7730] text-white flex items-center justify-center text-[0.68rem] font-bold shrink-0 mt-[3px]">
                         {i + 1}
                       </div>
-                      <div className="text-[1rem] text-[#3D3028] leading-[1.75]">{step}</div>
+                      <div className="text-[1rem] text-[#4A3D2C] leading-[1.75]">{step}</div>
                     </div>
                   ))}
 
                   {recipe.tips && (
-                    <div className="rounded-2xl bg-[#FBF7F0] border border-[#EDE5D8] p-5 mt-2">
-                      <div className="text-[0.65rem] font-bold tracking-widest uppercase mb-2 text-[#B8873A]">Chef's Tip</div>
-                      <div className="text-[1rem] text-[#3D3028] leading-[1.72]">{recipe.tips}</div>
+                    <div className="rounded-2xl bg-[#F5F0E4] border border-[#E4DDD0] p-5 mt-2">
+                      <div className="text-[0.65rem] font-bold tracking-widest uppercase mb-2 text-[#9E7B38]">Chef's Tip</div>
+                      <div className="text-[1rem] text-[#4A3D2C] leading-[1.72]">{recipe.tips}</div>
                     </div>
                   )}
 
@@ -467,9 +467,9 @@ export default function RecipeGenerator() {
                       <div className={secT}>Flavour Tips</div>
                       <div className="flex flex-col gap-3">
                         {recipe.flavourTips.map((tip, i) => (
-                          <div key={i} className="rounded-xl bg-[#F4F9F6] border border-[#D8EBE1] p-4">
-                            <div className="text-[0.65rem] font-bold tracking-widest uppercase mb-1.5 text-[#2C5F4A]">{tip.title}</div>
-                            <div className="text-[0.9375rem] text-[#3D3028] leading-relaxed">{tip.body}</div>
+                          <div key={i} className="rounded-xl bg-[#EEF5E8] border border-[#C0D5AA] p-4">
+                            <div className="text-[0.65rem] font-bold tracking-widest uppercase mb-1.5 text-[#6B7730]">{tip.title}</div>
+                            <div className="text-[0.9375rem] text-[#4A3D2C] leading-relaxed">{tip.body}</div>
                           </div>
                         ))}
                       </div>
@@ -481,9 +481,9 @@ export default function RecipeGenerator() {
                       <div className={secT}>Kitchen Tips</div>
                       <div className="flex flex-col gap-3">
                         {recipe.kitchenTips.map((tip, i) => (
-                          <div key={i} className="rounded-xl bg-[#F4F7FB] border border-[#D8E2F0] p-4">
-                            <div className="text-[0.65rem] font-bold tracking-widest uppercase mb-1.5 text-[#4A6B9E]">{tip.title}</div>
-                            <div className="text-[0.9375rem] text-[#3D3028] leading-relaxed">{tip.body}</div>
+                          <div key={i} className="rounded-xl bg-[#EEF5E8] border border-[#C0D5AA] p-4">
+                            <div className="text-[0.65rem] font-bold tracking-widest uppercase mb-1.5 text-[#4A6B30]">{tip.title}</div>
+                            <div className="text-[0.9375rem] text-[#4A3D2C] leading-relaxed">{tip.body}</div>
                           </div>
                         ))}
                       </div>
@@ -495,9 +495,9 @@ export default function RecipeGenerator() {
                       <div className={secT}>Watch Out For</div>
                       <div className="flex flex-col gap-3">
                         {recipe.watchOuts.map((w, i) => (
-                          <div key={i} className="rounded-xl bg-[#FBF5EF] border border-[#F0E6D5] p-4">
-                            <div className="text-[0.65rem] font-bold tracking-widest uppercase mb-1.5 text-[#C97B3A]">{w.title}</div>
-                            <div className="text-[0.9375rem] text-[#3D3028] leading-relaxed">{w.body}</div>
+                          <div key={i} className="rounded-xl bg-[#F5EEE4] border border-[#E8DDCC] p-4">
+                            <div className="text-[0.65rem] font-bold tracking-widest uppercase mb-1.5 text-[#9E6B48]">{w.title}</div>
+                            <div className="text-[0.9375rem] text-[#4A3D2C] leading-relaxed">{w.body}</div>
                           </div>
                         ))}
                       </div>
@@ -506,22 +506,22 @@ export default function RecipeGenerator() {
                 </div>
 
                 {/* Sidebar */}
-                <div className="p-6 bg-[#FDFAF5]">
+                <div className="p-6 bg-[#F6F3EA]">
 
                   {/* Servings adjuster */}
-                  <div className="flex items-center justify-between rounded-xl border border-[#E5DDD3] bg-white px-4 py-3 mb-5">
-                    <span className="text-[0.68rem] font-semibold tracking-widest uppercase text-[#9A8878]">Servings</span>
+                  <div className="flex items-center justify-between rounded-xl border border-[#E6DFD0] bg-white px-4 py-3 mb-5">
+                    <span className="text-[0.68rem] font-semibold tracking-widest uppercase text-[#8B7A6A]">Servings</span>
                     <div className="flex items-center gap-3">
                       <button
                         onClick={() => setDisplayServings(s => Math.max(MIN_SERVINGS, s - 1))}
                         disabled={displayServings <= MIN_SERVINGS}
-                        className="w-7 h-7 rounded-lg border border-[#E5DDD3] bg-white text-[#7A6B5E] flex items-center justify-center font-bold cursor-pointer hover:border-[#C5B9AD] hover:text-[#1A1208] transition-all duration-150 disabled:text-[#C5B9AD] disabled:cursor-not-allowed font-[inherit]"
+                        className="w-7 h-7 rounded-lg border border-[#E6DFD0] bg-white text-[#6B5A48] flex items-center justify-center font-bold cursor-pointer hover:border-[#C5BAA8] hover:text-[#3B2D1C] transition-all duration-150 disabled:text-[#C5BAA8] disabled:cursor-not-allowed font-[inherit]"
                       >−</button>
-                      <span className="text-lg font-bold min-w-[2ch] text-center text-[#1A1208]">{displayServings}</span>
+                      <span className="text-lg font-bold min-w-[2ch] text-center text-[#3B2D1C]">{displayServings}</span>
                       <button
                         onClick={() => setDisplayServings(s => Math.min(MAX_SERVINGS, s + 1))}
                         disabled={displayServings >= MAX_SERVINGS}
-                        className="w-7 h-7 rounded-lg border border-[#E5DDD3] bg-white text-[#7A6B5E] flex items-center justify-center font-bold cursor-pointer hover:border-[#C5B9AD] hover:text-[#1A1208] transition-all duration-150 disabled:text-[#C5B9AD] disabled:cursor-not-allowed font-[inherit]"
+                        className="w-7 h-7 rounded-lg border border-[#E6DFD0] bg-white text-[#6B5A48] flex items-center justify-center font-bold cursor-pointer hover:border-[#C5BAA8] hover:text-[#3B2D1C] transition-all duration-150 disabled:text-[#C5BAA8] disabled:cursor-not-allowed font-[inherit]"
                       >+</button>
                     </div>
                   </div>
@@ -529,12 +529,12 @@ export default function RecipeGenerator() {
                   {/* Ingredients */}
                   <div className={`${secT} flex items-center justify-between`}>
                     <span>Ingredients</span>
-                    {ratio !== 1 && <span className="text-[0.62rem] text-[#9A8878] font-normal normal-case tracking-normal">×{formatNum(ratio)}</span>}
+                    {ratio !== 1 && <span className="text-[0.62rem] text-[#8B7A6A] font-normal normal-case tracking-normal">×{formatNum(ratio)}</span>}
                   </div>
                   <div className="flex flex-col">
                     {(recipe.ingredients || []).map((ing, i) => (
-                      <div key={i} className="py-2.5 border-b border-[#EDE8E0] last:border-0 text-[0.9375rem] text-[#3D3028] leading-relaxed flex items-baseline gap-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#2C5F4A] shrink-0 mt-[0.45rem]"></span>
+                      <div key={i} className="py-2.5 border-b border-[#E6DFD0] last:border-0 text-[0.9375rem] text-[#4A3D2C] leading-relaxed flex items-baseline gap-2.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#6B7730] shrink-0 mt-[0.45rem]"></span>
                         {scaleIngredient(ing, ratio)}
                       </div>
                     ))}
@@ -552,7 +552,7 @@ export default function RecipeGenerator() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#1A1208] text-white rounded-full px-6 py-3 text-[0.68rem] font-bold tracking-widest uppercase z-[300] animate-toast whitespace-nowrap shadow-lg"
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-[#3B2D1C] text-white rounded-full px-6 py-3 text-[0.68rem] font-bold tracking-widest uppercase z-[300] animate-toast whitespace-nowrap shadow-lg"
         >
           {savedToast}
         </div>
@@ -564,7 +564,7 @@ export default function RecipeGenerator() {
           {content}
           <button
             onClick={() => setActiveSheet(null)}
-            className="w-full mt-5 py-3.5 rounded-2xl text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-150 bg-[#2C5F4A] text-white shadow-md hover:bg-[#1E4433]"
+            className="w-full mt-5 py-3.5 rounded-2xl text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-150 bg-[#6B7730] text-white shadow-md hover:bg-[#556020]"
           >Done</button>
         </BottomSheet>
       ))}
@@ -577,24 +577,24 @@ export default function RecipeGenerator() {
       )}
 
       {/* Footer */}
-      <footer className="mt-20 border-t border-[#E5DDD3] py-10 px-6 text-center">
-        <p className="text-[0.75rem] font-medium text-[#9A8878] mb-1">
+      <footer className="mt-20 border-t border-[#E6DFD0] py-10 px-6 text-center">
+        <p className="text-[0.75rem] font-medium text-[#8B7A6A] mb-1">
           Questions or feedback?{" "}
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="underline underline-offset-2 text-[#2C5F4A] hover:text-[#1E4433] transition-colors"
+            className="underline underline-offset-2 text-[#6B7730] hover:text-[#556020] transition-colors"
           >
             {CONTACT_EMAIL}
           </a>
         </p>
-        <p className="text-[0.65rem] leading-relaxed text-[#B5A898] max-w-xl mx-auto mt-3">
+        <p className="text-[0.65rem] leading-relaxed text-[#A88E7C] max-w-xl mx-auto mt-3">
           Karigar is provided for informational and entertainment purposes only. Recipes are AI-generated and may
           contain errors — always verify ingredients, quantities, cooking temperatures, and techniques before
           preparing food. Karigar is not responsible for adverse reactions, dietary harm, or any outcomes
           resulting from use of generated content. Allergen information is indicative only and must not replace
           professional dietary or medical advice.
         </p>
-        <p className="text-[0.6rem] text-[#9A8878] mt-3">
+        <p className="text-[0.6rem] text-[#8B7A6A] mt-3">
           © {new Date().getFullYear()} Karigar. All rights reserved.
         </p>
       </footer>

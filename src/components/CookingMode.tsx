@@ -15,7 +15,7 @@ export function CookingMode({ steps, onClose }: CookingModeProps) {
   const [done, setDone]               = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const accent = "#f3722c";
+  const accent = "#8A9A3C";
 
   const loadStep = useCallback((idx: number) => {
     if (intervalRef.current) clearInterval(intervalRef.current);

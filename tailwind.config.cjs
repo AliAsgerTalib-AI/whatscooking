@@ -2,15 +2,15 @@
 module.exports = {
   content: [
     "./index.html",
-    "./RecipeGenerator.jsx",
+    "./RecipeGenerator.tsx",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   safelist: [
-    "bg-[#2C5F4A]","text-[#2C5F4A]","border-[#2C5F4A]",
-    "bg-[#1E4433]","text-[#1E4433]",
-    "bg-[#F5F0E8]","bg-[#E8F2ED]","bg-[#FDFAF5]",
-    "text-[#7A6B5E]","text-[#9A8878]","text-[#1A1208]",
-    "border-[#E5DDD3]","border-[#EDE8E0]",
+    "bg-[#6B7730]","text-[#6B7730]","border-[#6B7730]",
+    "bg-[#556020]","text-[#556020]",
+    "bg-[#EBE4D2]","bg-[#E4EDD6]","bg-[#F6F3EA]",
+    "text-[#6B5A48]","text-[#8B7A6A]","text-[#3B2D1C]",
+    "border-[#E6DFD0]","border-[#E0D9C8]",
   ],
   theme: {
     borderRadius: {
@@ -26,18 +26,18 @@ module.exports = {
     },
     extend: {
       colors: {
-        primary:                  '#1A1208',
+        primary:                  '#3B2D1C',
         'on-primary':             '#FFFFFF',
-        'primary-container':      '#E8F2ED',
-        surface:                  '#FDFAF5',
+        'primary-container':      '#E4EDD6',
+        surface:                  '#F6F3EA',
         'surface-container':      '#FFFFFF',
-        'surface-container-high': '#F5F0E8',
-        outline:                  '#9A8878',
-        'card-border':            '#E5DDD3',
+        'surface-container-high': '#EBE4D2',
+        outline:                  '#8B7A6A',
+        'card-border':            '#E6DFD0',
       },
       fontFamily: {
-        sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
-        display: ['"Fraunces"', 'Georgia', 'serif'],
+        sans:    ['"Nunito"', 'system-ui', 'sans-serif'],
+        display: ['"Lora"', 'Georgia', 'serif'],
       },
       fontSize: {
         'display-lg':  ['3.5rem',    { lineHeight: '1.05', fontWeight: '800' }],
@@ -53,8 +53,8 @@ module.exports = {
         wide: '660px',
       },
       boxShadow: {
-        'card':    '0 1px 4px rgba(26,18,8,0.05), 0 6px 24px rgba(26,18,8,0.04)',
-        'card-lg': '0 8px 48px rgba(26,18,8,0.08)',
+        'card':    '0 1px 4px rgba(59,45,28,0.05), 0 6px 24px rgba(59,45,28,0.04)',
+        'card-lg': '0 8px 48px rgba(59,45,28,0.09)',
       },
       keyframes: {
         fadeIn: {

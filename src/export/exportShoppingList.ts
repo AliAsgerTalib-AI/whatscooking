@@ -4,8 +4,8 @@ import type { Recipe } from "../types/recipe";
 const SHOPPING_LIST_STYLES = `
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Georgia',serif;max-width:520px;margin:0 auto;padding:2rem;color:#1a1a1a;}
-  .header{border-bottom:3px solid #f3722c;padding-bottom:1rem;margin-bottom:1.5rem;}
-  .logo{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#f3722c;font-weight:bold;margin-bottom:0.4rem;font-family:sans-serif;}
+  .header{border-bottom:3px solid #6B7730;padding-bottom:1rem;margin-bottom:1.5rem;}
+  .logo{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#6B7730;font-weight:bold;margin-bottom:0.4rem;font-family:sans-serif;}
   h1{font-size:1.4rem;line-height:1.2;margin-bottom:0.3rem;}
   .serves{font-size:0.75rem;color:#999;font-family:sans-serif;}
   .ing-list{display:grid;grid-template-columns:1fr 1fr;gap:0 1.5rem;margin-top:1rem;}

@@ -4,25 +4,25 @@ import type { Recipe } from "../types/recipe";
 const HOME_PDF_STYLES = `
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Georgia',serif;max-width:680px;margin:0 auto;padding:2rem;color:#1a1a1a;}
-  .header{border-bottom:3px solid #f3722c;padding-bottom:1.2rem;margin-bottom:1.5rem;}
-  .logo{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:#f3722c;font-weight:bold;margin-bottom:0.5rem;}
+  .header{border-bottom:3px solid #6B7730;padding-bottom:1.2rem;margin-bottom:1.5rem;}
+  .logo{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:#6B7730;font-weight:bold;margin-bottom:0.5rem;}
   h1{font-size:2rem;line-height:1.2;margin-bottom:0.5rem;}
   .intro{color:#666;font-style:italic;font-size:0.95rem;line-height:1.6;}
   .tags{display:flex;flex-wrap:wrap;gap:0.3rem;margin:0.6rem 0;}
-  .tag{font-size:0.65rem;border:1px solid #c8a800;color:#c8a800;padding:0.15rem 0.5rem;border-radius:999px;font-family:sans-serif;}
+  .tag{font-size:0.65rem;border:1px solid #9E7B38;color:#9E7B38;padding:0.15rem 0.5rem;border-radius:999px;font-family:sans-serif;}
   .meta{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin:1.2rem 0;background:#fafafa;padding:1rem;border-radius:6px;}
   .meta-box{text-align:center;}
   .meta-key{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:0.2rem;font-family:sans-serif;}
-  .meta-val{font-size:0.85rem;font-weight:bold;color:#f3722c;}
-  .section-title{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:#f3722c;font-weight:bold;padding-bottom:0.4rem;border-bottom:1px solid #eee;margin:1.5rem 0 0.75rem;font-family:sans-serif;}
+  .meta-val{font-size:0.85rem;font-weight:bold;color:#6B7730;}
+  .section-title{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:#6B7730;font-weight:bold;padding-bottom:0.4rem;border-bottom:1px solid #eee;margin:1.5rem 0 0.75rem;font-family:sans-serif;}
   .ing-list{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem;margin-bottom:1.5rem;}
   .grid{display:grid;grid-template-columns:1fr;gap:1.5rem;}
   .step{display:flex;gap:0.75rem;margin-bottom:0.9rem;align-items:flex-start;}
-  .step-num{min-width:24px;height:24px;background:#f3722c;color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold;flex-shrink:0;margin-top:2px;font-family:sans-serif;}
+  .step-num{min-width:24px;height:24px;background:#6B7730;color:#fff;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:bold;flex-shrink:0;margin-top:2px;font-family:sans-serif;}
   .step-text{font-size:0.88rem;line-height:1.65;}
   .ing{font-size:0.85rem;padding:0.35rem 0;border-bottom:1px solid #f0f0f0;display:flex;gap:0.5rem;}
-  .ing-dot{width:5px;height:5px;border-radius:50%;background:#f3722c;margin-top:6px;flex-shrink:0;}
-  .tip-card{display:flex;gap:0.5rem;background:#fff8f5;border:1px solid #fde8d8;border-radius:6px;padding:0.6rem 0.8rem;margin-bottom:0.4rem;font-size:0.83rem;line-height:1.5;}
+  .ing-dot{width:5px;height:5px;border-radius:50%;background:#6B7730;margin-top:6px;flex-shrink:0;}
+  .tip-card{display:flex;gap:0.5rem;background:#F5F0E4;border:1px solid #E4DDD0;border-radius:6px;padding:0.6rem 0.8rem;margin-bottom:0.4rem;font-size:0.83rem;line-height:1.5;}
   .warn-card{display:flex;gap:0.5rem;background:#fffbea;border:1px solid #f0d060;border-radius:6px;padding:0.6rem 0.8rem;margin-bottom:0.4rem;font-size:0.83rem;line-height:1.5;}
   .footer{margin-top:2rem;padding-top:1rem;border-top:1px solid #eee;font-size:0.65rem;color:#bbb;font-family:sans-serif;display:flex;justify-content:space-between;}
   @media print{
@@ -66,7 +66,7 @@ export function exportHomePDF(recipe: Recipe, tags: string[], displayServings: n
     <div>
       <div class="section-title">Method</div>
       ${(recipe.steps || []).map((s, i) => `<div class="step"><div class="step-num">${i + 1}</div><div class="step-text">${s}</div></div>`).join("")}
-      ${recipe.tips ? `<div style="background:#fff8f5;border-left:3px solid #f3722c;padding:0.75rem 1rem;margin-top:1rem;font-size:0.85rem;line-height:1.6;color:#555;"><strong>💡 Chef's Tip:</strong> ${recipe.tips}</div>` : ""}
+      ${recipe.tips ? `<div style="background:#F5F0E4;border-left:3px solid #6B7730;padding:0.75rem 1rem;margin-top:1rem;font-size:0.85rem;line-height:1.6;color:#555;"><strong>💡 Chef's Tip:</strong> ${recipe.tips}</div>` : ""}
 
       ${(recipe.flavourTips || []).length ? `
       <div class="section-title" style="margin-top:1.5rem">🌿 Flavour Tips</div>
@@ -77,7 +77,7 @@ export function exportHomePDF(recipe: Recipe, tags: string[], displayServings: n
       ${(recipe.kitchenTips || []).map(t => `<div class="tip-card"><div><strong>${t.title}</strong> — ${t.body}</div></div>`).join("")}` : ""}
 
       ${(recipe.watchOuts || []).length ? `
-      <div class="section-title" style="margin-top:1.5rem;color:#c0392b">⚠️ Watch Out For</div>
+      <div class="section-title" style="margin-top:1.5rem;color:#9E6B48">⚠️ Watch Out For</div>
       ${(recipe.watchOuts || []).map(w => `<div class="warn-card"><span>${w.icon || "⚠️"}</span><div><strong>${w.title}</strong> — ${w.body}</div></div>`).join("")}` : ""}
     </div>
   </div>

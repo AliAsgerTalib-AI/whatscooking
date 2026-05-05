@@ -9,13 +9,13 @@
   }
 
   body {
-    background-color: #FDFAF5;
-    color: #1A1208;
+    background-color: #F6F3EA;
+    color: #3B2D1C;
   }
 
   ::-webkit-scrollbar         { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-thumb   { background: #D0C6BA; border-radius: 9999px; }
-  ::-webkit-scrollbar-track   { background: #FDFAF5; }
+  ::-webkit-scrollbar-thumb   { background: #C5BAA8; border-radius: 9999px; }
+  ::-webkit-scrollbar-track   { background: #F6F3EA; }
 
   input:focus,
   textarea:focus {
@@ -25,7 +25,7 @@
 
 @layer utilities {
   .glass {
-    background: rgba(253, 250, 245, 0.92);
+    background: rgba(246, 243, 234, 0.92);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
