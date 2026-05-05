@@ -125,7 +125,7 @@ export function exportProPDF(
 
   <div class="header">
     <div class="header-left">
-      <div class="brand">🍳 FlavorLab — Professional Kitchen</div>
+      <div class="brand">🍳 Karigar — Professional Kitchen</div>
       <div class="title">${recipe.title}</div>
       <div class="intro">${recipe.intro || ""}</div>
       <div class="badge-row">
@@ -207,7 +207,7 @@ export function exportProPDF(
   </div>
 
   <div class="footer">
-    <span><strong>FlavorLab</strong> Professional Kitchen · ${today}</span>
+    <span><strong>Karigar</strong> Professional Kitchen · ${today}</span>
     <span>Recipe ID: <strong>${recipeId}</strong></span>
   </div>
 

@@ -29,14 +29,14 @@ export function exportShoppingList(recipe: Recipe, displayServings: number, rati
   <title>Shopping List — ${recipe.title}</title>
   <style>${SHOPPING_LIST_STYLES}</style></head><body>
   <div class="header">
-    <div class="logo">🛒 FlavorLab — Shopping List</div>
+    <div class="logo">🛒 Karigar — Shopping List</div>
     <h1>${recipe.title}</h1>
     <div class="serves">Serves ${displayServings}</div>
   </div>
   <div class="ing-list">
     ${scaledIngs.map(i => `<div class="ing"><div class="box"></div>${i}</div>`).join("")}
   </div>
-  <div class="footer">FlavorLab AI · ${new Date().toLocaleDateString()}</div>
+  <div class="footer">Karigar AI · ${new Date().toLocaleDateString()}</div>
   <script>window.onload=()=>window.print();</script>
   </body></html>`;
 

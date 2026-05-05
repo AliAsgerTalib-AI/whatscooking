@@ -183,22 +183,27 @@ export default function RecipeGenerator() {
     <div className="min-h-screen bg-[#FAFAF9] text-slate-900 font-sans">
 
       <nav className="flex items-center justify-between px-6 md:px-16 py-3.5 sticky top-0 z-[100] glass border-b border-slate-200/70">
-        <div className={`font-display text-xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r ${m.logoGrad}`}>
-          FlavorLab
-        </div>
+        <button
+          onClick={() => setTab("generator")}
+          className="flex flex-col leading-none cursor-pointer bg-transparent border-0 p-0 text-left"
+        >
+          <span style={{fontFamily: "'Kufam', sans-serif", fontWeight: 700, fontSize: '1.25rem', letterSpacing: '0.1em', color: '#C5780D'}}>
+            KARIGAR
+          </span>
+          <span className="text-[0.55rem] tracking-widest uppercase text-slate-400 mt-0.5">
+            Meal Architecture
+          </span>
+        </button>
         <div className="flex items-center gap-2">
-          {["generator","favorites"].map(t => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              aria-pressed={tab === t}
-              className={`rounded-full px-4 py-1.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-200 ${
-                tab === t ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              {t === "generator" ? "Generator" : `Saved${favorites.length ? ` (${favorites.length})` : ""}`}
-            </button>
-          ))}
+          <button
+            onClick={() => setTab("favorites")}
+            aria-pressed={tab === "favorites"}
+            className={`rounded-full px-4 py-1.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-200 ${
+              tab === "favorites" ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            {`Saved${favorites.length ? ` (${favorites.length})` : ""}`}
+          </button>
         </div>
       </nav>
 
@@ -541,14 +546,14 @@ export default function RecipeGenerator() {
           </a>
         </p>
         <p className="text-[0.65rem] leading-relaxed text-slate-400 max-w-xl mx-auto mt-3">
-          FlavorLab is provided for informational and entertainment purposes only. Recipes are AI-generated and may
+          Karigar is provided for informational and entertainment purposes only. Recipes are AI-generated and may
           contain errors — always verify ingredients, quantities, cooking temperatures, and techniques before
-          preparing food. FlavorLab is not responsible for adverse reactions, dietary harm, or any outcomes
+          preparing food. Karigar is not responsible for adverse reactions, dietary harm, or any outcomes
           resulting from use of generated content. Allergen information is indicative only and must not replace
           professional dietary or medical advice.
         </p>
         <p className="text-[0.6rem] text-slate-300 mt-3">
-          © {new Date().getFullYear()} FlavorLab. All rights reserved.
+          © {new Date().getFullYear()} Karigar. All rights reserved.
         </p>
       </footer>
     </div>

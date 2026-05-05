@@ -21,7 +21,10 @@
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\" -File | Where-Object { $_.Extension -in \".json\",\".js\",\".jsx\",\".ts\",\".tsx\" } | Select-Object -ExpandProperty Name)",
       "Bash(Get-ChildItem -Path . -MaxDepth 1 -Include \"*.js\", \"*.jsx\", \"*.ts\", \"*.tsx\")",
       "Bash(Select-Object -ExpandProperty FullName)",
-      "Bash(Sort-Object)"
+      "Bash(Sort-Object)",
+      "Bash(Test-Path *)",
+      "Bash(npx playwright *)",
+      "Bash(Remove-Item \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\tests\\\\example.spec.js\")"
     ]
   }
 }

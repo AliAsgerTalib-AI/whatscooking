@@ -45,7 +45,7 @@ export function exportHomePDF(recipe: Recipe, tags: string[], displayServings: n
   <style>${HOME_PDF_STYLES}</style></head><body>
 
   <div class="header">
-    <div class="logo">🍳 FlavorLab</div>
+    <div class="logo">🍳 Karigar</div>
     <h1>${recipe.title}</h1>
     <p class="intro">${recipe.intro || ""}</p>
     ${tags.length ? `<div class="tags">${tags.map(t => `<span class="tag">${t}</span>`).join("")}</div>` : ""}
@@ -83,7 +83,7 @@ export function exportHomePDF(recipe: Recipe, tags: string[], displayServings: n
   </div>
 
   <div class="footer">
-    <span>FlavorLab AI · ${new Date().toLocaleDateString()}</span>
+    <span>Karigar AI · ${new Date().toLocaleDateString()}</span>
   </div>
 
   <script>window.onload=()=>window.print();</script>

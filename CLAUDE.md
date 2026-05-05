@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-**FlavorLab** — a React AI recipe generator that calls Google Gemini (`gemini-3-flash-preview`) to generate recipes from user-supplied ingredients. Home mode: casual, imperial units, gold/orange palette.
+**Karigar** — a React AI recipe generator that calls Google Gemini (`gemini-3-flash-preview`) to generate recipes from user-supplied ingredients. Home mode: casual, imperial units, gold/orange palette.
 
 The app is deployed to Vercel. The Vite dev server lives in `testbed/` and imports `RecipeGenerator.tsx` from the root.
 
