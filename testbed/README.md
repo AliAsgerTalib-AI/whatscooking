@@ -1,6 +1,6 @@
-# FlavorLab
+# Karigar
 
-An open-source AI recipe generator powered by Claude Sonnet. Two modes: **Home** (casual, imperial units) and **Pro** (professional kitchen, metric weights, EU allergen compliance, HACCP notes).
+An open-source AI recipe generator powered by Google Gemini. Generates recipes from your ingredients with flavour tips and kitchen tricks.
 
 **[Try it live →](https://whatscooking.vercel.app)**
 

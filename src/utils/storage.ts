@@ -1,4 +1,4 @@
-const PREFIX = "flavorlab_";
+const PREFIX = "karigar_";
 
 export function storageGet<T>(key: string, fallback: T): { ok: boolean; value: T } {
   try {
@@ -30,7 +30,7 @@ export function storageRemove(key: string): { ok: boolean; error?: unknown } {
 
 export function storageAvailable(): boolean {
   try {
-    const probe = "__flavorlab_probe__";
+    const probe = "__karigar_probe__";
     localStorage.setItem(probe, "1");
     localStorage.removeItem(probe);
     return true;

@@ -183,20 +183,17 @@ export default function RecipeGenerator() {
     <div className="min-h-screen bg-[#FAFAF9] text-slate-900 font-sans">
 
       <nav className="flex items-center justify-between px-6 md:px-16 py-3.5 sticky top-0 z-[100] glass border-b border-slate-200/70">
-        <button
-          onClick={() => setTab("generator")}
-          className="flex flex-col leading-none cursor-pointer bg-transparent border-0 p-0 text-left"
-        >
+        <div className="flex flex-col leading-none">
           <span style={{fontFamily: "'Kufam', sans-serif", fontWeight: 700, fontSize: '1.25rem', letterSpacing: '0.1em', color: '#C5780D'}}>
             KARIGAR
           </span>
           <span className="text-[0.55rem] tracking-widest uppercase text-slate-400 mt-0.5">
             Meal Architecture
           </span>
-        </button>
+        </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setTab("favorites")}
+            onClick={() => setTab(tab === "favorites" ? "generator" : "favorites")}
             aria-pressed={tab === "favorites"}
             className={`rounded-full px-4 py-1.5 text-[0.7rem] font-bold tracking-widest uppercase cursor-pointer font-[inherit] transition-all duration-200 ${
               tab === "favorites" ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"
@@ -237,14 +234,14 @@ export default function RecipeGenerator() {
                 >Clear</button>
               )}
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-1 -mb-1">
               {COOK_TYPES.map(ct => {
                 const active = cookType === ct.val;
                 return (
                   <button
                     key={ct.val}
                     onClick={() => setCookType(active ? null : ct.val)}
-                    className={`flex flex-col items-center gap-1.5 rounded-xl px-2 py-3 text-center cursor-pointer font-[inherit] transition-all duration-150 border ${
+                    className={`flex-1 flex flex-col items-center gap-1.5 rounded-xl px-2 py-3 text-center cursor-pointer font-[inherit] transition-all duration-150 border min-w-0 ${
                       active
                         ? `${m.chipActive} shadow-sm`
                         : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
