@@ -1,33 +1,7 @@
 import { ALLERGENS } from "../data/allergens.js";
 import { scaleIngredient } from "../utils/scaleIngredient.js";
 
-/**
- * Opens a new window with a professional A4 recipe card and auto-triggers print.
- */
-export function exportProPDF(recipe, tags, nutrition, allergens, displayServings, ratio, proFields) {
-  const win = window.open("", "_blank");
-  if (!win) return;
-
-  const scaledIngs          = (recipe.ingredients || []).map(i => scaleIngredient(i, ratio));
-  const presentAllergens    = (allergens || []).filter(a => a.present).map(a => ALLERGENS.find(x => x.id === a.id)?.label).filter(Boolean);
-  const mayContainAllergens = (allergens || []).filter(a => a.mayContain).map(a => ALLERGENS.find(x => x.id === a.id)?.label).filter(Boolean);
-  const today               = new Date().toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
-  const recipeId            = `FL-${Date.now().toString(36).toUpperCase().slice(-6)}`;
-
-  const allergenGrid = ALLERGENS.map(a => {
-    const hit       = (allergens || []).find(x => x.id === a.id);
-    const isPresent = hit?.present;
-    const isMay     = hit?.mayContain;
-    return `<div class="allergen-cell ${isPresent ? "present" : isMay ? "may" : ""}">
-      <div class="a-icon">${a.icon}</div>
-      <div class="a-label">${a.label}</div>
-      ${isPresent ? '<div class="a-dot present-dot"></div>' : isMay ? '<div class="a-dot may-dot"></div>' : ''}
-    </div>`;
-  }).join("");
-
-  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
-  <title>Recipe Card — ${recipe.title}</title>
-  <style>
+const PRO_PDF_STYLES = `
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Georgia',serif;color:#1a1a1a;background:#fff;font-size:10pt;}
     .page{max-width:210mm;margin:0 auto;padding:0;}
@@ -113,8 +87,34 @@ export function exportProPDF(recipe, tags, nutrition, allergens, displayServings
       .allergen-section{break-inside:avoid;}
       .footer{break-inside:avoid;}
     }
-  </style>
+`;
+
+export function exportProPDF(recipe, tags, nutrition, allergens, displayServings, ratio, proFields) {
+  const win = window.open("", "_blank");
+  if (!win) return;
+
+  const scaledIngs          = (recipe.ingredients || []).map(i => scaleIngredient(i, ratio));
+  const presentAllergens    = (allergens || []).filter(a => a.present).map(a => ALLERGENS.find(x => x.id === a.id)?.label).filter(Boolean);
+  const mayContainAllergens = (allergens || []).filter(a => a.mayContain).map(a => ALLERGENS.find(x => x.id === a.id)?.label).filter(Boolean);
+  const today               = new Date().toLocaleDateString("en-GB", { day:"2-digit", month:"short", year:"numeric" });
+  const recipeId            = `FL-${Date.now().toString(36).toUpperCase().slice(-6)}`;
+
+  const allergenGrid = ALLERGENS.map(a => {
+    const hit       = (allergens || []).find(x => x.id === a.id);
+    const isPresent = hit?.present;
+    const isMay     = hit?.mayContain;
+    return `<div class="allergen-cell ${isPresent ? "present" : isMay ? "may" : ""}">
+      <div class="a-icon">${a.icon}</div>
+      <div class="a-label">${a.label}</div>
+      ${isPresent ? '<div class="a-dot present-dot"></div>' : isMay ? '<div class="a-dot may-dot"></div>' : ''}
+    </div>`;
+  }).join("");
+
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/>
+  <title>Recipe Card — ${recipe.title}</title>
+  <style>${PRO_PDF_STYLES}</style>
   </head><body><div class="page">
+
 
   <div class="header">
     <div class="header-left">

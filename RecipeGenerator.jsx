@@ -1,17 +1,18 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 
-// ── App-level constants ───────────────────────────────────────────────────────
-const MAX_SERVINGS      = 200;
-const MIN_SERVINGS      = 1;
-const TOAST_DURATION_MS = 2200;
+// ── Constants ─────────────────────────────────────────────────────────────────
+import { MOBILE_BREAKPOINT, CONTACT_EMAIL } from "./src/constants.js";
+
+// ── Design tokens ─────────────────────────────────────────────────────────────
+import { m, card, lbl, secT, inputCls, bdg, chipClass } from "./src/tokens.js";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
-import { CUISINES }                from "./src/data/cuisines.js";
-import { FLAVORS }                 from "./src/data/flavors.js";
-import { DIETS }                   from "./src/data/diets.js";
+import { CUISINES }                 from "./src/data/cuisines.js";
+import { FLAVORS }                  from "./src/data/flavors.js";
+import { DIETS }                    from "./src/data/diets.js";
 import { METHODS, SERVING_PRESETS } from "./src/data/methods.js";
-import { ALLERGENS }               from "./src/data/allergens.js";
-import { COOK_TYPES }              from "./src/data/cookTypes.js";
+import { ALLERGENS }                from "./src/data/allergens.js";
+import { COOK_TYPES }               from "./src/data/cookTypes.js";
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
 import { formatNum }       from "./src/utils/formatNum.js";
@@ -25,10 +26,30 @@ import { CookingMode }        from "./src/components/CookingMode.jsx";
 import { exportShoppingList } from "./src/export/exportShoppingList.js";
 
 // ── Components ────────────────────────────────────────────────────────────────
-import { IngredientTags } from "./src/components/IngredientTags.jsx";
-import { BottomSheet }    from "./src/components/BottomSheet.jsx";
-import { NutritionBar }   from "./src/components/NutritionBar.jsx";
-import { FavoritesPanel } from "./src/components/FavoritesPanel.jsx";
+import { IngredientTags }  from "./src/components/IngredientTags.jsx";
+import { BottomSheet }     from "./src/components/BottomSheet.jsx";
+import { NutritionBar }    from "./src/components/NutritionBar.jsx";
+import { FavoritesPanel }  from "./src/components/FavoritesPanel.jsx";
+import { MobileFilterBar } from "./src/components/MobileFilterBar.jsx";
+import { DesktopFilters }  from "./src/components/DesktopFilters.jsx";
+
+// ── App-level constants ───────────────────────────────────────────────────────
+const MAX_SERVINGS      = 200;
+const MIN_SERVINGS      = 1;
+const TOAST_DURATION_MS = 2200;
+
+// ── Module-level pure component (stable ref — safe in useMemo deps) ───────────
+const FilterChips = ({ items, selected, onToggle, single }) => (
+  <div className="flex flex-wrap gap-1.5">
+    {items.map(item => (
+      <button
+        key={item.val}
+        className={chipClass(single ? selected === item.val : selected.includes(item.val))}
+        onClick={() => single ? onToggle(selected === item.val ? "" : item.val) : onToggle(item.val)}
+      >{item.label}</button>
+    ))}
+  </div>
+);
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RecipeGenerator() {
@@ -57,7 +78,7 @@ export default function RecipeGenerator() {
   const [cookType, setCookType]               = useState(null);
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 700);
+    const check = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
@@ -112,52 +133,6 @@ export default function RecipeGenerator() {
     setList(p => p.includes(val) ? p.filter(x => x !== val) : [...p, val]);
   }, []);
 
-  // ── Design tokens ─────────────────────────────────────────────────────────────
-  const m = {
-    logoGrad:   "from-orange-500 to-amber-400",
-    heroBadge:  "bg-orange-100 text-orange-700",
-    heroGrad:   "from-orange-500 to-amber-400",
-    chipActive: "bg-orange-500 text-white border-transparent shadow-sm",
-    pillActive: "bg-orange-500 text-white border-transparent",
-    servBtn:    "bg-orange-500 text-white border-transparent shadow-md",
-    ctaBtn:     "bg-gradient-to-r from-green-500 to-emerald-400 text-white shadow-lg shadow-green-200/60 hover:shadow-xl hover:shadow-green-200/80 hover:scale-[1.005]",
-    resultTint: "from-orange-50/60 to-amber-50/40",
-    badge:      "border-orange-200 bg-orange-50 text-orange-700",
-    savedBtn:   "bg-orange-500 text-white border-transparent",
-    tipCard:    "bg-orange-50 border border-orange-100",
-    tipLabel:   "text-orange-600",
-    stepNum:    "bg-orange-500",
-    watchCard:  "bg-amber-50 border border-amber-100",
-    watchLabel: "text-amber-700",
-    flavourCard:"bg-green-50 border border-green-100",
-    flavourLabel:"text-green-700",
-    kitchenCard:"bg-sky-50 border border-sky-100",
-    kitchenLabel:"text-sky-700",
-    calCard:    "bg-orange-50 border-orange-100",
-    calText:    "text-orange-600",
-    dot:        "bg-orange-400",
-    barColor:   "bg-orange-500",
-    toast:      "bg-orange-500",
-    sheetDone:  "bg-gradient-to-r from-orange-500 to-amber-400 text-white shadow-md",
-    footerLink: "text-orange-500 hover:text-orange-700",
-  };
-
-  // ── Design-system class strings ───────────────────────────────────────────────
-  const card = "bg-white rounded-2xl border border-slate-200 shadow-card p-6 mb-4";
-  const lbl  = "text-[0.7rem] font-semibold tracking-widest uppercase text-slate-400 mb-3";
-  const secT = "text-[0.7rem] font-semibold tracking-widest uppercase text-slate-400 mb-3 pb-2 border-b border-slate-100";
-  const bdg  = () => `inline-block rounded-full border text-[0.65rem] uppercase tracking-widest px-2.5 py-0.5 font-bold ${m.badge}`;
-
-  const chipClass = (active) =>
-    `px-3 py-1.5 rounded-full text-[0.7rem] font-semibold tracking-wide uppercase cursor-pointer font-[inherit] transition-all duration-150 border ${
-      active ? m.chipActive : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
-    }`;
-
-  const pillClass = (active) =>
-    `flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.7rem] font-semibold tracking-wide uppercase cursor-pointer font-[inherit] whitespace-nowrap transition-all duration-150 border ${
-      active ? m.pillActive : "bg-white text-slate-600 border-slate-200"
-    }`;
-
   // ── Generate ──────────────────────────────────────────────────────────────────
   const generate = async () => {
     if (ingredientTags.length === 0) { setError("Please add at least one ingredient."); return; }
@@ -180,22 +155,7 @@ export default function RecipeGenerator() {
     }
   };
 
-  // ── Shell-local sub-components ────────────────────────────────────────────────
-
-  const FilterChips = ({ items, selected, onToggle, single }) => (
-    <div className="flex flex-wrap gap-1.5">
-      {items.map(item => (
-        <button
-          key={item.val}
-          className={chipClass(single ? selected === item.val : selected.includes(item.val))}
-          onClick={() => single ? onToggle(selected === item.val ? "" : item.val) : onToggle(item.val)}
-        >{item.label}</button>
-      ))}
-    </div>
-  );
-
-  const inputCls = "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-[inherit] outline-none focus:border-slate-400 focus:bg-slate-50/50 transition-colors duration-150";
-
+  // ── Bottom-sheet content map ───────────────────────────────────────────────────
   const sheetMap = useMemo(() => ({
     cuisine:  { title:"Cuisine Style", content:<>
       <FilterChips items={CUISINES} selected={selectedCuisine} onToggle={v => { setSelectedCuisine(v); setCustomCuisine(""); }} single />
@@ -207,9 +167,9 @@ export default function RecipeGenerator() {
         className={inputCls + " mt-3"}
       />
     </> },
-    flavor:   { title:"Flavor Profile",       content:<FilterChips items={FLAVORS} selected={selectedFlavors} onToggle={v => toggle(v, selectedFlavors, setSelectedFlavors)} /> },
-    diet:     { title:"Dietary Requirements", content:<FilterChips items={DIETS}   selected={selectedDiets}   onToggle={v => toggle(v, selectedDiets, setSelectedDiets)} /> },
-    method:   { title:"Cooking Method",       content:<FilterChips items={METHODS} selected={selectedMethod}  onToggle={setSelectedMethod} single /> },
+    flavor:   { title:"Flavor Profile",       content:<FilterChips items={FLAVORS}   selected={selectedFlavors}   onToggle={v => toggle(v, selectedFlavors, setSelectedFlavors)} /> },
+    diet:     { title:"Dietary Requirements", content:<FilterChips items={DIETS}     selected={selectedDiets}     onToggle={v => toggle(v, selectedDiets, setSelectedDiets)} /> },
+    method:   { title:"Cooking Method",       content:<FilterChips items={METHODS}   selected={selectedMethod}    onToggle={setSelectedMethod} single /> },
     servings: { title:"Serving Size",         content:<>
       <p className="text-sm text-slate-500 mb-4">How many people?</p>
       <div className="flex gap-2 flex-wrap">
@@ -225,74 +185,7 @@ export default function RecipeGenerator() {
       </div>
     </> },
     allergies:{ title:"Allergens to Avoid",  content:<FilterChips items={ALLERGENS.map(a => ({ val:a.id, label:`${a.icon} ${a.label}` }))} selected={selectedAllergens} onToggle={v => toggle(v, selectedAllergens, setSelectedAllergens)} /> },
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [selectedCuisine, customCuisine, selectedFlavors, selectedDiets, selectedMethod, selectedAllergens, servings, toggle]);
-
-  const MobileFilterBar = () => {
-    const pills = [
-      { id:"cuisine",   label:customCuisine||selectedCuisine||"Cuisine",                                             active:!!(customCuisine||selectedCuisine) },
-      { id:"flavor",    label:selectedFlavors.length ? `${selectedFlavors.length} Flavor${selectedFlavors.length>1?"s":""}` : "Flavor", active:selectedFlavors.length>0 },
-      { id:"diet",      label:selectedDiets.length   ? `${selectedDiets.length} Diet${selectedDiets.length>1?"s":""}` : "Diet",         active:selectedDiets.length>0 },
-      { id:"method",    label:selectedMethod||"Method",                                                              active:!!selectedMethod },
-      { id:"servings",  label:`${servings} People`,                                                                  active:true },
-      { id:"allergies", label:selectedAllergens.length ? `${selectedAllergens.length} Allergen${selectedAllergens.length>1?"s":""}` : "Allergens", active:selectedAllergens.length>0 },
-    ];
-    return (
-      <div className="flex gap-1.5 overflow-x-auto pb-1" style={{ WebkitOverflowScrolling:"touch" }}>
-        {pills.map(p => (
-          <button key={p.id} onClick={() => setActiveSheet(p.id)} className={pillClass(p.active)}>
-            {p.label} <span className="opacity-50 text-[0.65rem]">▾</span>
-          </button>
-        ))}
-      </div>
-    );
-  };
-
-  const DesktopFilters = () => (<>
-    <div className={card}>
-      <div className={lbl}>Cuisine Style</div>
-      <div className="flex flex-wrap gap-1.5 mb-3">
-        {CUISINES.map(c => (
-          <button key={c.val} className={chipClass(selectedCuisine===c.val&&!customCuisine)} onClick={() => { setSelectedCuisine(c.val); setCustomCuisine(""); }}>{c.label}</button>
-        ))}
-      </div>
-      <input
-        type="text"
-        placeholder="Or type your own (e.g. Cajun, Hawaiian...)"
-        value={customCuisine}
-        onChange={e => { setCustomCuisine(e.target.value); setSelectedCuisine(""); }}
-        className={inputCls}
-      />
-    </div>
-    <div className={card}>
-      <div className={lbl}>Flavor Profile <span className="font-normal normal-case tracking-normal text-slate-300">— pick any</span></div>
-      <div className="flex flex-wrap gap-1.5">
-        {FLAVORS.map(f => <button key={f.val} className={chipClass(selectedFlavors.includes(f.val))} onClick={() => toggle(f.val, selectedFlavors, setSelectedFlavors)}>{f.label}</button>)}
-      </div>
-    </div>
-    <div className={card}>
-      <div className={lbl}>Dietary Requirements <span className="font-normal normal-case tracking-normal text-slate-300">— pick any</span></div>
-      <div className="flex flex-wrap gap-1.5">
-        {DIETS.map(d => <button key={d.val} className={chipClass(selectedDiets.includes(d.val))} onClick={() => toggle(d.val, selectedDiets, setSelectedDiets)}>{d.label}</button>)}
-      </div>
-    </div>
-    <div className={card}>
-      <div className={lbl}>Allergens to Avoid <span className="font-normal normal-case tracking-normal text-slate-300">— pick any</span></div>
-      <div className="flex flex-wrap gap-1.5">
-        {ALLERGENS.map(a => (
-          <button key={a.id} className={chipClass(selectedAllergens.includes(a.id))} onClick={() => toggle(a.id, selectedAllergens, setSelectedAllergens)}>
-            {a.icon} {a.label}
-          </button>
-        ))}
-      </div>
-    </div>
-    <div className={card}>
-      <div className={lbl}>Cooking Method <span className="font-normal normal-case tracking-normal text-slate-300">— pick one</span></div>
-      <div className="flex flex-wrap gap-1.5">
-        {METHODS.map(me => <button key={me.val} className={chipClass(selectedMethod===me.val)} onClick={() => setSelectedMethod(selectedMethod===me.val?"":me.val)}>{me.label}</button>)}
-      </div>
-    </div>
-  </>);
 
   // ── Render ────────────────────────────────────────────────────────────────────
   return (
@@ -409,10 +302,34 @@ export default function RecipeGenerator() {
           {isMobile ? (
             <div className={card}>
               <div className={lbl}>Preferences</div>
-              <MobileFilterBar />
+              <MobileFilterBar
+                customCuisine={customCuisine}
+                selectedCuisine={selectedCuisine}
+                selectedFlavors={selectedFlavors}
+                selectedDiets={selectedDiets}
+                selectedMethod={selectedMethod}
+                servings={servings}
+                selectedAllergens={selectedAllergens}
+                onOpen={setActiveSheet}
+              />
               <p className="text-[0.65rem] text-slate-400 mt-2.5 font-semibold tracking-widest uppercase">Tap to open options</p>
             </div>
-          ) : <DesktopFilters />}
+          ) : (
+            <DesktopFilters
+              selectedCuisine={selectedCuisine}
+              customCuisine={customCuisine}
+              selectedFlavors={selectedFlavors}
+              selectedDiets={selectedDiets}
+              selectedMethod={selectedMethod}
+              selectedAllergens={selectedAllergens}
+              onCuisineChange={setSelectedCuisine}
+              onCustomCuisineChange={setCustomCuisine}
+              onFlavorToggle={v => toggle(v, selectedFlavors, setSelectedFlavors)}
+              onDietToggle={v => toggle(v, selectedDiets, setSelectedDiets)}
+              onMethodToggle={v => setSelectedMethod(selectedMethod === v ? "" : v)}
+              onAllergenToggle={v => toggle(v, selectedAllergens, setSelectedAllergens)}
+            />
+          )}
 
           {/* Generate CTA */}
           <button
@@ -493,7 +410,7 @@ export default function RecipeGenerator() {
                 </div>
               </div>
 
-              {/* Two-column body — collapses at 660px */}
+              {/* Two-column body — collapses at 660px (Tailwind `wide:`) */}
               <div className="grid grid-cols-1 wide:grid-cols-[1fr_300px]">
 
                 {/* Main column */}
@@ -609,7 +526,7 @@ export default function RecipeGenerator() {
 
                   {/* Nutrition */}
                   {nutrition && (
-                    <NutritionBar nutrition={nutrition} barColor={m.barColor} calCard={m.calCard} calText={m.calText} />
+                    <NutritionBar nutrition={nutrition} barColor={m.barColor} />
                   )}
 
                 </div>
@@ -654,10 +571,10 @@ export default function RecipeGenerator() {
         <p className="text-[0.75rem] font-medium text-slate-500 mb-1">
           Questions or feedback?{" "}
           <a
-            href="mailto:aliasgertalib@gmail.com"
+            href={`mailto:${CONTACT_EMAIL}`}
             className={`underline underline-offset-2 transition-colors ${m.footerLink}`}
           >
-            aliasgertalib@gmail.com
+            {CONTACT_EMAIL}
           </a>
         </p>
         <p className="text-[0.65rem] leading-relaxed text-slate-400 max-w-xl mx-auto mt-3">

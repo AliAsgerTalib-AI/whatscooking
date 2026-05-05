@@ -10,7 +10,9 @@
       "Bash(git push *)",
       "Bash(C:\\\\Users\\\\alias\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\\\\superpowers\\\\5.0.7\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh *)",
       "Bash(cat vite.config.js)",
-      "Bash(cat vite.config.ts)"
+      "Bash(cat vite.config.ts)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\" -Recurse -File)",
+      "Bash(Select-Object FullName)"
     ]
   }
 }

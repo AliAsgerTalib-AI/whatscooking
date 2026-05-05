@@ -1,0 +1,77 @@
+<h2>Shopping List Export — Format</h2>
+<p class="subtitle">How should the grocery list be delivered to the user?</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f7f4;padding:1rem;font-family:sans-serif;">
+      <div style="background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:1rem;font-size:0.75rem;">
+        <div style="font-weight:bold;margin-bottom:0.6rem;color:#333;">📋 Copied to clipboard!</div>
+        <div style="background:#f4f4f4;border-radius:6px;padding:0.7rem;font-size:0.68rem;color:#555;line-height:1.8;font-family:monospace;">
+          Spaghetti Carbonara — serves 4<br/>
+          ─────────────────────<br/>
+          □ 400g spaghetti<br/>
+          □ 200g pancetta<br/>
+          □ 4 large eggs<br/>
+          □ 100g Pecorino Romano<br/>
+          □ 2 cloves garlic<br/>
+          □ Black pepper to taste
+        </div>
+        <div style="margin-top:0.8rem;text-align:center;">
+          <div style="display:inline-block;background:#22c55e;color:#fff;border-radius:8px;padding:0.4rem 1rem;font-size:0.65rem;font-weight:bold;">Copy Shopping List</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Copy to Clipboard</h3>
+      <p>One tap copies a plain-text checklist. Paste into WhatsApp, Notes, or any app. Simple, instant, no new window.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f7f4;padding:1rem;font-family:sans-serif;">
+      <div style="background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:1rem;">
+        <div style="border-bottom:3px solid #f3722c;padding-bottom:0.6rem;margin-bottom:0.7rem;">
+          <div style="font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:#f3722c;font-weight:bold;">🛒 FlavorLab Shopping List</div>
+          <div style="font-size:0.8rem;font-weight:bold;color:#1a1a1a;">Spaghetti Carbonara × 4</div>
+        </div>
+        <div style="font-size:0.65rem;color:#555;line-height:1.9;">
+          <div style="display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid #f5f5f5;padding:0.15rem 0;">□ <span>400g spaghetti</span></div>
+          <div style="display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid #f5f5f5;padding:0.15rem 0;">□ <span>200g pancetta</span></div>
+          <div style="display:flex;gap:0.4rem;align-items:center;border-bottom:1px solid #f5f5f5;padding:0.15rem 0;">□ <span>4 large eggs</span></div>
+          <div style="display:flex;gap:0.4rem;align-items:center;padding:0.15rem 0;">□ <span>100g Pecorino Romano</span></div>
+        </div>
+        <div style="margin-top:0.8rem;text-align:center;">
+          <div style="display:inline-block;background:#f3722c;color:#fff;border-radius:8px;padding:0.4rem 1rem;font-size:0.65rem;font-weight:bold;">Print / Save PDF</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Styled Print / PDF</h3>
+      <p>Opens a print-ready branded shopping list in a new tab (same pattern as recipe PDF). Great for printing to take to the shop.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f7f4;padding:1rem;font-family:sans-serif;">
+      <div style="background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:1rem;">
+        <div style="font-size:0.7rem;font-weight:bold;color:#333;margin-bottom:0.7rem;">🛒 Shopping List</div>
+        <div style="font-size:0.65rem;color:#555;line-height:1.8;margin-bottom:0.8rem;">
+          <div>□ 400g spaghetti</div>
+          <div>□ 200g pancetta</div>
+          <div>□ 4 large eggs</div>
+          <div>□ 100g Pecorino Romano</div>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <div style="flex:1;background:#22c55e;border-radius:8px;padding:0.5rem;text-align:center;font-size:0.62rem;font-weight:bold;color:#fff;">📋 Copy</div>
+          <div style="flex:1;background:#f3722c;border-radius:8px;padding:0.5rem;text-align:center;font-size:0.62rem;font-weight:bold;color:#fff;">🖨 Print</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Both (Copy + Print)</h3>
+      <p>Two buttons side by side — clipboard for quick sharing, print for paper. Covers all use cases. Slightly more UI surface.</p>
+    </div>
+  </div>
+
+</div>

@@ -17,6 +17,11 @@ export default async function handler(req, res) {
 
   const { model, contents, generationConfig } = req.body;
 
+  const ALLOWED_MODELS = new Set(["gemini-2.5-flash", "gemini-3-flash-preview"]);
+  if (!model || !ALLOWED_MODELS.has(model)) {
+    return res.status(400).json({ error: "Invalid model." });
+  }
+
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   const upstream = await fetch(url, {

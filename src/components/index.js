@@ -8,3 +8,5 @@ export { AllergenMatrix }   from "./AllergenMatrix.jsx";
 export { MiseEnPlace }      from "./MiseEnPlace.jsx";
 export { FavoritesPanel }   from "./FavoritesPanel.jsx";
 export { ProFieldsPanel }   from "./ProFieldsPanel.jsx";
+export { MobileFilterBar }  from "./MobileFilterBar.jsx";
+export { DesktopFilters }   from "./DesktopFilters.jsx";

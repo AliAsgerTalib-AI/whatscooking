@@ -1,11 +1,38 @@
 // ── Models — swap these strings to upgrade without touching any other code ──────
-const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-3-flash-preview";
 
 // ── Constants ────────────────────────────────────────────────────────────────────
 const ANTHROPIC_BASE       = "/api/generate";
 const MAX_RESPONSE_CHARS   = 32_000;
 const MAX_TOKENS           = 8192;
 const GENERATION_TEMP      = 0.8;
+const FETCH_TIMEOUT_MS     = 30_000;
+const MAX_RETRIES          = 2;
+
+async function fetchWithRetry(url, options) {
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const tid = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+    try {
+      const res = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(tid);
+      if (res.ok || res.status < 500) return res;
+      if (attempt < MAX_RETRIES) {
+        await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+        continue;
+      }
+      return res;
+    } catch (e) {
+      clearTimeout(tid);
+      if (e.name === "AbortError") throw new Error("Request timed out. Please try again.");
+      if (attempt < MAX_RETRIES) {
+        await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+        continue;
+      }
+      throw e;
+    }
+  }
+}
 
 export async function generateRecipe({
   ingredientTags,
@@ -63,7 +90,7 @@ Respond ONLY with a valid JSON object. No markdown, no explanation. Exact struct
   "nutrition": { "calories": 420, "protein": 32, "carbs": 38, "fat": 14, "fiber": 5, "sodium": 680, "note": "Estimated values per serving" }
 }`;
 
-  const res = await fetch(ANTHROPIC_BASE, {
+  const res = await fetchWithRetry(ANTHROPIC_BASE, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
