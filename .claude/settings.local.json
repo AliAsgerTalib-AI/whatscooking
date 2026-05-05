@@ -24,7 +24,8 @@
       "Bash(Sort-Object)",
       "Bash(Test-Path *)",
       "Bash(npx playwright *)",
-      "Bash(Remove-Item \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\tests\\\\example.spec.js\")"
+      "Bash(Remove-Item \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\\\\tests\\\\example.spec.js\")",
+      "Bash(Get-ChildItem -Recurse -Path . -Include \"*.tsx\", \"*.ts\", \"*.css\", \"*.scss\")"
     ]
   }
 }

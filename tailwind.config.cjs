@@ -6,25 +6,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   safelist: [
-    // dynamic accent classes used via `m` token object
-    "bg-indigo-600","bg-orange-500","bg-indigo-100","bg-orange-100",
-    "bg-indigo-50","bg-orange-50","bg-amber-50",
-    "border-indigo-100","border-orange-100","border-amber-100",
-    "border-indigo-200","border-orange-200",
-    "text-indigo-600","text-orange-500","text-orange-600",
-    "text-indigo-700","text-orange-700","text-amber-700",
-    "text-indigo-500","text-orange-500",
-    "bg-indigo-400","bg-orange-400",
-    "bg-indigo-500","bg-orange-500",
-    "from-indigo-600","from-orange-500",
-    "to-purple-500","to-amber-400",
-    "shadow-indigo-200/60","shadow-orange-200/60",
-    "shadow-indigo-200/80","shadow-orange-200/80",
-    "bg-gradient-to-r","bg-gradient-to-br",
-    "from-indigo-50/60","from-orange-50/60",
-    "to-purple-50/40","to-amber-50/40",
-    "from-indigo-600/8","to-purple-500/8",
-    "border-indigo-100","hover:text-indigo-700","hover:text-orange-700",
+    "bg-[#2C5F4A]","text-[#2C5F4A]","border-[#2C5F4A]",
+    "bg-[#1E4433]","text-[#1E4433]",
+    "bg-[#F5F0E8]","bg-[#E8F2ED]","bg-[#FDFAF5]",
+    "text-[#7A6B5E]","text-[#9A8878]","text-[#1A1208]",
+    "border-[#E5DDD3]","border-[#EDE8E0]",
   ],
   theme: {
     borderRadius: {
@@ -40,16 +26,14 @@ module.exports = {
     },
     extend: {
       colors: {
-        // legacy tokens — kept for component compatibility
-        primary:                  '#111111',
+        primary:                  '#1A1208',
         'on-primary':             '#FFFFFF',
-        'primary-container':      '#333333',
-        surface:                  '#111111',
-        'surface-container':      '#1a1a1a',
-        'surface-container-high': '#222222',
-        outline:                  '#444444',
-        // new tokens
-        'card-border': '#2e2e2e',
+        'primary-container':      '#E8F2ED',
+        surface:                  '#FDFAF5',
+        'surface-container':      '#FFFFFF',
+        'surface-container-high': '#F5F0E8',
+        outline:                  '#9A8878',
+        'card-border':            '#E5DDD3',
       },
       fontFamily: {
         sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
@@ -65,17 +49,12 @@ module.exports = {
       letterSpacing: {
         label: '0.06rem',
       },
-      backgroundImage: {
-        'primary-cta': 'linear-gradient(135deg, #111111, #333333)',
-        'home-cta':    'linear-gradient(135deg, #F97316, #F59E0B)',
-        'pro-cta':     'linear-gradient(135deg, #6366F1, #818CF8)',
-      },
       screens: {
         wide: '660px',
       },
       boxShadow: {
-        'card':    '0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04)',
-        'card-lg': '0 8px 48px rgba(0,0,0,0.08)',
+        'card':    '0 1px 4px rgba(26,18,8,0.05), 0 6px 24px rgba(26,18,8,0.04)',
+        'card-lg': '0 8px 48px rgba(26,18,8,0.08)',
       },
       keyframes: {
         fadeIn: {
