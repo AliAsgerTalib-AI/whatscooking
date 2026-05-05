@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **FlavorLab** — a React AI recipe generator that calls Google Gemini (`gemini-3-flash-preview`) to generate recipes from user-supplied ingredients. Home mode: casual, imperial units, gold/orange palette.
 
-The app is deployed to Vercel. The Vite dev server lives in `testbed/` and imports `RecipeGenerator.jsx` from the root.
+The app is deployed to Vercel. The Vite dev server lives in `testbed/` and imports `RecipeGenerator.tsx` from the root.
 
 ## Commands
 
@@ -27,18 +27,22 @@ Tests live in `testbed/tests/` (Vitest). Run with `cd testbed && npm test`.
 ## Architecture
 
 ```
-RecipeGenerator.jsx          ← thin shell; imports from src/
+RecipeGenerator.tsx          ← main component; imports from src/
 src/
-├── api/recipeApi.js         ← generateRecipe(); builds prompts, calls /api/generate
-├── api/generate.js  →  api/generate.js (Vercel serverless proxy to Anthropic)
-├── components/              ← IngredientTags, BottomSheet, NutritionBar, AllergenMatrix,
-│                               MiseEnPlace, FavoritesPanel, ProFieldsPanel, FilterChips,
-│                               MobileFilterBar, DesktopFilters, ProResultTabs
-├── hooks/useFavorites.js    ← localStorage persistence (key: "favs", max 20)
+├── api/recipeApi.ts         ← generateRecipe(); builds prompts, calls /api/generate
+├── App.tsx                  ← ErrorBoundary wrapper
+├── main.tsx                 ← Vite entry point
+api/generate.ts              ← Vercel serverless proxy to Gemini
+├── components/              ← IngredientTags, BottomSheet, AllergenMatrix,
+│                               MiseEnPlace, FavoritesPanel, ProFieldsPanel,
+│                               MobileFilterBar, DesktopFilters, CookingMode
+├── hooks/useFavorites.ts    ← localStorage persistence (key: "favs", max 20)
 ├── data/                    ← CUISINES, FLAVORS, DIETS, METHODS, ALLERGENS, SUGGESTIONS
-├── utils/                   ← formatNum, scaleIngredient, makeid, storage
-├── export/                  ← exportHomePDF, exportProPDF (open new window + auto-print)
-└── types/recipe.ts          ← interfaces: Recipe, Nutrition, AllergenStatus, Favorite, ProFields
+├── utils/                   ← formatNum, scaleIngredient, makeid, storage, parseStepTime
+├── export/                  ← exportHomePDF, exportProPDF, exportShoppingList
+├── constants.ts             ← MOBILE_BREAKPOINT, CONTACT_EMAIL
+├── tokens.ts                ← design token helpers (m, card, lbl, etc.)
+└── types/recipe.ts          ← interfaces: Recipe, Nutrition, AllergenStatus, Favorite, SelectOption, CookType
 ```
 
 **API flow:** `RecipeGenerator` → `generateRecipe()` → `POST /api/generate` (Vercel serverless) → `generativelanguage.googleapis.com`. The API key (`GEMINI_API_KEY`) is server-side only.
@@ -57,4 +61,4 @@ src/
 
 Vercel project. `vercel.json` configures the build output and SPA routing. Set `GEMINI_API_KEY` in Vercel environment variables.
 
-The `testbed/` directory is the Vite app that wraps `RecipeGenerator.jsx` for local development and Vercel deployment.
+The `testbed/` directory is the Vite app that wraps `RecipeGenerator.tsx` for local development and Vercel deployment.

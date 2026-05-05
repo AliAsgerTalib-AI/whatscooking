@@ -12,7 +12,16 @@
       "Bash(cat vite.config.js)",
       "Bash(cat vite.config.ts)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\" -Recurse -File)",
-      "Bash(Select-Object FullName)"
+      "Bash(Select-Object FullName)",
+      "Bash(git grep *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\" -Recurse -File -Name)",
+      "Bash(Select-String \"\\\\.\\(js|jsx|ts|tsx\\)$\")",
+      "Bash(Measure-Object)",
+      "Bash(Select-Object -ExpandProperty Count)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\alias\\\\OneDrive\\\\AI Projects\\\\whatscooking\" -File | Where-Object { $_.Extension -in \".json\",\".js\",\".jsx\",\".ts\",\".tsx\" } | Select-Object -ExpandProperty Name)",
+      "Bash(Get-ChildItem -Path . -MaxDepth 1 -Include \"*.js\", \"*.jsx\", \"*.ts\", \"*.tsx\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)"
     ]
   }
 }

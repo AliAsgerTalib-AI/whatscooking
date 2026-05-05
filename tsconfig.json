@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+    "paths": {
+      "@/types/*":      ["./src/types/*"],
+      "@/data/*":       ["./src/data/*"],
+      "@/utils/*":      ["./src/utils/*"],
+      "@/api/*":        ["./src/api/*"],
+      "@/export/*":     ["./src/export/*"],
+      "@/components/*": ["./src/components/*"]
+    }
+  },
+  "include": [
+    "RecipeGenerator.tsx",
+    "src/**/*",
+    "api/**/*",
+    "vite.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "testbed",
+    "dist"
+  ]
+}
