@@ -44,12 +44,12 @@ module.exports = {
         primary:                  '#111111',
         'on-primary':             '#FFFFFF',
         'primary-container':      '#333333',
-        surface:                  '#FAFAF9',
-        'surface-container':      '#F4F3F0',
-        'surface-container-high': '#ECEAE6',
-        outline:                  '#9B9790',
+        surface:                  '#111111',
+        'surface-container':      '#1a1a1a',
+        'surface-container-high': '#222222',
+        outline:                  '#444444',
         // new tokens
-        'card-border': '#E5E3DF',
+        'card-border': '#2e2e2e',
       },
       fontFamily: {
         sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],

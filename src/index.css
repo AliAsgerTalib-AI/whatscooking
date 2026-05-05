@@ -5,15 +5,18 @@
 @layer base {
   html, body, #root {
     min-height: 100vh;
+    font-size: 17px;
   }
 
   body {
     @apply bg-surface text-primary font-sans;
+    background-color: #111111;
+    color: #f0f0f0;
   }
 
   ::-webkit-scrollbar         { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-thumb   { background: #C9C6C0; border-radius: 9999px; }
-  ::-webkit-scrollbar-track   { background: #FAFAF9; }
+  ::-webkit-scrollbar-thumb   { background: #444; border-radius: 9999px; }
+  ::-webkit-scrollbar-track   { background: #111111; }
 
   input:focus,
   textarea:focus {
@@ -27,7 +30,7 @@
 
 @layer utilities {
   .glass {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(17, 17, 17, 0.88);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
   }
